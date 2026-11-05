@@ -1,0 +1,843 @@
+/* Slide 3 on /v7 (DeckOutcomes.tsx): left aligned, the header and the bento in one screen (desktop
+   about 520px of it; a phone about 640). No shadows, no dark grounds. Desktop: the figures 3 × 2 at
+   the left (7 of 12), the press tile at the right (5); a phone: the figures 3 × 2 compact, the press
+   tile under them with the clipping's photo at its side. */
+.dko-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: var(--size-measure-max);
+}
+
+.dko-bento {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+@media (width >= 1056px) {
+  .dko-bento { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+}
+
+/* ── the figures: hairline cells (the gap over the line colour) ───────────────────────────────── */
+.dko-figs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 1px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-decorative);
+  border-radius: var(--radius-lg);
+  background: var(--border-decorative);
+}
+.dko-fig {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--surface-default);
+}
+.dko-fig dd {
+  margin: 0;
+  font-size: clamp(2.25rem, 3.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ssb-light-9);
+}
+.dko-fig dt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--type-label-size);
+  line-height: 1.35;
+  font-weight: var(--font-weight-medium);
+  color: var(--content-primary);
+}
+.dko-fig dt small {
+  font-size: var(--type-caption-size);
+  line-height: 1.35;
+  font-weight: var(--font-weight-regular, 400);
+  color: var(--content-secondary);
+}
+.dko-fig[data-lead] { background: var(--color-ssb-light-2); }
+.dko-fig[data-lead] dd { color: var(--color-ssb-light-11); }
+
+/* ── the press tile: grey, a white clipping set in it, the CTA under ──────────────────────────── */
+.dko-press {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+}
+.dko-clip {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-decorative);
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+}
+.dko-clip-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.6 / 1;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+.dko-clip-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+.dko-clip-logo { display: block; align-self: flex-start; width: auto; height: 1.25rem; margin-bottom: var(--space-1); }
+.dko-clip-title {
+  margin: 0;
+  font-size: var(--type-h3-size, 1.25rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: var(--font-weight-semibold);
+  color: var(--content-primary);
+}
+.dko-clip-sub {
+  margin: 0;
+  font-size: var(--type-label-size);
+  line-height: 1.5;
+  color: var(--content-secondary);
+}
+.dko-cta { align-self: stretch; justify-content: center; }
+
+.dko-recruiters { margin-top: var(--space-16); }
+
+/* ── phones: everything compact enough for one screen ─────────────────────────────────────────── */
+@media (width < 672px) {
+  .dko-bento { gap: var(--space-3); margin-top: var(--space-6); }
+  .dko-fig { gap: var(--space-2); padding: var(--space-3); }
+  .dko-fig dd { font-size: 1.5rem; letter-spacing: -0.03em; }
+  .dko-fig dt { font-size: var(--type-caption-size); }
+  .dko-fig dt small { display: none; }
+  .dko-press { gap: var(--space-3); padding: var(--space-3); }
+  /* the clipping's photo at its side, a square, so the tile stays short */
+  .dko-clip { flex-direction: row; }
+  .dko-clip-photo { width: 6.5rem; aspect-ratio: auto; height: auto; flex: none; }
+  .dko-clip-body { padding: var(--space-3); gap: var(--space-1); }
+  .dko-clip-logo { height: 1rem; }
+  .dko-clip-title { font-size: 1rem; line-height: 1.3; }
+  .dko-clip-sub { font-size: var(--type-caption-size); line-height: 1.45; }
+  .dko-recruiters { margin-top: var(--space-12); }
+}
+/* a phone names each figure in short, cohort included ("Avg CTC · C2"), in place of label and note */
+.dko-short { display: none; }
+@media (width < 672px) {
+  .dko-long { display: none; }
+  .dko-short { display: inline; }
+}
+/* The Times of India's wordmark (14:1): a little lower than the made-up one, so it isn't too wide */
+.dko-clip-logo { height: 1rem; margin-bottom: var(--space-1-5, 6px); }
+@media (width < 672px) { .dko-clip-logo { height: 0.75rem; } }
+
+/* ── (later, 2026-10-28, the user's ask: the phone "too cluttered", room and size over height) phones:
+   the figures two across in three rows, larger, with their full label and note again; the clipping's
+   photo back on top, wider and more padded ───────────────────────────────────────────────────────── */
+@media (width < 672px) {
+  .dko-bento { gap: var(--space-4); }
+  .dko-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dko-fig { gap: var(--space-4); padding: var(--space-5) var(--space-4); }
+  .dko-fig dd { font-size: 2.125rem; }
+  .dko-fig dt { font-size: var(--type-label-size); }
+  .dko-fig dt small { display: block; }
+  .dko-long { display: inline; }
+  .dko-short { display: none; }
+  .dko-press { gap: var(--space-4); padding: var(--space-4); }
+  .dko-clip { flex-direction: column; }
+  .dko-clip-photo { width: 100%; aspect-ratio: 2 / 1; height: auto; }
+  .dko-clip-body { gap: var(--space-2); padding: var(--space-5); }
+  .dko-clip-logo { height: 0.875rem; margin-bottom: var(--space-2); }
+  .dko-clip-title { font-size: 1.25rem; }
+  .dko-clip-sub { font-size: var(--type-label-size); line-height: 1.5; }
+}
+/* (the same day: "taller, but not that much; balance it") phones: the same layout, tighter: the cells
+   less padded, the figures a step smaller, the clipping's photo wider and shorter beside a shorter body */
+@media (width < 672px) {
+  .dko-bento { gap: var(--space-3); }
+  .dko-fig { gap: var(--space-3); padding: var(--space-4); }
+  .dko-fig dd { font-size: 1.875rem; }
+  .dko-fig dt { gap: 0; }
+  .dko-press { gap: var(--space-3); padding: var(--space-3); }
+  .dko-clip-photo { aspect-ratio: 2.8 / 1; }
+  .dko-clip-body { gap: var(--space-1-5, 6px); padding: var(--space-4); }
+  .dko-clip-logo { margin-bottom: var(--space-1); }
+  .dko-clip-title { font-size: 1.125rem; }
+  .dko-clip-sub { font-size: var(--type-caption-size); }
+}
+
+/* (later, 2026-10-28, the user's ask: the figures smaller with more room; 3.2x no longer singled out)
+   every cell alike, white with its figure in the brand green; the figures a step smaller, the cells
+   more padded */
+.dko-fig[data-lead] { background: var(--surface-default); }
+.dko-fig[data-lead] dd { color: var(--color-ssb-light-9); }
+.dko-fig dd { font-weight: var(--font-weight-medium); }
+@media (width >= 672px) {
+  .dko-fig { padding: var(--space-6) var(--space-8); }
+  .dko-fig dd { font-size: clamp(1.875rem, 2.6vw, 2.375rem); }
+}
+@media (width < 672px) {
+  .dko-fig { gap: var(--space-4); padding: var(--space-5); }
+  .dko-fig dd { font-size: 1.5rem; letter-spacing: -0.02em; }
+  .dko-fig dt span { font-size: var(--type-caption-size); }
+  .dko-fig dt { font-size: var(--type-caption-size); }
+}
+
+/* ── (later, 2026-10-28, the user's reference: vFinal's article card, the photo larger) the press card:
+   white with a hairline, no tile behind; the paper's wordmark and the date on one line, the headline,
+   the byline, a rule, the photo (about half the card, 4:3) beside the opening lines, a rule, the CTA ── */
+.dko-press {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-decorative);
+  background: var(--surface-default);
+}
+.dko-press-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-6) 0;
+}
+.dko-press-top .dko-clip-logo { margin: 0; }
+.dko-press-date {
+  font-size: var(--type-label-size);
+  line-height: 1.2;
+  color: var(--content-secondary);
+  white-space: nowrap;
+}
+.dko-press .dko-clip-title {
+  margin: var(--space-4) var(--space-6) 0;
+  font-size: 1.375rem;
+  line-height: 1.25;
+}
+.dko-press-by {
+  margin: var(--space-2) var(--space-6) 0;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-decorative);
+  font-size: var(--type-label-size);
+  line-height: 1.3;
+  color: var(--content-secondary);
+}
+.dko-press-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-5);
+  flex: 1;
+  padding: var(--space-5) var(--space-6);
+}
+.dko-press-story .dko-clip-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+}
+.dko-press .dko-clip-sub {
+  font-size: var(--type-body-size, 1rem);
+  line-height: 1.55;
+}
+.dko-press-foot {
+  padding: var(--space-4) var(--space-6) var(--space-5);
+  border-top: 1px solid var(--border-decorative);
+}
+.dko-press-foot .dko-cta { width: 100%; }
+/* phones: the photo full width over the opening lines */
+@media (width < 672px) {
+  .dko-press { padding: 0; gap: 0; }
+  .dko-press-top { padding: var(--space-5) var(--space-5) 0; }
+  .dko-press-top .dko-clip-logo { height: 0.8125rem; }
+  .dko-press-date { font-size: var(--type-caption-size); }
+  .dko-press .dko-clip-title { margin: var(--space-3) var(--space-5) 0; font-size: 1.25rem; }
+  .dko-press-by { margin: var(--space-1-5, 6px) var(--space-5) 0; padding-bottom: var(--space-4); font-size: var(--type-caption-size); }
+  .dko-press-story { grid-template-columns: 1fr; gap: var(--space-3); padding: var(--space-4) var(--space-5); }
+  .dko-press-story .dko-clip-photo { aspect-ratio: 16 / 9; }
+  .dko-press .dko-clip-sub { font-size: var(--type-label-size); }
+  .dko-press-foot { padding: var(--space-4) var(--space-5); }
+}
+/* (the same day: "a bit thinner; space is left beside the photo") desktop: the photo wider than tall
+   (16:10) at half the card, the rows tighter, so the card and the figures beside it are shorter */
+@media (width >= 672px) {
+  .dko-press-top { padding-top: var(--space-5); }
+  .dko-press .dko-clip-title { margin-top: var(--space-3); }
+  .dko-press-by { padding-bottom: var(--space-4); }
+  .dko-press-story { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-5); padding: var(--space-4) var(--space-6); }
+  .dko-press-story .dko-clip-photo { aspect-ratio: 16 / 10; }
+  .dko-press .dko-clip-sub { font-size: var(--type-label-size); line-height: 1.55; }
+  .dko-press-foot { padding: var(--space-4) var(--space-6); }
+}
+
+/* ── The recruiters on /v7 (2026-10-28, the user's ask): from the tablet up, the phone's tiles (each
+   cell its own rounded tile, a hairline edge, 8px apart) in place of the joined panel; 8 × 3 on
+   desktop (was 6 × 4), lower cells, so the grid is about half as tall. Every logo fitted to one box,
+   about Swiggy's and Zomato's size (92 × 30): wide wordmarks (CK Birla, Landmark) no longer run
+   long, square marks (EY, Zendesk) no longer stand tall. ─────────────────────────────────────────── */
+main[data-page='v7'] .peers-flip {
+  gap: var(--space-2);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+main[data-page='v7'] .peers-flip-face {
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+main[data-page='v7'] .peers-flip-logo[style] {
+  width: min(calc(var(--w) * 0.85), 5.75rem);
+  max-width: 86%;
+  height: auto;
+  max-height: 1.875rem;
+}
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  main[data-page='v7'] .peers-flip-cell { height: 4.5rem; }
+}
+@media (width >= 1056px) {
+  main[data-page='v7'] .peers-flip { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  main[data-page='v7'] .peers-flip-cell { height: 4.25rem; }
+}
+/* phones keep their 3 × 8 tiles, the logos in the same box, smaller */
+@media (width < 672px) {
+  main[data-page='v7'] .peers-flip-logo[style] { width: min(calc(var(--w) * 0.6), 4.5rem); max-height: 1.5rem; }
+}
+/* (first look) the 92px box shrank the wide wordmarks under Swiggy's size: each logo back at its full
+   weight (its `resolveLogos` width), only the widest held to the tile (7.5rem) and the tallest to 34px */
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip-logo[style] { width: min(var(--w), 7.5rem); max-width: 92%; max-height: 2.125rem; }
+  main[data-page='v7'] .peers-flip-face { padding: 0 var(--space-2); }
+}
+/* the few that still read off beside Swiggy and Zomato, nudged by eye (scale, so the tile's layout
+   doesn't move): bold wordmarks down a step, thin or boxed ones up */
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip-logo:is([src*='uber'], [src*='zepto']) { scale: 0.8; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='goldman'], [src*='oyo'], [src*='flipkart']) { scale: 0.9; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='zendesk'], [src*='times-group'], [src*='ck-birla'], [src*='samsung'], [src*='nomura']) { scale: 1.12; }
+}
+/* (later: "a bit smaller, it looks cluttered") every logo about 80% of that, more air in each tile */
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip-logo[style] { width: min(calc(var(--w) * 0.8), 6rem); max-width: 80%; max-height: 1.75rem; }
+  main[data-page='v7'] .peers-flip-face { padding: 0 var(--space-4); }
+}
+@media (width < 672px) {
+  main[data-page='v7'] .peers-flip-logo[style] { width: min(calc(var(--w) * 0.5), 3.75rem); max-width: 78%; max-height: 1.25rem; }
+}
+/* the same by-eye nudges on a phone */
+@media (width < 672px) {
+  main[data-page='v7'] .peers-flip-logo:is([src*='uber'], [src*='zepto']) { scale: 0.8; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='goldman'], [src*='oyo'], [src*='flipkart']) { scale: 0.9; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='zendesk'], [src*='times-group'], [src*='ck-birla'], [src*='samsung'], [src*='nomura']) { scale: 1.12; }
+}
+/* (later: "a very little taller, to balance") the tiles a step taller around the smaller logos */
+@media (width >= 672px) { main[data-page='v7'] .peers-flip-cell { height: 5rem; } }
+@media (width >= 1056px) { main[data-page='v7'] .peers-flip-cell { height: 4.75rem; } }
+@media (width < 672px) { main[data-page='v7'] .peers-flip-cell { height: 4.125rem; } }
+
+/* ── The internship companies on /v7 (2026-10-28, the user's ask: "the same style as the placement
+   logos"): the recruiters' tiles (each its own rounded tile, a hairline edge, 8px apart), 8 × 3 on
+   desktop, 6 × 4 on a tablet, 3 × 8 on a phone; every logo held to one box of the recruiters' size,
+   the heaviest and the lightest nudged by eye. Plain CSS beats the grid's Tailwind utilities. ────── */
+[data-page='v7'] .in-logos {
+  gap: var(--space-2);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+[data-page='v7'] .in-logos > li {
+  height: 4.75rem;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-page);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+[data-page='v7'] .in-logos img { max-width: min(6rem, 80%); max-height: 1.75rem; }
+[data-page='v7'] .in-logos img:is([alt='MPL'], [alt='Slikk'], [alt='Vaani']) { scale: 0.8; }
+[data-page='v7'] .in-logos img:is([alt='apna'], [alt='The Whole Truth'], [alt='Reckitt'], [alt='Chai Point']) { scale: 1.15; }
+@media (width >= 672px) { [data-page='v7'] .in-logos { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (width >= 1056px) { [data-page='v7'] .in-logos { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+@media (width < 672px) {
+  [data-page='v7'] .in-logos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  [data-page='v7'] .in-logos > li { height: 4.125rem; padding: 0 var(--space-3); }
+  [data-page='v7'] .in-logos img { max-width: min(3.75rem, 78%); max-height: 1.25rem; }
+}
+/* (later the same day, the user's ask: "the same style for this as well, so everything is consistent")
+   the recruiters' tile rules above now reach every flip grid on /v7 (main[data-page='v7']), so
+   Alumni's "Your peers come from" takes them too; its square marks nudged as the recruiters' were */
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip-logo:is([src*='apollo'], [src*='tcs'], [src*='zs']) { scale: 1.1; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='deloitte'], [src*='accenture']) { scale: 0.9; }
+}
+@media (width >= 672px) {
+  main[data-page='v7'] .peers-flip-logo:is([src*='mckinsey']) { scale: 1.35; }
+  main[data-page='v7'] .peers-flip-logo:is([src*='deutsche'], [src*='apollo'], [src*='tcs']) { scale: 1.2; }
+}
+[data-page='v7'] .in-logos img:is([alt='BCCI'], [alt='FirstClub'], [alt='The Whole Truth'], [alt='apna']) { scale: 1.25; }
+@media (width < 672px) { [data-page='v7'] .in-logos img[alt='FirstClub'] { scale: 1; } }
+/* (later, 2026-10-28, the user's ask: phones, "the boxes a very little lower") every logo grid's tiles
+   58px tall on a phone (was 66) */
+@media (width < 672px) {
+  main[data-page='v7'] .peers-flip-cell { height: 3.625rem !important; }
+  [data-page='v7'] .in-logos > li { height: 3.625rem !important; }
+}
+
+/* ── (later, 2026-10-28, the user's ask, /v8 only: "like v3") the figures on a photo, as /v3's
+   placements banner: the founding cohort's photo fills the tile under v3's shade, and the six
+   figures sit on one frosted glass plate, inset a little (12px) from the photo's edge; hairlines of
+   light between the figures; the figures in the light brand green, the labels white ──────────────── */
+.dko-glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: var(--pg-slate);
+}
+.dko-glass-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+}
+.dko-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, var(--pg-night-a35) 0%, var(--pg-night-a50) 50%, var(--pg-night-a70) 100%);
+}
+.dko-glass .dko-figs {
+  height: 100%;
+  gap: 0;
+  border: var(--border-width-hair, 1px) solid var(--pg-white-a18);
+  background: var(--pg-white-a10);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 1.3));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 1.3));
+}
+.dko-glass .dko-fig,
+.dko-glass .dko-fig[data-lead] {
+  background: none;
+  box-shadow: 0 0 0 0.5px var(--pg-white-a16);
+}
+.dko-glass .dko-fig dd,
+.dko-glass .dko-fig[data-lead] dd { color: var(--pg-green-55); }
+.dko-glass .dko-fig dt { color: var(--pg-white); }
+.dko-glass .dko-fig dt small { color: var(--pg-white-a74); }
+@media (width < 672px) { .dko-glass { padding: var(--space-2); } }
+/* (the same day: "use a darker bg") the shade over the photo heavier, as v3's (0.5 to 0.9), and the
+   plate a dark glass (a black tint, the blur dimmed) in place of the white tint */
+.dko-glass::before { background: linear-gradient(to bottom, var(--pg-night-a55) 0%, var(--pg-night-a70) 50%, var(--pg-night-a85) 100%); }
+.dko-glass .dko-figs {
+  border-color: var(--pg-white-a14);
+  background: var(--pg-night-a45);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(1.1) brightness(0.6);
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(1.1) brightness(0.6);
+}
+.dko-glass .dko-fig,
+.dko-glass .dko-fig[data-lead] { box-shadow: 0 0 0 0.5px var(--pg-white-a12); }
+
+/* ── /v8 (2026-10-28, the user's reference): the divider from the dark folds to the light page: the
+   dark ground (the tone's #0a0a0a), a band of brand-green light low in it, fading into the page's
+   ground; its lower edge a soft, wide curve ─────────────────────────────────────────────────────── */
+.dko-glow {
+  position: relative;
+  height: clamp(9rem, 16vw, 15rem);
+  margin-bottom: calc(-1 * clamp(2rem, 4vw, 4rem));
+  background:
+    radial-gradient(140% 70% at 50% 100%, var(--surface-page) 30%, transparent 62%),
+    linear-gradient(to bottom, var(--pg-dark-1) 0%, var(--pg-green-02) 28%, var(--pg-green-15) 46%, var(--pg-green-42) 64%, var(--pg-green-52) 76%, var(--surface-page) 96%);
+  pointer-events: none;
+}
+/* the recruiters as their own section: no top margin of their own (the section's padding is it) */
+.dko-solo .dko-recruiters { margin-top: 0; }
+
+/* (the same day, the user's asks) the glass plate to the photo's edge (no inset), and the divider's
+   light an arc curving upwards: the page's ground rising as a wide dome from below, a green rim round
+   it, the black above */
+.dko-glass, .dko-glass:is(*) { padding: 0; }
+.dko-glass .dko-figs { border: 0; border-radius: inherit; }
+.dko-glow {
+  height: clamp(10rem, 18vw, 17rem);
+  background:
+    radial-gradient(75% 115% at 50% 135%, var(--surface-page) 52%, var(--pg-green-56) 60%, var(--pg-green-45) 66%, var(--pg-green-30) 74%, var(--pg-dark-1-a00) 86%),
+    var(--pg-dark-1);
+}
+/* the arc's ends meet the page under it: the lowest part fades to the page's ground across the width */
+.dko-glow {
+  background:
+    linear-gradient(to bottom, transparent 62%, var(--surface-page) 100%),
+    radial-gradient(75% 115% at 50% 135%, var(--surface-page) 52%, var(--pg-green-56) 60%, var(--pg-green-45) 66%, var(--pg-green-30) 74%, var(--pg-dark-1-a00) 86%),
+    var(--pg-dark-1);
+}
+/* (the same day: "make it curve downwards") the arc the other way: the black hangs down as a wide
+   dome from above, a green rim under it, the page's ground below; the top edge black across the width */
+.dko-glow {
+  background:
+    linear-gradient(to bottom, var(--pg-dark-1) 0%, var(--pg-dark-1-a00) 30%),
+    radial-gradient(75% 115% at 50% -35%, var(--pg-dark-1) 52%, var(--pg-green-30) 60%, var(--pg-green-45) 67%, var(--pg-green-56) 75%, var(--surface-page) 88%),
+    var(--surface-page);
+}
+
+/* (the same day: "remove the background image, subtly lift the stat cards") no photo, no frost: the
+   six figures as one raised panel on the black, a step lighter than the ground, its light falling
+   from the top (a faint top rim and a soft glow), a deep soft shadow under it; hairlines between */
+.dko-glass, .dko-glass:is(*) { background: none; overflow: visible; }
+.dko-glass-bg, .dko-glass::before { display: none; }
+.dko-glass .dko-figs {
+  border: 1px solid var(--pg-white-a09);
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--pg-white-a05), transparent 60%),
+    linear-gradient(to bottom, var(--pg-dark-5-warm), var(--pg-dark-ground-warm));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow:
+    inset 0 1px 0 var(--pg-white-a08),
+    0 1px 2px var(--pg-black-a50),
+    0 24px 48px -24px var(--pg-black-a90);
+}
+.dko-glass .dko-fig,
+.dko-glass .dko-fig[data-lead] { box-shadow: 0 0 0 0.5px var(--pg-white-a08); }
+
+/* ── /v8 (2026-10-28, the user's reference: SST's placements card) one card: the "Placement
+   highlights" strip across its top, then the figures at the left (the lead large, its line, the other
+   five in one bordered row split by hairlines) and the press card at the right ─────────────────── */
+.dks {
+  margin-top: var(--space-8);
+  overflow: hidden;
+  border: 1px solid var(--border-decorative);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--pg-white-a04), transparent 60%),
+    var(--surface-default);
+  box-shadow: inset 0 1px 0 var(--pg-white-a06), 0 24px 48px -28px var(--pg-black-a80);
+}
+
+/* the strip: the brand green, a lighter sheen at either end, the words running left in spaced caps */
+.dks-strip {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-4);
+  background: linear-gradient(90deg, var(--pg-ticker-shine) 0%, var(--pg-ticker-green) 14%, var(--pg-ticker-green-deep) 50%, var(--pg-ticker-green) 86%, var(--pg-ticker-shine) 100%);
+}
+.dks-strip::before,
+.dks-strip::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: 18%;
+  pointer-events: none;
+}
+.dks-strip::before { left: 0; background: linear-gradient(90deg, var(--pg-white-a28), transparent); }
+.dks-strip::after { right: 0; background: linear-gradient(270deg, var(--pg-white-a28), transparent); }
+.dks-track {
+  display: flex;
+  width: max-content;
+  animation: dks-run 40s linear infinite;
+}
+.dks-track > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-10, 2.5rem);
+  padding-right: var(--space-10, 2.5rem);
+  font-size: var(--type-label-size, 0.875rem);
+  line-height: 1;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--pg-white);
+}
+.dks-track > span::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--pg-white); }
+@keyframes dks-run { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .dks-track { animation: none; } }
+
+.dks-body {
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-8);
+}
+@media (width >= 1056px) {
+  .dks-body { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: var(--space-10, 2.5rem); padding: var(--space-10, 2.5rem); }
+}
+
+.dks-stats { display: flex; flex-direction: column; min-width: 0; }
+.dks-k {
+  margin: 0;
+  font-size: var(--type-eyebrow-size, 0.75rem);
+  line-height: 1.2;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--content-primary);
+}
+.dks-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ssb-light-9);
+}
+.dks-lead span { font-size: clamp(1.125rem, 1.6vw, 1.5rem); letter-spacing: -0.01em; }
+.dks-lead-sub {
+  margin: var(--space-4) 0 0;
+  font-size: var(--type-body-size, 1rem);
+  line-height: 1.5;
+  color: var(--content-secondary);
+}
+
+/* the other five in one bordered row, hairlines between */
+.dks-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: var(--space-8) 0 0;
+  padding: var(--space-5) 0;
+  border: 1px solid var(--border-decorative);
+  border-radius: var(--radius-lg);
+  background: var(--pg-white-a02);
+}
+.dks-fig { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; padding-inline: var(--space-5); }
+.dks-fig + .dks-fig { border-left: 1px solid var(--border-decorative); }
+.dks-fig dd {
+  margin: 0;
+  font-size: clamp(1.375rem, 1.9vw, 1.75rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--color-ssb-light-9);
+}
+.dks-fig dt { display: flex; flex-direction: column; gap: 2px; font-size: var(--type-caption-size, 0.75rem); line-height: 1.35; font-weight: var(--font-weight-medium); color: var(--content-primary); }
+.dks-fig dt small { font-size: var(--type-caption-size, 0.75rem); font-weight: 400; color: var(--content-secondary); opacity: 0.75; }
+
+/* the press card in the card: its own hairline card, as before */
+.dks .dko-press { align-self: stretch; }
+
+/* tablets: the row in three then two; phones: two across */
+@media (width < 1056px) {
+  .dks-row { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--space-5); }
+  .dks-fig:nth-child(3n + 1) { border-left: 0; }
+}
+@media (width < 672px) {
+  .dks { margin-top: var(--space-6); }
+  .dks-strip { padding-block: var(--space-3); }
+  .dks-track > span { font-size: var(--type-caption-size, 0.75rem); gap: var(--space-6); padding-right: var(--space-6); }
+  .dks-body { gap: var(--space-6); padding: var(--space-5); }
+  .dks-lead { margin-top: var(--space-3); }
+  .dks-lead-sub { margin-top: var(--space-3); font-size: var(--type-label-size, 0.875rem); }
+  .dks-row { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: var(--space-6); padding: var(--space-4) 0; }
+  .dks-fig { padding-inline: var(--space-4); }
+  .dks-fig:nth-child(3n + 1) { border-left: 1px solid var(--border-decorative); }
+  .dks-fig:nth-child(odd) { border-left: 0; }
+}
+
+/* (the same day, the user's asks) the six figures 3 × 2 in the bordered panel (the lead no longer
+   singled out); the strip black, its words in a green gradient; the card lifted off the black ground */
+.dks-row, .dks-row:is(*) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 0;
+  margin-top: var(--space-6);
+  padding: 0;
+}
+.dks-fig, .dks-fig:is(*) { gap: var(--space-3); padding: var(--space-6); border-left: 0; }
+.dks-fig:not(:nth-child(3n + 1)) { border-left: 1px solid var(--border-decorative); }
+.dks-fig:nth-child(n + 4) { border-top: 1px solid var(--border-decorative); }
+.dks-fig dd { font-size: clamp(1.75rem, 2.6vw, 2.375rem); }
+.dks-fig dt { font-size: var(--type-label-size, 0.875rem); }
+@media (width < 672px) {
+  .dks-row, .dks-row:is(*) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dks-fig, .dks-fig:is(*) { padding: var(--space-4); border-left: 0; border-top: 0; }
+  .dks-fig:nth-child(even) { border-left: 1px solid var(--border-decorative); }
+  .dks-fig:nth-child(n + 3) { border-top: 1px solid var(--border-decorative); }
+  .dks-fig dd { font-size: 1.625rem; }
+  .dks-fig dt { font-size: var(--type-caption-size, 0.75rem); }
+}
+
+.dks-strip {
+  background: var(--pg-dark-0);
+  border-bottom: 1px solid var(--pg-white-a08);
+}
+.dks-strip::before { background: linear-gradient(90deg, var(--pg-dark-0), transparent); }
+.dks-strip::after { background: linear-gradient(270deg, var(--pg-dark-0), transparent); }
+.dks-track > span {
+  color: transparent;
+  background: linear-gradient(90deg, var(--pg-ticker-shine), var(--pg-green-59) 50%, var(--pg-ticker-shine));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.dks-track > span::after { background: var(--pg-mint); }
+
+.dks {
+  border-color: var(--pg-white-a10);
+  background:
+    radial-gradient(120% 70% at 50% 0%, var(--pg-white-a05), transparent 60%),
+    var(--pg-dark-4);
+  box-shadow:
+    inset 0 1px 0 var(--pg-white-a07),
+    0 0 0 1px var(--pg-black-a60),
+    0 30px 60px -24px var(--pg-black),
+    0 0 80px -10px var(--pg-white-a05);
+}
+/* (the same day: "a very slight gradient to lock into the rise") a faint wash of the divider's green
+   rising from the card's foot, so the card leads into the green glow below the section */
+.dks {
+  background:
+    radial-gradient(120% 70% at 50% 0%, var(--pg-white-a05), transparent 60%),
+    radial-gradient(110% 60% at 50% 115%, var(--pg-ticker-shine-a10), transparent 70%),
+    var(--pg-dark-4);
+}
+/* (the same ask) the divider's dark and the card on the new ground (#101010); the stats panel's top
+   margin now the eyebrow is gone */
+.dko-glow {
+  background:
+    linear-gradient(to bottom, var(--pg-dark-ground) 0%, var(--pg-dark-ground-a00) 30%),
+    radial-gradient(75% 115% at 50% -35%, var(--pg-dark-ground) 52%, var(--pg-green-30) 60%, var(--pg-green-45) 67%, var(--pg-green-56) 75%, var(--surface-page) 88%),
+    var(--surface-page);
+}
+.dks {
+  background:
+    radial-gradient(120% 70% at 50% 0%, var(--pg-white-a05), transparent 60%),
+    radial-gradient(110% 60% at 50% 115%, var(--pg-ticker-shine-a10), transparent 70%),
+    var(--pg-dark-card);
+}
+.dks-row, .dks-row:is(*) { margin-top: 0; }
+
+/* (the same day, the user's ask: the startup cards' colours) the card as the startups' cards on the
+   dark ground: their surface (#171717) and hairline, flat (no sheen, no green wash, no glow), the
+   stats panel and the press card inside it on the same surface with the same hairline */
+.dks, .dks:is(*) {
+  border-color: var(--border-decorative);
+  background: var(--surface-default);
+  box-shadow: none;
+}
+.dks-row, .dks-row:is(*) { background: none; }
+
+/* ── /v8 (2026-10-28, the user's ask: "the earlier placements design, a ticker strip across it, the
+   border a bit thicker"): the bento as it was, inside one card with a 2px edge; across the card's top a
+   brand-green strip with "Placement highlights" running along it, its ends fading into the green ──── */
+.dko-card {
+  margin-top: var(--space-8);
+  overflow: hidden;
+  border: 2px solid var(--border-decorative);
+  border-radius: var(--radius-lg);
+  background: var(--surface-default);
+}
+.dko-card .dko-bento { margin-top: 0; padding: var(--space-5); }
+.dko-card .dko-figs { border-width: 2px; }
+.dko-ticker {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--space-3);
+  background: linear-gradient(90deg, var(--pg-ticker-green) 0%, var(--pg-ticker-green-deep) 50%, var(--pg-ticker-green) 100%);
+}
+.dko-ticker::before,
+.dko-ticker::after { content: ''; position: absolute; inset-block: 0; z-index: 1; width: 14%; pointer-events: none; }
+.dko-ticker::before { left: 0; background: linear-gradient(90deg, var(--pg-ticker-green), transparent); }
+.dko-ticker::after { right: 0; background: linear-gradient(270deg, var(--pg-ticker-green), transparent); }
+.dko-ticker-track { display: flex; width: max-content; animation: dko-ticker-run 40s linear infinite; }
+.dko-ticker-track > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding-right: var(--space-8);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--pg-white);
+}
+.dko-ticker-track > span::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--pg-white-a85); }
+@keyframes dko-ticker-run { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .dko-ticker-track { animation: none; } }
+@media (width < 672px) {
+  .dko-card { margin-top: var(--space-6); }
+  .dko-card .dko-bento { padding: var(--space-3); }
+  .dko-ticker { padding-block: 10px; }
+  .dko-ticker-track > span { gap: var(--space-5); padding-right: var(--space-5); font-size: 11px; letter-spacing: 0.18em; }
+}
+/* (later, the same day: "no border inside, a grey fill instead") inside the card: the figures as grey
+   tiles 8px apart, no outline or hairlines between them; the press card grey too, no outline; the card's
+   own 2px edge and the strip are the only lines */
+.dko-card .dko-figs {
+  gap: var(--space-2);
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.dko-card .dko-fig { border-radius: var(--radius-lg); background: var(--surface-sunken); }
+.dko-card .dko-press { border: 0; background: var(--surface-sunken); }
+/* (later, the same day: "the outer border a bit thicker and lighter") the card's edge 3px, a pale grey */
+.dko-card { border: 3px solid var(--pg-card-edge); }
+/* (later, the same day: "a shine on the ticker strip, a bit more immersive") a glossy strip: a soft light
+   along its top edge and a darker foot (a rounded, lit bar), and a band of light sweeping across it every
+   few seconds, behind the words; still under reduced motion */
+.dko-ticker {
+  background:
+    linear-gradient(105deg, transparent 0%, transparent 42%, var(--pg-white-a32) 50%, transparent 58%, transparent 100%) -150% 0 / 60% 100% no-repeat,
+    linear-gradient(180deg, var(--pg-white-a16) 0%, var(--pg-white-a00) 48%, var(--pg-black-a12) 100%),
+    linear-gradient(90deg, var(--pg-ticker-green) 0%, var(--pg-ticker-green-deep) 50%, var(--pg-ticker-green) 100%);
+  box-shadow: inset 0 1px 0 var(--pg-white-a28), inset 0 -1px 0 var(--pg-black-a18);
+  animation: dko-ticker-shine 4.5s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+@keyframes dko-ticker-shine {
+  0% { background-position: -150% 0, 0 0, 0 0; }
+  60%, 100% { background-position: 250% 0, 0 0, 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .dko-ticker { animation: none; } }
+/* (later, the same day: "a static shine, not a shimmer") the band of light held still, wide and soft, a
+   little right of centre, over the glossy bar; nothing moves but the words */
+.dko-ticker {
+  animation: none;
+  background:
+    linear-gradient(105deg, transparent 0%, var(--pg-white-a00) 30%, var(--pg-white-a22) 46%, var(--pg-white-a30) 50%, var(--pg-white-a22) 54%, var(--pg-white-a00) 70%, transparent 100%) 62% 0 / 70% 100% no-repeat,
+    linear-gradient(180deg, var(--pg-white-a16) 0%, var(--pg-white-a00) 48%, var(--pg-black-a12) 100%),
+    linear-gradient(90deg, var(--pg-ticker-green) 0%, var(--pg-ticker-green-deep) 50%, var(--pg-ticker-green) 100%);
+}
+/* (later, the same day: "not in the middle; at both sides, left and right, much more prominent; a
+   premium strip") no band in the middle: the strip a deep green lit from both ends (a brighter green
+   there), with a glare of white at each side laid over the words like light on lacquer, a crisp light
+   line along the top edge, a darker foot; still */
+.dko-ticker {
+  background:
+    linear-gradient(180deg, var(--pg-white-a22) 0%, var(--pg-white-a04) 45%, var(--pg-black-a18) 100%),
+    linear-gradient(90deg, var(--pg-green-44) 0%, var(--pg-green-39) 18%, var(--pg-green-26) 50%, var(--pg-green-39) 82%, var(--pg-green-44) 100%);
+  box-shadow: inset 0 1px 0 var(--pg-white-a45), inset 0 -1px 0 var(--pg-black-a25);
+}
+.dko-ticker::before,
+.dko-ticker::after { width: 26%; mix-blend-mode: screen; }
+.dko-ticker::before {
+  background:
+    linear-gradient(105deg, var(--pg-white-a85) 0%, var(--pg-white-a45) 14%, var(--pg-white-a12) 34%, transparent 62%),
+    radial-gradient(120% 160% at 0% 0%, var(--pg-white-a50), transparent 55%);
+}
+.dko-ticker::after {
+  background:
+    linear-gradient(255deg, var(--pg-white-a85) 0%, var(--pg-white-a45) 14%, var(--pg-white-a12) 34%, transparent 62%),
+    radial-gradient(120% 160% at 100% 0%, var(--pg-white-a50), transparent 55%);
+}
+@media (width < 672px) { .dko-ticker::before, .dko-ticker::after { width: 34%; } }

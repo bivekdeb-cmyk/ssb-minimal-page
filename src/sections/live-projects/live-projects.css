@@ -1,0 +1,88 @@
+/* Live projects cards: the faculty card's shell (.ssx-card, story-card.css) with a
+   company line, a hairline, then the brief. Tokens only; follows data-brand / data-theme. */
+
+/* the text stands on a progressive blur, not a black fade: the photo stays light to its foot and
+   goes soft under the words. A second copy of the photo, blurred, is laid over the first and let
+   in gradually from above the company name down (a blurred copy, not a backdrop blur: that one
+   reads past the card's edge and brings in black along the foot). A thin tint over the same
+   stretch keeps white type readable on a pale photo. */
+.lp-card .ssx-card__media > .lp-soft {
+  position: absolute;
+  inset: 0;
+  filter: blur(12px) saturate(1.1);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 37%, rgb(0 0 0 / 0.55) 52%, #000 66%);
+  mask-image: linear-gradient(to bottom, transparent 37%, rgb(0 0 0 / 0.55) 52%, #000 66%);
+}
+.lp-card .ssx-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0) 46%, rgb(0 0 0 / 0.22) 70%, rgb(0 0 0 / 0.34) 100%);
+}
+/* the shell's own dark fade is not used here */
+.lp-card.ssx-card::after { background: none; }
+.lp-content { text-shadow: 0 1px 10px rgb(0 0 0 / 0.3); }
+.lp-card .ssx-card__media > img {
+  object-position: 50% 50%;
+  /* several of the photos end in a dark strip (the front of a desk, a slate floor), which sat
+     under the text as a black band: the photo is drawn a fifth larger from its top edge, so that
+     strip falls outside the card and the lit part of the scene runs to the foot */
+  transform: scale(1.2);
+  transform-origin: 50% 0%;
+}
+
+.lp-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding: var(--space-6) var(--space-5);
+  text-align: start;
+}
+/* the company, as the wordmark on a case card: large, then a hairline under it */
+.lp-company {
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid color-mix(in srgb, var(--on-image-ink) 28%, transparent);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-lh);
+  letter-spacing: var(--type-h2-tracking);
+  font-weight: var(--font-weight-bold);
+  color: var(--on-image-ink);
+}
+/* the brief: its name in the body size, semibold, then one quiet line */
+.lp-title {
+  margin: 0;
+  font-size: var(--type-body-size, 1rem);
+  line-height: var(--type-body-lh, 1.5);
+  font-weight: 600;
+  color: var(--on-image-ink);
+}
+.lp-desc {
+  margin: 0;
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-lh);
+  color: var(--on-image-ink-secondary);
+  text-wrap: pretty;
+}
+
+/* no photo yet: the card stands on the brand's dark surface, lit from its top corner */
+.lp-card:not([data-photo]) {
+  background:
+    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--surface-brand-solid) 55%, transparent), transparent 70%),
+    var(--surface-inverse, #0f1512);
+}
+
+/* no photo: the card stands on a deep green ground, lit from its top corner */
+.lp-card:not([data-photo]) {
+  background:
+    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, var(--surface-brand-solid) 70%, transparent), transparent 70%),
+    radial-gradient(90% 70% at 100% 100%, color-mix(in srgb, var(--surface-brand-solid) 40%, transparent), transparent 70%),
+    #0c2417;
+}
+.lp-card:not([data-photo]).ssx-card::after { background: none; }
+
+/* a company's logo in place of its name (LiveProjectsSection `logos`): white, about the name's height */
+.lp-logo { display: block; height: 22px; width: auto; max-width: 9rem; object-fit: contain; object-position: left center; filter: brightness(0) invert(1); }

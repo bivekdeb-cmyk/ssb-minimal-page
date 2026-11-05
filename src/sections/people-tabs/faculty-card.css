@@ -1,0 +1,367 @@
+/* =========================================================
+   Faculty card (2026-10-13, the team's mock): the portrait at the left fading into a dark ground,
+   the course, "by" the name, a hairline, credentials and a white logo tile at the right. One
+   480 x 320 design scaled to its slot (FacultyCard sets --fc-scale), so sizes inside are the web
+   values, not the type tokens, which step down on phones.
+   ========================================================= */
+.fc-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 480px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #232323;
+  color: var(--on-image-ink);
+  transform: scale(var(--fc-scale, 1));
+  transform-origin: top left;
+}
+/* the portrait: the left half, its right edge melting into the ground */
+.fc-card__photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 54%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  -webkit-mask-image: linear-gradient(to right, #000 62%, transparent);
+  mask-image: linear-gradient(to right, #000 62%, transparent);
+}
+/* a soft light behind the copy, as the mock's blurred room */
+.fc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 85% 45%, rgb(255 255 255 / 0.08), transparent 60%);
+  pointer-events: none;
+}
+.fc-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 49%;
+  padding: var(--space-8) var(--space-6) var(--space-6) 0;
+  min-width: 0;
+}
+.fc-card__course {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: var(--font-weight-medium);
+  text-wrap: balance;
+}
+.fc-card__by {
+  margin: var(--space-3) 0 0;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: var(--font-weight-medium);
+}
+.fc-card__rule {
+  align-self: stretch;
+  margin: var(--space-4) 0;
+  border: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.28);
+}
+.fc-card__credentials {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--on-image-ink-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.fc-card__logo {
+  /* a block, not a grid: a grid's auto row let a tall mark (CRED, 74 x 88) set its own height */
+  display: block;
+  margin-top: auto;
+  width: 9.5rem;
+  height: 3.5rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+.fc-card__logo img {
+  /* fill the tile, not the file's own size: some SVGs declare a tiny one (Paytm's is 17 x 5) */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* CRED's file is white artwork (made for dark grounds): drawn black on the white tile */
+.fc-card__logo img[src$='/cred.svg'] { filter: invert(1); }
+
+/* ── the drifting rows: Alumni's (alumni.css), two rows of cards sliding sideways without stopping,
+   each its cards twice over so the loop has no seam. From the tablet up the rows run opposite
+   ways; on phones both run the same way (the team's ask, 2026-10-13), the second a step behind. ── */
+.fc-drift { position: relative; z-index: 0; isolation: isolate; display: grid; gap: var(--space-4); overflow: hidden; }
+.fc-drift-row { --card-w: 21.5rem; --gap: var(--space-4); display: flex; width: max-content; animation: fc-drift calc(var(--n) * 9s) linear infinite; }
+.fc-drift-row[data-dir='back'] { animation-direction: reverse; }
+.fc-drift:hover .fc-drift-row { animation-play-state: paused; }
+.fc-drift-set { display: flex; gap: var(--gap); margin: 0; padding: 0 var(--gap) 0 0; list-style: none; }
+.fc-drift-set > li { position: relative; flex: none; width: var(--card-w); aspect-ratio: 3 / 2; }
+@keyframes fc-drift { to { transform: translateX(-50%); } }
+/* no edge fade on the rows (2026-10-13, the team's ask): the cards run sharp to the window's edges */
+@media (672px <= width < 1056px) { .fc-drift-row { --card-w: 20rem; --gap: var(--space-3); } .fc-drift { gap: var(--space-3); } }
+@media (width < 672px) {
+  .fc-drift { gap: var(--space-3); }
+  .fc-drift-row { --card-w: 19rem; --gap: var(--space-3); animation-duration: calc(var(--n) * 8s); }
+  /* both rows the same way, card over card (2026-10-13, the team's ask): no offset; each row's
+     duration scales with its card count, so both move at one speed and stay lined up */
+  .fc-drift-row[data-dir='back'] { animation-direction: normal; }
+  .fc-drift:active .fc-drift-row { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) { .fc-drift-row { animation: none !important; } }
+
+/* One row on desktop (mentors, 2026-10-13): the second row hidden and the cards bigger, three and a
+   half across the window. Phones keep the two rows running the same way, as faculty's. */
+@media (width >= 1056px) {
+  .fc-drift[data-single] .fc-drift-row[data-dir='back'] { display: none; }
+  .fc-drift[data-single] .fc-drift-row { --card-w: clamp(20rem, calc((100vw - 3 * var(--gap)) / 3.5), 32rem); }
+}
+
+/* m-web (2026-10-13, the team's ask): no drifting. The cards in two rows, card over card, swiped a
+   column at a time from the page's content edge (Alumni's row), with the dots under them. */
+.fc-grid, .fc-grid-dots { display: none; }
+@media (width < 672px) {
+  .fc-drift { display: none; }
+  .fc-grid {
+    --scroller-inset: var(--space-gutter);
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: 19rem;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0 var(--scroller-inset) var(--space-2);
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--scroller-inset);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .fc-grid::-webkit-scrollbar { display: none; }
+  .fc-grid > li { position: relative; aspect-ratio: 3 / 2; scroll-snap-align: start; }
+  .fc-grid-dots { display: block; }
+}
+
+/* Mentors (2026-10-13, the team's ask): their earlier photo card (MeetCard, 3:4, the text over the
+   photo) in this layout, smaller. Desktop: the one drifting row, about four and a half in view;
+   phones: the two-row grid, two columns and the next peeking (a step bigger, the team's ask). */
+.fc-drift[data-kind='meet'] .fc-drift-set > li,
+.fc-grid[data-kind='meet'] > li { aspect-ratio: auto; }
+.fc-drift[data-kind='meet'] .fc-drift-row { --card-w: clamp(15rem, calc((100vw - 4 * var(--gap)) / 4.5), 21rem); }
+.fc-drift[data-kind='meet'] .meet-card__content { padding: var(--space-5) var(--space-4); }
+@media (width < 672px) {
+  .fc-grid[data-kind='meet'] { grid-auto-columns: calc((100vw - 2 * var(--space-gutter) - var(--space-3) * 2) / 2.1); }
+  .fc-grid[data-kind='meet'] .meet-card__content { gap: 4px; padding: var(--space-3) var(--space-2); }
+  .fc-grid[data-kind='meet'] .meet-card__kicker { display: none; }
+  .fc-grid[data-kind='meet'] .ssx-card .meet-card__name { font-size: 0.875rem; line-height: 1.25; }
+  .fc-grid[data-kind='meet'] .ssx-card .meet-card__role { font-size: 0.5625rem; }
+  .fc-grid[data-kind='meet'] .meet-card__logo { margin-top: 2px; --meet-logo-h: 1.125rem; }
+  .fc-grid[data-kind='meet'] .meet-card__logo img { max-width: 100%; }
+}
+
+/* Mentors on the web (2026-10-13, the team's ask): the looping scroller with the dot nav under it, in
+   place of the drift; no "Meet" kicker. Phones keep the two-row grid. */
+.fc-drift[hidden] { display: none; }
+.fc-meet-web .h-scroller > li { width: clamp(15rem, calc((100vw - 4 * var(--space-4)) / 4.5), 21rem); }
+.fc-meet-web .meet-card__kicker { display: none; }
+/* more room inside the card around the text (the team's ask, 2026-10-13; was 20 / 16) */
+.fc-meet-web .meet-card__content { padding: var(--space-6); }
+@media (width < 672px) { .fc-meet-web { display: none; } }
+/* phones: four cards in view at once, two columns of two (the team's ask, 2026-10-13) */
+@media (width < 672px) {
+  .fc-grid[data-kind='meet'] { grid-auto-columns: calc((100vw - 2 * var(--space-gutter) - var(--space-3)) / 2); }
+  .fc-grid[data-kind='meet'] .ssx-card .meet-card__name { font-size: 1rem; }
+  .fc-grid[data-kind='meet'] .ssx-card .meet-card__role { font-size: 0.625rem; }
+  .fc-grid[data-kind='meet'] .meet-card__logo { --meet-logo-h: 1.375rem; }
+}
+/* phones: the text further in from the card's edges too (was 12 / 8) */
+@media (width < 672px) { .fc-grid[data-kind='meet'] .meet-card__content { padding: var(--space-4); } }
+/* phones (2026-10-13, the team's ask): at least 16px inside the card, and room between the lines:
+   the role no longer pulled up into the name (its -4px), 6px between the lines, the logo a step lower */
+@media (width < 672px) {
+  .fc-grid[data-kind='meet'] .meet-card__content { gap: 6px; padding: max(16px, var(--space-4)); }
+  .fc-grid[data-kind='meet'] .ssx-card .meet-card__role { margin-top: 0; }
+  .fc-grid[data-kind='meet'] .meet-card__logo { margin-top: 6px; }
+}
+/* mentors (2026-10-13, the team's ask): every logo the same height, CRED's badge included (its
+   `scale` drew it 1.7 times the others', set inline, so it takes !important to override) */
+.fc-meet-web .meet-card__logo img,
+.fc-grid[data-kind='meet'] .meet-card__logo img { height: var(--meet-logo-h) !important; }
+/* mentors (2026-10-13, the team's ask): the logo as on the faculty cards, in its own colours on a
+   white tile of one fixed size, fitted inside it, so every mark sits in the same bounding box */
+.fc-meet-web .meet-card__logo,
+.fc-grid[data-kind='meet'] .meet-card__logo {
+  display: block;
+  width: 8.5rem;
+  height: 3rem;
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+.fc-meet-web .meet-card__logo img,
+.fc-grid[data-kind='meet'] .meet-card__logo img {
+  width: 100%;
+  height: 100% !important;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+  filter: none;
+}
+.fc-meet-web .meet-card__logo img[src$='/cred.svg'],
+.fc-grid[data-kind='meet'] .meet-card__logo img[src$='/cred.svg'] { filter: invert(1); }
+@media (width < 672px) {
+  .fc-grid[data-kind='meet'] .meet-card__logo { width: 7rem; height: 2.5rem; margin-top: 6px; padding: 6px 10px; }
+}
+
+/* the brand's tile (2026-10-13): a one-colour mark drawn white on its brand's colour */
+.fc-card__logo img[data-white] { filter: brightness(0) invert(1); }
+
+/* Faculty on phones (2026-10-13, the team's ask: "auto carousel like desktop"): the two drifting rows,
+   as on desktop, running opposite ways; the swipe grid and its dots kept for the mentors only */
+@media (width < 672px) {
+  .fc-drift:not([data-kind='meet']):not([hidden]) { display: grid; }
+  .fc-drift:not([data-kind='meet']) .fc-drift-row[data-dir='back'] { animation-direction: reverse; }
+  .fc-grid:not([data-kind='meet']), .pt-panel:has(.fc-grid:not([data-kind='meet'])) .fc-grid-dots { display: none; }
+}
+
+/* Faculty (2026-10-13, the team's ask): both rows the same way at every width, the second half a card
+   behind the first (the rows run at one speed, so the step holds) */
+.fc-drift .fc-drift-row[data-dir='back'],
+.fc-drift:not([data-kind='meet']) .fc-drift-row[data-dir='back'] { animation-direction: normal !important; }
+.fc-drift-lane + .fc-drift-lane .fc-drift-row { margin-left: calc((var(--card-w) + var(--gap)) / -4); } /* a quarter card (half before, 2026-10-13) */
+/* phones: the swipe back (useSwipeDrift): each lane a sideways scroller whose scroll does the drifting */
+@media (width < 672px) {
+  .fc-drift-lane { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .fc-drift-lane::-webkit-scrollbar { display: none; }
+  .fc-drift-row { animation: none !important; }
+  .fc-drift-lane + .fc-drift-lane .fc-drift-row { margin-left: 0; }
+}
+.fc-drift { grid-template-columns: minmax(0, 1fr); }
+.fc-drift-lane { min-width: 0; }
+
+/* phones (2026-10-13, the team's ask): a smaller step between the rows (a quarter card, useSwipeDrift),
+   the cards a size down so more show, and the gallery controls under them (DriftNav) */
+.fc-drift-nav { display: none; }
+@media (width < 672px) {
+  .fc-drift-row { --card-w: 17rem; }
+  .fc-drift-nav { display: block; margin-top: var(--space-6); }
+}
+
+/* ── The company line (2026-10-23, the team's ask): the company's mark alone in a 44px box, its name
+   beside it in white at 18px medium, so the company reads as the card's last strong line under the
+   quieter credentials (13px). In the card's 480px design units (it is scaled as a whole). ── */
+.fc-card__co { display: flex; align-items: center; gap: var(--space-3); margin-top: auto; min-width: 0; }
+.fc-card__mark { display: grid; flex: none; place-items: center; width: 2.75rem; height: 2.75rem; overflow: hidden; border-radius: var(--radius-md);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+.fc-card__mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* marks with their own margins (the icons on white) a touch inset; full-bleed app icons fill */
+.fc-card__mark[data-inset] img { width: 78%; height: 78%; }
+.fc-card__co-name { min-width: 0; font-size: 1.125rem; line-height: 1.25; font-weight: var(--font-weight-medium); letter-spacing: -0.01em; color: #fff;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ── Readable at the card's real size (2026-10-23, the team's ask). The card is drawn at 480px and
+   scaled to its slot (~0.72 on desktop), so its type is set larger in design units to land at
+   readable sizes on screen: credentials 18 (≈13px shown, was ≈9), the company's mark 60 (≈43,
+   was ≈32) and name 26 (≈19, was ≈13); "by" 18. Credentials hold to two lines to make the room. ── */
+.fc-card__by { font-size: 1.125rem; }
+.fc-card__credentials { font-size: 1.125rem; line-height: 1.35; -webkit-line-clamp: 2; color: rgb(255 255 255 / 0.78); }
+.fc-card__mark { width: 3.75rem; height: 3.75rem; }
+.fc-card__co { gap: var(--space-4); }
+.fc-card__co-name { font-size: 1.625rem; line-height: 1.2; }
+/* phones: the card scales further (~0.57), so its type a step larger again, nothing under 12px shown */
+@media (width < 672px) {
+  .fc-card__by, .fc-card__credentials { font-size: 1.375rem; }
+  .fc-card__credentials { -webkit-line-clamp: 2; }
+  .fc-card__mark { width: 4.25rem; height: 4.25rem; }
+  .fc-card__co-name { font-size: 1.875rem; }
+}
+
+/* ── Faculty: still, two straight rows (2026-10-23, the team's ask: "no ticker, no auto scroll, one
+   above the other, the cards bigger, more room"). The drifting lanes and their nav are off; the
+   swipe grid takes over at every width: two rows, each card directly over another, scrolled a
+   column at a time by hand (or the dots and arrows), nothing moving by itself. Cards bigger: 480px
+   wide on desktop (the card's own design size, drawn at 1:1), 400 on a tablet, 85% of a phone;
+   24px between cards on desktop, 16 on a phone. (The mentors keep their own layout.) ── */
+.pt-panel:has(.fc-drift:not([data-kind='meet'])) :is(.fc-drift, .fc-drift-nav) { display: none !important; }
+.fc-grid:not([data-kind='meet']) {
+  --scroller-inset: calc(max(0px, (100% - var(--size-container-max)) / 2) + var(--space-gutter));
+  display: grid !important; grid-template-rows: repeat(2, auto); grid-auto-flow: column; grid-auto-columns: 30rem; gap: var(--space-6);
+  margin: 0; padding: 0 var(--scroller-inset) var(--space-2); list-style: none; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--scroller-inset); scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.fc-grid:not([data-kind='meet'])::-webkit-scrollbar { display: none; }
+.fc-grid:not([data-kind='meet']) > li { position: relative; aspect-ratio: 3 / 2; scroll-snap-align: start; }
+.pt-panel:has(.fc-grid:not([data-kind='meet'])) .fc-grid-dots { display: block !important; margin-top: var(--space-6); }
+@media (width < 1056px) { .fc-grid:not([data-kind='meet']) { grid-auto-columns: 25rem; gap: var(--space-5); } }
+@media (width < 672px) { .fc-grid:not([data-kind='meet']) { grid-auto-columns: 85vw; gap: var(--space-4); } }
+/* desktop, the card at 1:1 now: the type back to its own scale with room round it (credentials 15,
+   "by" 16, the company's mark 52 and name 22), not the enlarged sizes made for the scaled-down card */
+@media (width >= 1056px) {
+  .fc-card__by { font-size: 1rem; }
+  .fc-card__credentials { font-size: 0.9375rem; line-height: 1.4; }
+  .fc-card__mark { width: 3.25rem; height: 3.25rem; }
+  .fc-card__co-name { font-size: 1.375rem; }
+}
+
+/* (later, the team's ask) desktop: four and a half columns in view, the type between the two earlier
+   takes. The card is scaled to its slot (~0.6 at 1440), so the sizes are in its 480px design units:
+   course 32 (≈19 shown), "by" and credentials 20 (≈12), the company's mark 64 (≈38) and name 28 (≈17). */
+@media (width >= 1056px) {
+  .fc-grid:not([data-kind='meet']) { grid-auto-columns: calc((100vw - (max(0px, (100vw - var(--size-container-max)) / 2) + var(--space-gutter)) - 4 * var(--space-4)) / 4.5); gap: var(--space-4); }
+  .fc-card__course { font-size: 2rem; }
+  .fc-card__by { font-size: 1.25rem; }
+  .fc-card__credentials { font-size: 1.25rem; line-height: 1.35; }
+  .fc-card__mark { width: 4rem; height: 4rem; }
+  .fc-card__co-name { font-size: 1.75rem; }
+}
+/* (later) three and a half columns on desktop (~375px cards, ~0.78 scale), and the company line a step
+   down so it sits under the course title, not level with it: the name 22 (≈17 shown), the mark 52 (≈41);
+   "by" and credentials 17 (≈13), course 30 (≈23) */
+@media (width >= 1056px) {
+  .fc-grid:not([data-kind='meet']) { grid-auto-columns: calc((100vw - (max(0px, (100vw - var(--size-container-max)) / 2) + var(--space-gutter)) - 3 * var(--space-4)) / 3.5); }
+  .fc-card__course { font-size: 1.875rem; }
+  .fc-card__by, .fc-card__credentials { font-size: 1.0625rem; }
+  .fc-card__mark { width: 3.25rem; height: 3.25rem; }
+  .fc-card__co-name { font-size: 1.375rem; }
+}
+/* phones (later): the card now draws at ~0.69 (85% of the phone's width), so its type re-set for that
+   scale, the course leading: course 26 (≈18 shown), "by" and credentials 18 (≈12.5), the company's
+   name 22 (≈15) and mark 52 (≈36) */
+@media (width < 672px) {
+  .fc-card__course { font-size: 1.625rem; }
+  .fc-card__by, .fc-card__credentials { font-size: 1.125rem; }
+  .fc-card__mark { width: 3.25rem; height: 3.25rem; }
+  .fc-card__co-name { font-size: 1.375rem; }
+}
+/* the 12px floor on the narrowest phones: "by" and credentials 19 (≈12.2 at 360, ≈13 at 390) */
+@media (width < 672px) { .fc-card__by, .fc-card__credentials { font-size: 1.1875rem; } }
+
+/* ── Mentors as Faculty (2026-10-23, the team's ask): the same two straight rows at every width (the
+   looping web row off), three and a half columns on desktop, each card as wide as a faculty card and
+   as tall (3:2), the photo card's text at its foot. ── */
+html body .fc-meet-web { display: none !important; }
+html body .fc-grid[data-kind='meet'] {
+  --scroller-inset: calc(max(0px, (100% - var(--size-container-max)) / 2) + var(--space-gutter));
+  display: grid !important; grid-template-rows: repeat(2, auto); grid-auto-flow: column; gap: var(--space-4);
+  grid-auto-columns: calc((100vw - (max(0px, (100vw - var(--size-container-max)) / 2) + var(--space-gutter)) - 3 * var(--space-4)) / 3.5);
+  margin: 0; padding: 0 var(--scroller-inset) var(--space-2); list-style: none; overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--scroller-inset); scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+html body .fc-grid[data-kind='meet'] > li { position: relative; aspect-ratio: 3 / 2; scroll-snap-align: start; }
+html body .fc-grid[data-kind='meet'] .ssx-card { position: absolute; inset: 0; aspect-ratio: auto; }
+html body .pt-panel:has(.fc-grid[data-kind='meet']) .fc-grid-dots { display: block !important; margin-top: var(--space-6); }
+@media (width < 1056px) { html body .fc-grid[data-kind='meet'] { grid-auto-columns: 25rem; } }
+@media (width < 672px) { html body .fc-grid[data-kind='meet'] { grid-auto-columns: 85vw; } }
+
+/* phones: two rows, card over card, as Alumni (2026-10-23, the team's ask; one row tried that day) */

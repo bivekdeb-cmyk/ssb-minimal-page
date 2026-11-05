@@ -1,0 +1,1220 @@
+/* The green a stat comes up in, clear at rest (PlacementsMotion). */
+.pl-tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--surface-brand-solid), var(--content-brand));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Units (₹, L, %, ×, +) a step down and grey, so the digits carry the figure. */
+.pl-unit {
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--content-secondary);
+}
+.pl-unit-lead {
+  margin-inline-end: 0.06em;
+  vertical-align: 0.62em;
+}
+
+/* ---- The logo grid: each cell turns over in 3D (PlacementsMotion) ---- */
+
+.pl-cell {
+  perspective: 50rem;
+  overflow: hidden;
+}
+.pl-flipper {
+  transform-style: preserve-3d;
+}
+.pl-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.pl-face-back {
+  transform: rotateX(180deg);
+}
+
+/* Pointing at a logo steps the others back, so the turned cell is the one thing lit. */
+.pl-grid img {
+  transition:
+    opacity var(--motion-duration-normal) var(--motion-easing-productive-in-out),
+    filter var(--motion-duration-normal) var(--motion-easing-productive-in-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pl-grid:has(.pl-cell:hover) .pl-cell:not(:hover) img {
+    opacity: var(--opacity-muted);
+    filter: grayscale(1);
+  }
+}
+
+/* ---- The stories carousel (StoriesMotion) ---- */
+
+/* A real scroller that snaps a card to the page margin; the next card peeks in. */
+.pl-carousel {
+  --carousel-inset: calc(max(0px, (100% - var(--size-container-max)) / 2) + var(--space-gutter));
+  display: flex;
+  gap: var(--space-4);
+  /* No margin here: unlayered, it would beat the margin utilities on the element. */
+  padding: 0 var(--carousel-inset);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--carousel-inset);
+  scrollbar-width: none;
+}
+.pl-carousel::-webkit-scrollbar {
+  display: none;
+}
+.pl-carousel > li {
+  flex: none;
+  /* Wide, the next card peeking in (54rem: 80% of the first cut's 68rem, the team's call). */
+  width: min(88%, 54rem);
+  scroll-snap-align: start;
+}
+/* A mouse can drag the row too (carousel.ts). */
+@media (pointer: fine) {
+  .pl-carousel {
+    cursor: grab;
+  }
+  .pl-carousel[data-dragging] {
+    cursor: grabbing;
+    user-select: none;
+  }
+}
+
+.pl-story {
+  --story-radius: var(--radius-2xl);
+  border-radius: var(--story-radius);
+}
+/* The proof's height on a phone and a tablet, under the copy (off the spacing
+   scale, so not a utility: h-64 would compile to nothing). On desktop it sits
+   beside the copy and takes the card's height. */
+.pl-story-media {
+  height: 16rem;
+}
+@media (width >= 672px) {
+  .pl-story-media {
+    height: 20rem;
+  }
+}
+@media (width >= 1056px) {
+  .pl-story {
+    min-height: 26rem;
+  }
+  .pl-story-media {
+    height: auto;
+  }
+}
+
+/* A card's wall of logos: two columns drifting in opposite directions, faded at both ends. */
+.pl-wall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  overflow: hidden;
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+}
+/* Two copies of a column's logos, moved by one copy's height. Each tile carries
+   its own gap below it (not the track's `gap`), so one copy is exactly half. */
+/* Out of the flow, so a column is as tall as its box, not its tiles. */
+.pl-wall-track {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  animation: pl-wall-up var(--wall-duration) linear infinite;
+}
+.pl-wall-track[data-dir='down'] {
+  animation-name: pl-wall-down;
+}
+.pl-wall:hover .pl-wall-track {
+  animation-play-state: paused;
+}
+.pl-wall-tile {
+  margin-block-end: var(--space-3);
+}
+@keyframes pl-wall-up {
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes pl-wall-down {
+  from {
+    transform: translateY(-50%);
+  }
+}
+/* The same drift, sideways (the showcase's rows below desktop). */
+@keyframes pl-wall-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes pl-wall-right {
+  from {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pl-wall-track {
+    animation: none;
+  }
+}
+
+/* A role tile's company logo: the secondary line under the role, so it is drawn
+   at about half its size. `zoom` scales its layout box too (a transform
+   would leave the full-size gap), and scales every logo alike, so they keep
+   their equal visual weight. */
+.pl-role-logo {
+  display: flex;
+  zoom: 0.55;
+}
+.pl-role-logo-large {
+  zoom: 0.4;
+}
+
+/* ---- Rolling figures (RollingFigure; StoriesMotion spins the reels) ---- */
+
+.pl-figure {
+  font-variant-numeric: tabular-nums;
+}
+/* A digit's slot: as wide as its digit, one line tall, the reel faded out at its
+   top and bottom edges as it spins. Clipped with a mask, not overflow, which would
+   move an inline-block's baseline to its bottom edge. */
+.pl-roll {
+  position: relative;
+  display: inline-block;
+  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+.pl-roll-ghost {
+  visibility: hidden;
+}
+.pl-roll-reel {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  text-align: center;
+}
+.pl-roll-reel > span {
+  display: block;
+}
+/* The drawn figure (its reels, its units) can't be selected, so copying it gives
+   the plain value (the screen readers' copy) and not every reel's digits. */
+.pl-figure > [aria-hidden] {
+  user-select: none;
+}
+
+/* A figure on a light-grey box of its own (FigureStrip boxed): the card frame's grey and radius. */
+.pl-figure-box {
+  padding: var(--space-5);
+  border-radius: var(--radius-2xl);
+  background: var(--surface-sunken);
+}
+@media (width >= 672px) {
+  .pl-figure-box {
+    padding: var(--space-6);
+  }
+}
+
+/* ---- The showcase variation (ShowcaseMotion) ---- */
+
+/* The cards and the chips over their foot. The frame and the copy's inset are
+   set here, so the chips line up with the copy whichever card is under them. */
+.pl-deck {
+  --app-frame: 0.375rem;
+  --app-pad: var(--space-6);
+  --chip-h: 2rem;
+  position: relative;
+}
+@media (width >= 672px) {
+  .pl-deck {
+    --app-pad: var(--space-10);
+  }
+}
+/* One card at a time, inside the page margins (the carousel sits in the Container). */
+.pl-carousel-full {
+  --carousel-inset: 0px;
+}
+.pl-carousel-full > li {
+  width: 100%;
+}
+/* The crossfading deck (fadeControls): the cards stacked in one grid cell from
+   the server on, the one on show on top, so taking over moves nothing (turning a
+   scroller into the stack on load moved the hidden cards: a 0.53 layout shift).
+   Until the script has (data-fade), or without it, only the first card shows;
+   the others are transparent, not hidden, so screen readers still have them.
+   Sideways swipes are the carousel's; vertical ones still scroll the page. */
+.pl-fade {
+  display: grid;
+  /* The cards' z-indices stay inside the stack, under the chips laid over it. */
+  isolation: isolate;
+  touch-action: pan-y;
+}
+.pl-fade > li {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.pl-fade:not([data-fade]) > li + li {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The card, after the App Store's Today cards. The frame is grey (the team's
+   call: a coloured card was too much); the photo sits inside it with rounded
+   corners, the floating column on it and the claim at its foot. (It had a tab
+   cut out of the frame at the top left naming it; the chips do that now.) */
+.pl-app {
+  --app-tone: var(--surface-sunken);
+  position: relative;
+  height: 100%;
+  padding: var(--app-frame);
+  background: var(--app-tone);
+  color: var(--content-primary);
+}
+.pl-app-inner {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: calc(var(--story-radius) - var(--app-frame));
+}
+.pl-app-visual {
+  position: relative;
+  flex: none;
+  height: 18rem;
+}
+/* The photo fills the card behind the floating column and the copy; it blurs
+   progressively, not by fading to grey (the team's call). Three blurred copies
+   sit on it, each revealed by its own gradient: behind the logos, then softly
+   and deeply toward the copy, under a light frost that keeps the text legible.
+   The copies are static (no backdrop-filter, which would re-run as the page
+   scrolls); every layer is scaled up a little alike, so they stay aligned
+   while each blur's soft, transparent rim falls outside the card. The layer
+   is composited (will-change) so the entrance's zoom never re-blurs. */
+.pl-app-media {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.pl-app-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2);
+}
+.pl-app-blur-side {
+  filter: blur(10px);
+  mask-image: linear-gradient(to right, transparent 42%, #000 70%);
+}
+.pl-app-blur-soft {
+  filter: blur(6px);
+  mask-image: linear-gradient(to bottom, transparent 40%, #000 60%);
+}
+.pl-app-blur-deep {
+  filter: blur(18px);
+  mask-image: linear-gradient(to bottom, transparent 55%, #000 80%);
+}
+/* A dark scrim over the blurred foot, so the copy reads in white (the team's
+   call). It starts higher on a phone, where the copy takes most of the card. */
+.pl-app-frost {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 15%,
+    color-mix(in oklab, var(--surface-image-scrim) 55%, transparent) 38%,
+    color-mix(in oklab, var(--surface-image-scrim) 85%, transparent) 100%
+  );
+}
+@media (width >= 1056px) {
+  .pl-app-frost {
+    background: linear-gradient(
+      to bottom,
+      transparent 30%,
+      color-mix(in oklab, var(--surface-image-scrim) 50%, transparent) 60%,
+      color-mix(in oklab, var(--surface-image-scrim) 85%, transparent) 100%
+    );
+  }
+}
+/* The floating column: two columns of tiles on the photo's right side, ending
+   above the copy so it never runs into the figure. */
+.pl-app-drift {
+  position: absolute;
+  inset-block: 0 var(--space-10);
+  inset-inline-end: var(--space-3);
+  /* Narrower on a phone, so the photo still shows beside it. */
+  width: 52%;
+}
+.pl-app-copy {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: 0 var(--app-pad) var(--app-pad);
+}
+.pl-app-muted {
+  color: color-mix(in oklab, var(--content-on-image) 82%, transparent);
+}
+.pl-app-ink {
+  color: var(--content-on-image);
+}
+/* The figure's line clips it, so it slides up into place (ShowcaseMotion). */
+.pl-slide {
+  overflow: hidden;
+}
+.pl-slide > span {
+  display: inline-block;
+}
+@media (width >= 672px) {
+  .pl-app-visual {
+    height: 20rem;
+  }
+  .pl-app-drift {
+    inset-inline-end: var(--space-4);
+    width: min(64%, 26rem);
+  }
+}
+/* On desktop the floating column runs the card's full height (the team's call)
+   and the copy settles at the foot of the card's left side. */
+@media (width >= 1056px) {
+  .pl-app-inner {
+    min-height: 34rem;
+    justify-content: flex-end;
+  }
+  .pl-app-visual {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+  .pl-app-drift {
+    inset-block: 0;
+    inset-inline-end: var(--space-10);
+    width: min(40%, 26rem);
+  }
+  .pl-app-copy {
+    flex: none;
+    max-width: 55%;
+  }
+}
+
+/* The recruiters' box: one box of cells, no gaps and no fill (the team's call),
+   hairlines between the cells (a 1px gap over the line colour, each cell the
+   page's colour) and round it. Each cell holds its logo from every set, stacked,
+   only the current one showing (until the motion has run, the first: CSS). The
+   logos in their own colours (the team's call; they were grey until pointed at). 6 × 2 on desktop, 4 × 3 on a tablet, 3 × 4 on a phone: twelve cells
+   always fill their rows, so no line colour shows through an empty one. */
+/* The line over them: the h3 size at a medium weight, quiet (the team's call). */
+.pl-recruiters-title {
+  font-weight: var(--font-weight-medium);
+}
+.pl-boxes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--border-width-hair);
+  overflow: hidden;
+  border: var(--border-width-hair) solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--border-subtle);
+}
+@media (width >= 672px) {
+  .pl-boxes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (width >= 1056px) {
+  .pl-boxes {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.pl-box {
+  position: relative;
+  height: 4.5rem;
+  overflow: hidden;
+  background: var(--surface-page);
+}
+@media (width >= 672px) {
+  .pl-box {
+    height: 5.5rem;
+  }
+}
+/* On a phone the logos are drawn at 75% (zoom: every logo alike, so they keep
+   their equal weight), so the widest fit a third of the width. */
+@media (width < 672px) {
+  .pl-box img {
+    zoom: 0.75;
+  }
+}
+.pl-box-logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-3);
+}
+.pl-box-logo + .pl-box-logo {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Below desktop the card stacks: the photo shows under the chips, then the
+   figure and claim, then the floating logos (or roles) at the card's foot, as
+   two rows drifting sideways one each way and faded at both sides (the team's
+   calls: two narrow columns were hard to read on a phone; the rows went over
+   the photo, then under the claim). Each row is a tile tall; the track runs
+   along it, the tiles a fixed width, each carrying its gap to its right so one
+   copy is exactly half. */
+@media (width < 1056px) {
+  .pl-app-inner {
+    min-height: 30rem;
+    justify-content: flex-end;
+  }
+  .pl-app-copy {
+    flex: none;
+    padding-bottom: var(--space-5);
+  }
+  .pl-app-visual {
+    order: 2;
+    height: auto;
+    padding-bottom: var(--app-pad);
+  }
+  .pl-app-drift {
+    position: relative;
+    inset: auto;
+    width: auto;
+    grid-template-columns: minmax(0, 1fr);
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  }
+  .pl-app-drift > div {
+    height: 5rem;
+  }
+  .pl-app-drift .pl-wall-track {
+    inset: 0 auto 0 0;
+    display: flex;
+    width: max-content;
+    animation-name: pl-wall-left;
+  }
+  .pl-app-drift .pl-wall-track[data-dir='down'] {
+    animation-name: pl-wall-right;
+  }
+  .pl-app-drift .pl-wall-tile {
+    width: 11rem;
+    margin: 0 var(--space-3) 0 0;
+  }
+  /* Its mask blurs the photo's right side, where the columns were. */
+  .pl-app-blur-side {
+    display: none;
+  }
+}
+@media (672px <= width < 1056px) {
+  .pl-app-inner {
+    min-height: 34rem;
+  }
+  .pl-app-drift > div {
+    height: 4.5rem;
+  }
+  .pl-app-drift .pl-wall-tile {
+    width: 10rem;
+  }
+  .pl-app-drift .pl-wall-tile > * {
+    height: 100%;
+  }
+  .pl-app-drift .pl-wall-tile img {
+    zoom: 0.75;
+  }
+}
+/* The claim reads on from the bold figure at a lighter weight (the team's call). */
+.pl-app-title {
+  font-weight: var(--font-weight-medium);
+}
+/* On a phone, a step smaller (the team's calls): the claim at the h2 size, and the
+   tiles small (7.5rem × 3.25rem), their logos drawn at 60% (zoom, which shrinks
+   the layout box too and every logo alike, so they keep their equal weight),
+   the roles at the caption size. */
+@media (width < 672px) {
+  .pl-app-title {
+    font-size: var(--type-h2-size);
+    line-height: var(--type-h2-lh);
+    letter-spacing: var(--type-h2-tracking);
+  }
+  .pl-app-drift {
+    gap: var(--space-2);
+  }
+  .pl-app-drift > div {
+    height: 3.25rem;
+  }
+  .pl-app-drift .pl-wall-tile {
+    width: 7.5rem;
+    margin-inline-end: var(--space-2);
+  }
+  .pl-app-drift .pl-wall-tile > * {
+    height: 100%;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-lg);
+  }
+  .pl-app-drift .pl-wall-tile img {
+    zoom: 0.6;
+  }
+  /* The role alone, without its company (the team's call: the tile is too small
+     for both), set tight so a role over two lines fits. */
+  .pl-app-drift .type-label {
+    line-height: 1.25;
+  }
+  .pl-app-drift .type-caption {
+    display: none;
+  }
+}
+
+/* The showcase's header: eyebrow, title and lead in one column, the report in the
+   title's row at the right, centred on it. On a phone the report follows the lead. */
+.pl-header-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+/* The long lead in three lines on desktop (the team's call). */
+.pl-header-grid > [data-enter='sub'] {
+  max-width: var(--size-panel-2xl);
+}
+.pl-header-aside {
+  margin-top: var(--space-3);
+}
+@media (width >= 672px) {
+  .pl-header-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-10);
+  }
+  .pl-header-grid > :not(.pl-header-aside) {
+    grid-column: 1;
+  }
+  .pl-header-aside {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    margin-top: 0;
+  }
+}
+
+/* The chips naming the cards (after the team's slideshow card), laid over the
+   cards' top left inside the frame, in line with the copy; they stay put as the
+   cards change under them (and stand in for the tab the cards had: fewer things
+   on the photo, the team's call). Light glass, quiet: the one on show a step
+   brighter, not solid, with the card's time filling a line along its foot in
+   the brand green (green only as motion). The row scrolls when it doesn't fit
+   (a phone), clipped at the photo's edges, its first chip at rest on the copy's
+   edge. Chips keep one weight and size whatever their
+   state, so a change never moves the row (no check mark, unlike the
+   reference: it widened the chip). */
+.pl-chips {
+  position: absolute;
+  inset-inline: var(--app-frame);
+  top: calc(var(--app-frame) + var(--app-pad) - var(--space-1));
+  display: flex;
+  pointer-events: none;
+}
+.pl-chips-row {
+  position: relative;
+  display: flex;
+  gap: var(--space-2);
+  max-width: 100%;
+  /* Room for the focus ring, which the scroller would clip. */
+  padding: var(--space-1) var(--app-pad);
+  overflow-x: auto;
+  scrollbar-width: none;
+  pointer-events: auto;
+  /* No mask to fade its edges: a mask makes the row a backdrop root, so the
+     chips' glass would blur only the row (nothing), not the photo under it. */
+}
+.pl-chips-row::-webkit-scrollbar {
+  display: none;
+}
+.pl-chip {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--chip-h);
+  padding-inline: var(--space-3);
+  overflow: hidden;
+  border: var(--border-width-hair) solid color-mix(in oklab, var(--surface-default) 50%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--surface-default) 38%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  color: var(--content-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-easing-productive-in-out),
+    border-color var(--motion-duration-fast) var(--motion-easing-productive-in-out),
+    color var(--motion-duration-fast) var(--motion-easing-productive-in-out);
+}
+.pl-chip:hover {
+  background: color-mix(in oklab, var(--surface-default) 58%, transparent);
+  color: var(--content-primary);
+}
+.pl-chip:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+/* The card on show; until the motion has set it (or without it), the first. */
+.pl-chip[aria-current='true'],
+.pl-chips:not([data-ready]) .pl-chip:first-child {
+  background: color-mix(in oklab, var(--surface-default) 72%, transparent);
+  color: var(--content-primary);
+}
+.pl-chip-icon {
+  display: inline-flex;
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+}
+.pl-chip-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.pl-chip-fill {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: var(--content-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+/* On desktop the chips keep to the copy's column, clear of the floating logos. */
+@media (width >= 1056px) {
+  .pl-chips {
+    inset-inline-end: auto;
+    max-width: 55%;
+  }
+}
+
+/* ---- Feedback, 2026-10-06 ---- */
+/* The average CTC by cohort: two boxes side by side. */
+.pl-cohorts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-10) 0 0; padding: 0; list-style: none; }
+@media (width >= 672px) { .pl-cohorts { gap: var(--space-4); margin-top: var(--space-12); } }
+/* The companies: two rows of logos running past, the second the other way; faded at both ends. */
+.pl-rows { display: grid; gap: var(--space-4); overflow: hidden; mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+.pl-row { display: flex; width: max-content; animation: pl-row-run 60s linear infinite; }
+.pl-row[data-dir='back'] { animation-direction: reverse; }
+.pl-rows:hover .pl-row { animation-play-state: paused; }
+.pl-row-set { display: flex; flex: none; gap: var(--space-4); padding-right: var(--space-4); }
+.pl-row-logo { display: grid; place-items: center; flex: none; width: 11rem; height: 5rem; border: var(--border-width-hair) solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-page); }
+@keyframes pl-row-run { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .pl-row { animation: none; } }
+@media (width < 672px) { .pl-row-logo { width: 8.5rem; height: 4rem; } }
+
+/* The chips, with more contrast (2026-10-07): grey text on pale glass was hard to read over a
+   bright photo. The ones at rest are dark glass with white text; the one on show is near-solid
+   white with dark text. */
+.pl-chip {
+  border-color: rgb(255 255 255 / 0.3);
+  background: rgb(20 22 28 / 0.46);
+  color: #fff;
+}
+.pl-chip:hover {
+  background: rgb(20 22 28 / 0.62);
+  color: #fff;
+}
+.pl-chip[aria-current='true'],
+.pl-chips:not([data-ready]) .pl-chip:first-child {
+  border-color: rgb(255 255 255 / 0.9);
+  background: rgb(255 255 255 / 0.94);
+  color: #171717;
+}
+.pl-chip-fill {
+  height: 3px;
+}
+
+/* The cohort boxes sit as close under the deck as they sit to each other (2026-10-07, the team's ask). */
+.pl-cohorts { margin-top: var(--space-3); }
+@media (width >= 672px) { .pl-cohorts { margin-top: var(--space-4); } }
+
+/* (2026-10-09) the showcase's logo tiles smaller, so more show at a glance: shorter tiles, a
+   tighter gap, the logos scaled down with them (still legible) */
+@media (width >= 1056px) {
+  .pl-app-drift { width: min(34%, 21rem); }
+  .pl-app-drift .pl-wall { gap: var(--space-2); }
+  .pl-app-drift .pl-wall-tile { margin-block-end: var(--space-2); }
+  .pl-app-drift .pl-wall-tile > * { height: 4.25rem !important; padding-inline: var(--space-3) !important; border-radius: 10px; }
+  .pl-app-drift .pl-wall-tile img { zoom: 0.72; }
+}
+/* (2026-10-09) the showcase card a little lower on desktop (34rem before) */
+@media (width >= 1056px) { .pl-app-inner { min-height: 28rem; } }
+
+/* ── Placements variant B (2026-10-09): one static card, three figures, a strip of logos ── */
+.pl-static { display: none; position: relative; isolation: isolate; overflow: hidden; margin-top: var(--space-10); border: 8px solid var(--surface-sunken); border-radius: 24px; min-height: 22rem; color: #fff; }
+html[data-placements='static'] .pl-static { display: flex; flex-direction: column; justify-content: space-between; }
+html[data-placements='static'] .pl-deck { display: none; }
+.pl-static-media { position: absolute; inset: 0; z-index: -1; }
+.pl-static-media img { width: 100%; height: 100%; object-fit: cover; filter: blur(2px); transform: scale(1.04); }
+.pl-static-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(10 14 22 / 0.15) 0%, rgb(10 14 22 / 0.35) 45%, rgb(10 14 22 / 0.82) 100%); }
+/* the logos: one row of white tiles drifting sideways across the top */
+.pl-static-strip { display: flex; width: max-content; padding: var(--space-6) 0 0; animation: pl-static-run 40s linear infinite; mask-image: none; }
+.pl-static:hover .pl-static-strip { animation-play-state: paused; }
+.pl-static-set { display: flex; gap: var(--space-3); padding-right: var(--space-3); }
+.pl-static-logo { display: grid; place-items: center; flex: none; width: 9rem; height: 3.5rem; padding: 0 var(--space-3); border-radius: 10px; background: #fff; }
+.pl-static-logo img { zoom: 0.62; }
+@keyframes pl-static-run { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .pl-static-strip { animation: none; } }
+/* the figures: three side by side at the foot */
+.pl-static-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); margin: 0; padding: var(--space-10) var(--space-10) var(--space-8); }
+.pl-static-stats > div { display: grid; gap: var(--space-2); align-content: end; }
+.pl-static-stats > div + div { padding-left: var(--space-6); border-left: 1px solid rgb(255 255 255 / 0.25); }
+.pl-static-stats dd { order: -1; margin: 0; font-size: clamp(2.5rem, 4.4vw, 4rem); line-height: 1; letter-spacing: -0.03em; font-weight: 500; }
+.pl-static-stats dt { font-size: var(--type-body-lg-size, 1.125rem); line-height: 1.35; color: rgb(255 255 255 / 0.88); }
+@media (width < 672px) {
+  .pl-static { min-height: 0; border-width: 4px; border-radius: 16px; }
+  .pl-static-stats { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); padding: var(--space-12) var(--space-5) var(--space-6); }
+  .pl-static-stats > div + div { padding: var(--space-5) 0 0; border-left: 0; border-top: 1px solid rgb(255 255 255 / 0.25); }
+  .pl-static-logo { width: 7.5rem; height: 3rem; }
+}
+/* the switch, at the window's foot (right of the terms' one) */
+.pl-variant { position: fixed; right: 16px; bottom: 16px; z-index: 900; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--surface-page); box-shadow: 0 10px 28px -12px rgb(0 0 0 / 0.35); font-size: 12px; }
+.pl-variant > span { padding: 0 8px; font-weight: 700; color: var(--content-secondary); text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px; }
+.pl-variant button { all: unset; cursor: pointer; padding: 7px 10px; border-radius: 7px; font-weight: 600; color: var(--content-primary); }
+.pl-variant button[aria-pressed='true'] { background: var(--content-primary); color: var(--surface-page); }
+.pl-variant button:focus-visible { outline: 2px solid var(--border-focus); }
+@media (max-width: 1055px) { .pl-variant { bottom: 136px; right: 12px; } }
+/* clear of the site's bottom nav and its callback button */
+@media (min-width: 1056px) { .pl-variant { bottom: 84px; } }
+/* variant B, taller (2026-10-09): the figures at the top, the logos in two rows below */
+.pl-static { min-height: 30rem; }
+.pl-static-media::after { background: linear-gradient(to bottom, rgb(10 14 22 / 0.72) 0%, rgb(10 14 22 / 0.35) 40%, rgb(10 14 22 / 0.35) 60%, rgb(10 14 22 / 0.7) 100%); }
+.pl-static-stats { padding: var(--space-10) var(--space-10) var(--space-6); }
+.pl-static-stats > div { align-content: start; }
+.pl-static-rows { display: grid; gap: var(--space-3); padding: 0 0 var(--space-8); overflow: hidden; }
+.pl-static-strip { padding: 0; }
+.pl-static-strip[data-dir='back'] { animation-direction: reverse; }
+@media (width < 672px) {
+  .pl-static-stats { padding: var(--space-8) var(--space-5) var(--space-6); }
+  .pl-static-rows { padding-bottom: var(--space-5); }
+}
+/* variant B (2026-10-09): the photo sharp and a little brighter; the scrim lighter, kept only where the
+   white figures sit */
+.pl-static-media img { filter: none; transform: none; }
+.pl-static-media::after { background: linear-gradient(to bottom, rgb(10 14 22 / 0.55) 0%, rgb(10 14 22 / 0.18) 38%, rgb(10 14 22 / 0.06) 62%, rgb(10 14 22 / 0.3) 100%); }
+/* variant B (2026-10-09, corrected): a light blur (not none, not the earlier 2px), and the figures set
+   just above the logos at the foot, the two as one block */
+.pl-static-media img { filter: blur(1px) brightness(1.04); transform: scale(1.02); }
+html[data-placements='static'] .pl-static { justify-content: flex-end; }
+.pl-static-stats { padding-top: var(--space-6); padding-bottom: var(--space-6); }
+.pl-static-stats > div { align-content: end; }
+.pl-static-media::after { background: linear-gradient(to bottom, rgb(10 14 22 / 0.05) 0%, rgb(10 14 22 / 0.12) 35%, rgb(10 14 22 / 0.5) 62%, rgb(10 14 22 / 0.62) 100%); }
+
+/* ── Placements variant C (2026-10-09, ?placements=v3): A's card held still, a line naming the logos
+   where the chips were, all three figures at its foot, the logos drifting at its right ── */
+.pl-v3 { display: none; --app-frame: 0.375rem; --app-pad: var(--space-6); }
+@media (width >= 672px) { .pl-v3 { --app-pad: var(--space-10); } }
+html[data-placements='v3'] .pl-v3 { display: block; }
+html[data-placements='v3'] .pl-deck { display: none; }
+.pl-v3-title { position: relative; z-index: 1; margin: 0; padding: var(--app-pad) var(--app-pad) 0; max-width: 55%; color: #fff; font-size: var(--type-h3-size, 1.5rem); line-height: 1.25; font-weight: var(--font-weight-medium); text-shadow: 0 1px 12px rgb(0 0 0 / 0.25); }
+.pl-v3-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); margin: 0; color: #fff; }
+.pl-v3-stats > div { display: grid; gap: var(--space-2); align-content: end; }
+.pl-v3-stats > div + div { padding-left: var(--space-6); border-left: 1px solid rgb(255 255 255 / 0.28); }
+.pl-v3-stats dd { order: -1; margin: 0; font-size: clamp(2.25rem, 3.6vw, 3.5rem); line-height: 1; letter-spacing: -0.03em; font-weight: 500; }
+.pl-v3-stats dt { font-size: var(--type-body-size, 1rem); line-height: 1.35; color: rgb(255 255 255 / 0.88); }
+@media (width >= 1056px) {
+  .pl-v3 .pl-app-inner { justify-content: space-between; }
+  .pl-v3 .pl-app-copy { max-width: 66%; }
+  .pl-v3-stats dt { text-wrap: balance; }
+}
+@media (width < 1056px) {
+  .pl-v3 .pl-app-inner { justify-content: flex-start; }
+  .pl-v3-title { max-width: none; padding-bottom: var(--space-16, 4rem); }
+  .pl-v3 .pl-app-copy { margin-top: auto; }
+}
+@media (width < 672px) {
+  .pl-v3-title { font-size: 1.125rem; }
+  .pl-v3-stats { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+  .pl-v3-stats > div + div { padding: var(--space-4) 0 0; border-left: 0; border-top: 1px solid rgb(255 255 255 / 0.28); }
+}
+/* variant C, evened out (2026-10-09): every figure on one line, every label on one line, all at one baseline */
+.pl-v3-stats > div { align-content: start; }
+@media (width >= 672px) { .pl-v3-stats dt { white-space: nowrap; } }
+@media (width >= 1056px) { .pl-v3 .pl-app-copy { max-width: 64%; } .pl-v3-stats dd { font-size: clamp(2.25rem, 3.2vw, 3.25rem); } }
+/* the report strip under the card */
+.pl-v3-report { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6); border-radius: var(--radius-lg); background: var(--surface-sunken); }
+.pl-v3-report p { display: grid; gap: 2px; margin: 0; }
+.pl-v3-report strong { font-weight: 600; color: var(--content-primary); }
+.pl-v3-report span { font-size: 0.875rem; color: var(--content-secondary); }
+@media (width < 672px) { .pl-v3-report { flex-direction: column; align-items: stretch; padding: var(--space-4); } .pl-v3-report a { width: 100%; } }
+/* variant C: the header's lead cut to its first sentence; the rest is in the report strip */
+html[data-placements='v3'] .pl-lead-more { display: none; }
+.pl-v3-report p { max-width: 48rem; }
+.pl-v3-report span { font-size: 0.9375rem; line-height: 1.45; }
+/* variant C (2026-10-09): the report only in the strip, not beside the title; the strip's text short,
+   a line and three tags */
+html[data-placements='v3'] .pl-head-report { display: none; }
+.pl-v3-report-text { display: grid; gap: var(--space-2); }
+.pl-v3-report-text strong { font-weight: 600; color: var(--content-primary); }
+.pl-v3-report-text ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.pl-v3-report-text li { padding: 4px 10px; border-radius: 999px; background: var(--surface-page); box-shadow: inset 0 0 0 1px var(--border-subtle); font-size: 0.8125rem; line-height: 1.3; color: var(--content-secondary); }
+/* variant C (2026-10-09): the logos a step smaller, so more show at once; the logo rows under the card
+   repeat them, so they go */
+@media (width >= 1056px) {
+  .pl-v3 .pl-app-drift { width: min(30%, 18rem); }
+  .pl-v3 .pl-app-drift .pl-wall-tile > * { height: 3.25rem !important; border-radius: 8px; }
+  .pl-v3 .pl-app-drift .pl-wall-tile img { zoom: 0.56; }
+  .pl-v3 .pl-app-drift .pl-wall-tile { margin-block-end: var(--space-2); }
+}
+@media (width < 1056px) {
+  .pl-v3 .pl-app-drift > div { height: 2.75rem; }
+  .pl-v3 .pl-app-drift .pl-wall-tile { width: 6.5rem; }
+  .pl-v3 .pl-app-drift .pl-wall-tile img { zoom: 0.5; }
+}
+html[data-placements='v3'] .pl-recruiters { display: none; }
+/* the strip's tags with their icons (2026-10-09): the carousel chips' rocket, globe and sparkle, small and green */
+.pl-v3-report-text li { display: inline-flex; align-items: center; gap: 6px; padding-left: 8px; }
+.pl-v3-report-text li svg { width: 14px; height: 14px; flex: none; color: var(--content-brand, var(--color-ssb-light-9)); }
+/* a pinned version (/v3): shown from the server's HTML, before the switch's script has run */
+[data-pl-fixed='v3'] .pl-deck, [data-pl-fixed='v3'] .pl-recruiters, [data-pl-fixed='v3'] .pl-head-report { display: none; }
+[data-pl-fixed='v3'] .pl-v3 { display: block; }
+[data-pl-fixed='v3'] .pl-lead-more { display: none; }
+
+/* Version C, four figures (2026-10-12: the cohorts' two in place of "87%"): a row of four from sm,
+   2 × 2 on a phone */
+@media (width >= 672px) { .pl-v3-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); } .pl-v3-stats:has(> div:nth-child(4)) > div + div { padding-left: var(--space-5); } .pl-v3-stats:has(> div:nth-child(4)) dt { white-space: normal; text-wrap: balance; } }
+@media (width >= 1056px) { .pl-v3 .pl-app-copy:has(.pl-v3-stats > div:nth-child(4)) { max-width: 72%; } }
+@media (width < 672px) {
+  .pl-v3-stats:has(> div:nth-child(4)) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+  .pl-v3-stats:has(> div:nth-child(4)) > div + div { padding: 0; border-top: 0; }
+  .pl-v3-stats:has(> div:nth-child(4)) > div:nth-child(n + 3) { padding-top: var(--space-4); border-top: 1px solid rgb(255 255 255 / 0.28); }
+}
+/* the figures on one line (₹23–24L broke at the dash), a step smaller to fit four */
+.pl-v3-stats:has(> div:nth-child(4)) dd { white-space: nowrap; font-size: clamp(1.75rem, 2.6vw, 2.75rem); }
+
+/* Version C on m-web (2026-10-12): no logos on the card, the card's height unchanged (the figures
+   keep to its foot, the photo fills the rest) */
+@media (width < 672px) {
+  .pl-v3 .pl-story .pl-app-visual { display: none; }
+  .pl-v3 .pl-story { min-height: 492px; }
+}
+/* desktop: every label on two lines, broken at the same place (its last two words below), so the
+   four figures and their labels line up (2026-10-12) */
+@media (width >= 1056px) {
+  .pl-v3-stats .pl-v3-stat-tail { display: block; }
+  .pl-v3-stats dt { white-space: nowrap; }
+}
+
+/* Version C: "Your peers come from" after the figures' card (2026-10-12), then the report strip */
+.pl-v3-peers { margin-block: var(--space-12, 3rem); }
+@media (width < 672px) { .pl-v3-peers { margin-block: var(--space-10, 2.5rem); } }
+
+/* Version C (2026-10-12): no logos on the card at any size (the peers grid follows it); the card's
+   height as it was with them */
+.pl-v3 .pl-story .pl-app-visual { display: none; }
+@media (width >= 672px) { .pl-v3 .pl-story { min-height: 556px; } }
+@media (width >= 1056px) { .pl-v3 .pl-story { min-height: 460px; } }
+/* the four figures across the card's full width, evenly (2026-10-12; with the logos gone) */
+.pl-v3 .pl-story .pl-app-copy,
+.pl-v3 .pl-app-copy:has(.pl-v3-stats > div:nth-child(4)) { max-width: none; width: 100%; }
+@media (width >= 1056px) { .pl-v3-stats:has(> div:nth-child(4)) dd { font-size: clamp(2.5rem, 3.6vw, 3.5rem); } }
+/* every label on one line on desktop (2026-10-12: the four across the full card have the room); a
+   tablet keeps two lines each, broken alike */
+@media (width >= 672px) and (width < 1056px) { .pl-v3-stats .pl-v3-stat-tail { display: block; } }
+@media (width >= 1056px) {
+  .pl-v3-stats .pl-v3-stat-tail { display: inline; }
+  .pl-v3-stats:has(> div:nth-child(4)) dt { white-space: nowrap; }
+}
+
+/* The report strip with a press card (2026-10-12, after Mesa's): the article at the left, the text,
+   the tags and the two actions at the right. Stacked on a phone, the article first. Plain: the
+   same grey strip, the article a white card in it. */
+.pl-v3-report[data-press] { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-5); padding: var(--space-4); }
+@media (width >= 1056px) { .pl-v3-report[data-press] { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-10, 2.5rem); padding: var(--space-5) var(--space-10, 2.5rem) var(--space-5) var(--space-5); } }
+.pl-press { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-5); padding: var(--space-5); border-radius: var(--radius-lg); background: var(--surface-page); box-shadow: inset 0 0 0 1px var(--border-subtle); color: inherit; text-decoration: none; transition: box-shadow 200ms ease; }
+.pl-press:hover { box-shadow: inset 0 0 0 1px var(--border-strong, var(--border-subtle)), 0 10px 30px -18px rgb(0 0 0 / 0.3); }
+.pl-press:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.pl-press-copy { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.pl-press-masthead { padding-bottom: var(--space-2); border-bottom: 1px solid var(--border-subtle); font-family: Georgia, 'Times New Roman', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; color: var(--content-primary); }
+.pl-press-section { margin-top: var(--space-1); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--content-brand, var(--color-ssb-light-9)); }
+.pl-press-headline { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem); line-height: 1.2; font-weight: 700; color: var(--content-primary); text-wrap: balance; }
+.pl-press-side { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.pl-press-side img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-md, 8px); background: var(--surface-sunken); }
+.pl-press-synopsis { display: grid; gap: 2px; font-size: 0.8125rem; line-height: 1.45; color: var(--content-secondary); }
+.pl-press-synopsis b { font-size: 0.75rem; font-weight: 700; color: var(--content-primary); }
+.pl-press-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.pl-v3-report[data-press] .pl-v3-report-text { gap: var(--space-3); }
+.pl-v3-report[data-press] .pl-v3-report-text strong { font-size: 1.25rem; line-height: 1.3; }
+@media (width < 672px) {
+  .pl-press { grid-template-columns: minmax(0, 1fr); padding: var(--space-4); gap: var(--space-4); }
+  .pl-press-side { flex-direction: column-reverse; }
+  .pl-press-actions { flex-direction: column; }
+  .pl-press-actions > * { width: 100%; justify-content: center; }
+  .pl-v3-report[data-press] .pl-v3-report-text strong { font-size: 1.125rem; }
+}
+/* (the strip's older `.pl-v3-report span` rule set every span at 15px grey: the press card's parts
+   take their own sizes back) */
+.pl-v3-report .pl-press-masthead { font-size: 1.25rem; color: var(--content-primary); }
+.pl-v3-report .pl-press-section { font-size: 0.75rem; color: var(--content-brand, var(--color-ssb-light-9)); }
+.pl-v3-report .pl-press-headline { font-size: clamp(1.375rem, 1rem + 1.1vw, 1.875rem); line-height: 1.2; color: var(--content-primary); }
+.pl-v3-report .pl-press-synopsis { font-size: 0.8125rem; line-height: 1.45; }
+
+/* The press card, compact (2026-10-12, "reduce the height, it can't be the same as Mesa"): one row,
+   a small photo, then where it ran and the headline in the page's own type; the strip's text and
+   actions beside it. No masthead, no synopsis, no tags. */
+.pl-v3-report[data-press] { gap: var(--space-4); padding: var(--space-3); }
+@media (width >= 1056px) { .pl-v3-report[data-press] { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8); padding: var(--space-3) var(--space-6) var(--space-3) var(--space-3); } }
+.pl-press { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-2); }
+.pl-press > img { flex: none; width: 7.5rem; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-md, 8px); background: var(--surface-sunken); }
+.pl-press-copy { display: grid; gap: 4px; min-width: 0; }
+.pl-v3-report .pl-press-source { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--content-brand, var(--color-ssb-light-9)); }
+.pl-v3-report .pl-press-headline { font-family: inherit; font-size: 1.0625rem; line-height: 1.35; font-weight: 600; color: var(--content-primary); text-wrap: balance; }
+.pl-v3-report[data-press] .pl-v3-report-text { gap: var(--space-2); }
+.pl-v3-report[data-press] .pl-v3-report-text strong { font-size: 1rem; }
+.pl-press-actions { margin-top: 0; flex-wrap: nowrap; }
+@media (width < 672px) {
+  .pl-press { gap: var(--space-3); }
+  .pl-press > img { width: 5.5rem; }
+  .pl-v3-report .pl-press-headline { font-size: 0.9375rem; }
+  .pl-press-actions { flex-wrap: wrap; }
+}
+/* a step taller (2026-10-12): more room around the row, a larger photo */
+.pl-v3-report[data-press] { padding: var(--space-4); }
+@media (width >= 1056px) { .pl-v3-report[data-press] { padding: var(--space-4) var(--space-8) var(--space-4) var(--space-4); } }
+.pl-press { padding: var(--space-3); }
+.pl-press > img { width: 9rem; }
+@media (width < 672px) { .pl-press > img { width: 6.5rem; } }
+
+/* ── Version C, merged (2026-10-12): the figures and the press card in one card over the photo ──
+   Desktop: the line, the four figures (2 × 2) and the report's CTA at the left, the article, a white
+   card, at the right. A phone: stacked, the article last. */
+.pl-merge { position: relative; isolation: isolate; display: grid; gap: var(--space-6); overflow: hidden; padding: var(--space-6) var(--space-5); border-radius: var(--radius-lg); color: #fff; }
+@media (width >= 1056px) { .pl-merge { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); align-items: center; gap: var(--space-12, 3rem); padding: var(--space-10, 2.5rem); } }
+.pl-merge-bg { position: absolute; inset: 0; z-index: -1; background: #2b3340; }
+.pl-merge-bg img { width: 100%; height: 100%; object-fit: cover; filter: blur(6px) saturate(0.9); transform: scale(1.06); }
+.pl-merge-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgb(10 14 20 / 0.82) 0%, rgb(10 14 20 / 0.62) 55%, rgb(10 14 20 / 0.45) 100%); }
+.pl-merge-main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); min-width: 0; }
+.pl-merge-title { margin: 0; font-size: 1.25rem; line-height: 1.3; font-weight: 600; }
+.pl-merge-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-8); width: 100%; margin: 0; }
+@media (width >= 672px) { .pl-merge-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); } }
+.pl-merge-stats > div { display: grid; gap: var(--space-1); align-content: start; }
+.pl-merge-stats dd { order: -1; margin: 0; font-size: clamp(1.875rem, 1.2rem + 2vw, 2.75rem); line-height: 1; letter-spacing: -0.03em; font-weight: 500; white-space: nowrap; }
+.pl-merge-stats dt { font-size: 0.875rem; line-height: 1.35; color: rgb(255 255 255 / 0.82); }
+@media (width >= 1056px) { .pl-merge-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pl-merge-stats > div + div { } }
+.pl-merge-press { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-lg); background: var(--surface-page, #fff); color: var(--content-primary); text-decoration: none; box-shadow: 0 24px 50px -28px rgb(0 0 0 / 0.6); transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.pl-merge-press:hover { transform: translateY(-2px); }
+.pl-merge-press:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.pl-merge-press img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.pl-merge-press-copy { display: grid; gap: var(--space-2); padding: var(--space-4) var(--space-5) var(--space-5); }
+.pl-merge-press-source { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--content-brand, var(--color-ssb-light-9)); }
+.pl-merge-press-headline { font-size: 1.125rem; line-height: 1.35; font-weight: 600; text-wrap: balance; }
+.pl-merge-press-more { display: inline-flex; align-items: center; gap: 6px; margin-top: var(--space-1); font-size: 0.875rem; font-weight: 600; color: var(--content-secondary); }
+.pl-merge-press-more svg { width: 14px; height: 14px; }
+@media (width < 672px) {
+  .pl-merge-cta { width: 100%; justify-content: center; }
+  .pl-merge-title { font-size: 1.125rem; }
+}
+@media (width >= 672px) and (width < 1056px) { .pl-merge-press { flex-direction: row; } .pl-merge-press img { width: 40%; aspect-ratio: auto; } }
+/* the four figures in a row with hairlines between, as before the merge (2026-10-12); 2 × 2 on a phone */
+@media (width >= 672px) {
+  .pl-merge-stats, .pl-merge-stats:is(*) { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); }
+  .pl-merge-stats > div + div { padding-left: var(--space-5); border-left: 1px solid rgb(255 255 255 / 0.28); }
+}
+@media (width >= 1056px) {
+  .pl-merge { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--space-10, 2.5rem); }
+  .pl-merge-stats dd { font-size: clamp(1.75rem, 2.3vw, 2.5rem); }
+  .pl-merge-stats dt { white-space: normal; }
+}
+@media (width >= 1056px) { .pl-merge-tail { display: block; } .pl-merge-stats dt { white-space: nowrap; } }
+/* the left column runs the card's height (2026-10-12): the line at the top, the figures in the
+   middle, the CTA at the foot, level with the article's edges; the photo clearer (less blur, a
+   lighter shade) */
+@media (width >= 1056px) {
+  .pl-merge { align-items: stretch; }
+  .pl-merge-main { justify-content: space-between; padding-block: var(--space-2); }
+}
+.pl-merge-bg img { filter: blur(2px); transform: scale(1.02); }
+.pl-merge-bg::after { background: linear-gradient(100deg, rgb(10 14 20 / 0.6) 0%, rgb(10 14 20 / 0.38) 55%, rgb(10 14 20 / 0.2) 100%); }
+.pl-merge-main { text-shadow: 0 1px 12px rgb(0 0 0 / 0.35); }
+/* the blur grows downwards (2026-10-12, as the card before the merge): the photo sharp at the top,
+   a soft blur from the middle, a deep one over the lower third, under a shade that darkens to the
+   foot; the figures and the CTA sit at the foot, on the dark */
+.pl-merge-bg img { position: absolute; inset: 0; filter: none; transform: none; }
+.pl-merge-bg img.pl-merge-blur { transform: scale(1.04); }
+.pl-merge-blur-soft { filter: blur(6px); -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000 60%); mask-image: linear-gradient(to bottom, transparent 30%, #000 60%); }
+.pl-merge-blur-deep { filter: blur(18px); -webkit-mask-image: linear-gradient(to bottom, transparent 55%, #000 85%); mask-image: linear-gradient(to bottom, transparent 55%, #000 85%); }
+.pl-merge-bg::after { z-index: 1; background: linear-gradient(to bottom, rgb(10 14 20 / 0.12) 0%, rgb(10 14 20 / 0.2) 35%, rgb(10 14 20 / 0.62) 72%, rgb(10 14 20 / 0.8) 100%); }
+.pl-merge-main { justify-content: flex-start; }
+.pl-merge-stats { margin-top: auto; }
+@media (width >= 1056px) { .pl-merge-main { gap: var(--space-5); } }
+@media (width < 1056px) { .pl-merge-stats { margin-top: var(--space-10, 2.5rem); } }
+/* (specific enough to beat `.pl-merge-bg img`) */
+.pl-merge-bg img.pl-merge-blur-soft { filter: blur(6px); }
+.pl-merge-bg img.pl-merge-blur-deep { filter: blur(18px); }
+/* a phone: the figures sit higher in the taller stacked card, so its shade starts earlier */
+@media (width < 1056px) { .pl-merge-bg::after { background: linear-gradient(to bottom, rgb(10 14 20 / 0.35) 0%, rgb(10 14 20 / 0.6) 30%, rgb(10 14 20 / 0.78) 100%); } .pl-merge-blur-soft { -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000 25%); mask-image: linear-gradient(to bottom, transparent 5%, #000 25%); } .pl-merge-blur-deep { -webkit-mask-image: linear-gradient(to bottom, transparent 20%, #000 45%); mask-image: linear-gradient(to bottom, transparent 20%, #000 45%); } }
+
+/* ── The press clipping (2026-10-12): ssx-ui's parts only (ClickableCard, Heading, Divider,
+   Timestamp, Text, AspectRatio); layout only here, no paper, grain, tears or filters of our own ── */
+@media (width >= 1056px) { .pl-merge { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); } }
+.pl-clip-body { display: flex; flex-direction: column; gap: var(--space-3); }
+.pl-clip-masthead { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.pl-clip-paper { text-transform: uppercase; letter-spacing: 0.12em; }
+.pl-clip-out { width: 16px; height: 16px; flex: none; color: var(--content-secondary); }
+.pl-clip-dateline { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+.pl-clip-headline { text-wrap: balance; }
+.pl-clip-story { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-4); align-items: start; }
+.pl-clip-photo { overflow: hidden; border-radius: var(--radius-md); }
+.pl-clip-photo img { width: 100%; height: 100%; object-fit: cover; }
+/* a shorter banner (2026-10-12): the card's padding, the clipping's spacing and its photo a step down */
+@media (width >= 1056px) { .pl-merge { padding: var(--space-8); gap: var(--space-8); } }
+.pl-clip-body { gap: var(--space-2); padding: var(--space-4) var(--space-5); }
+.pl-clip-body [data-variant='rule'] { margin-block: var(--space-1); }
+.pl-clip-story { grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-3); align-items: center; }
+@media (width < 672px) { .pl-clip-story { grid-template-columns: 6rem minmax(0, 1fr); } }
+/* (2026-10-12) the article card narrower, more room between the figures and the card, and between
+   the figures and the CTA */
+@media (width >= 1056px) {
+  .pl-merge { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); gap: var(--space-16, 4rem); }
+  .pl-merge-main { gap: var(--space-8); }
+}
+.pl-merge-cta { margin-top: var(--space-2); }
+/* the figures and their dividers equidistant (2026-10-12): each column as wide as its own figure,
+   the same space before a divider as after it */
+@media (width >= 672px) {
+  .pl-merge-stats, .pl-merge-stats:is(*) { --pl-gap: var(--space-8); display: flex; flex-wrap: nowrap; gap: var(--pl-gap); }
+  .pl-merge-stats > div { flex: none; }
+  .pl-merge-stats > div + div { padding-left: var(--pl-gap); }
+}
+@media (width >= 672px) and (width < 1056px) { .pl-merge-stats, .pl-merge-stats:is(*) { --pl-gap: var(--space-5); } }
+/* the space scales down with the screen so the row never runs past its column */
+@media (width >= 672px) { .pl-merge-stats, .pl-merge-stats:is(*) { --pl-gap: clamp(0.75rem, 1.8vw, 2rem); } }
+@media (width >= 1056px) and (width < 1280px) { .pl-merge-stats dd { font-size: clamp(1.5rem, 2.2vw, 2.25rem); } }
+/* a narrow tablet: 2 × 2 as on a phone (four across ran past the card) */
+@media (width >= 672px) and (width < 760px) {
+  .pl-merge-stats, .pl-merge-stats:is(*) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+  .pl-merge-stats > div + div { padding-left: 0; border-left: 0; }
+}
+/* a step taller (2026-10-13): 330 to 440px on desktop, the photo given more room above the figures */
+@media (width >= 1056px) { .pl-merge { min-height: 440px; padding-block: var(--space-10, 2.5rem); } }
+/* the article card keeps its own height, centred in the taller banner (stretched, it left a gap under the text) */
+@media (width >= 1056px) { .pl-merge > .pl-clip { align-self: center; } }
+/* spread across the column (2026-10-13): figures and dividers as items, spaced evenly, so every
+   figure is the same distance from the dividers either side of it */
+.pl-merge-rule { display: none; }
+@media (width >= 760px) {
+  .pl-merge-stats, .pl-merge-stats:is(*) { display: flex; justify-content: space-between; gap: var(--space-4); }
+  .pl-merge-stats > .pl-merge-stat { flex: none; padding-left: 0; border-left: 0; }
+  .pl-merge-rule { display: block; flex: none; width: 1px; align-self: stretch; background: rgb(255 255 255 / 0.28); }
+}
+@media (width >= 1056px) { .pl-merge-main > .pl-merge-stats { width: 100%; } }
+@media (width >= 760px) { .pl-merge-tail { display: block; } .pl-merge-stats dt { white-space: nowrap; } }
+@media (width >= 760px) and (width < 1280px) { .pl-merge-stats dd { font-size: clamp(1.5rem, 2.3vw, 2.125rem); } }
+@media (width >= 1056px) and (width < 1200px) { .pl-merge { gap: var(--space-8); grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); } }
+/* (the older `> div + div` rules gave the dividers padding and a border of their own) */
+.pl-merge-stats > .pl-merge-rule, .pl-merge-stats > .pl-merge-rule + .pl-merge-stat { padding: 0; border: 0; }
+.pl-merge-stats > .pl-merge-rule { display: none; }
+@media (width >= 760px) { .pl-merge-stats > .pl-merge-rule { display: block; } }
+/* 2026-10-13: the figures closer together: from the left, the same space either side of each
+   divider (32px at 1440), not spread to the column's edge */
+@media (width >= 760px) { .pl-merge-stats, .pl-merge-stats:is(*) { justify-content: flex-start; gap: clamp(1rem, 2.2vw, 2rem); } }
+/* 2026-10-13: the figures on a frosted glass plate, as the curriculum's "300+" plate: a light
+   white tint over a blur of the photo, a bright top rim and a hairline round it */
+.pl-merge-stats, .pl-merge-stats:is(*) {
+  padding: var(--space-5) var(--space-6); border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 0.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 0 0 1px rgb(255 255 255 / 0.14), 0 10px 30px -18px rgb(0 0 0 / 0.5);
+}
+@media (width >= 760px) { .pl-merge-stats, .pl-merge-stats:is(*) { gap: clamp(1rem, 2.4vw, 2.25rem); } }
+@media (width >= 1056px) { .pl-merge-main > .pl-merge-stats { width: auto; padding: var(--space-6) var(--space-8); } }
+@media (width < 760px) { .pl-merge-stats, .pl-merge-stats:is(*) { padding: var(--space-4); } }
+/* the plate quieter (2026-10-13), as the testimonial's profile card: no shadows (none under it, no
+   rim, none on the type), a little more white tint, a hairline round it */
+.pl-merge-stats, .pl-merge-stats:is(*) {
+  border: var(--border-width-hair) solid color-mix(in oklab, var(--on-image-ink) 18%, transparent);
+  background: color-mix(in oklab, var(--on-image-ink) 14%, transparent);
+  box-shadow: none;
+  text-shadow: none;
+}
+/* 2026-10-13: no shadow anywhere on the left (the title's and the button's type), and the photo less
+   blurred: its two blur layers about half as strong, the plate's own frost lighter */
+.pl-merge-main, .pl-merge-main * { text-shadow: none; }
+.pl-merge-main .pl-merge-cta { box-shadow: none; }
+.pl-merge-bg img.pl-merge-blur-soft { filter: blur(3px); }
+.pl-merge-bg img.pl-merge-blur-deep { filter: blur(8px); }
+.pl-merge-stats, .pl-merge-stats:is(*) { -webkit-backdrop-filter: blur(6px) saturate(1.2); backdrop-filter: blur(6px) saturate(1.2); }
+
+/* 2026-10-13: the report's button at the article card's foot, full width, on the footer's rule;
+   the headline is the card's link (underlined on hover) */
+.pl-clip-foot { padding: var(--space-3) var(--space-5) var(--space-4); }
+.pl-clip-cta, .pl-clip-cta:is(*) { width: 100%; }
+.pl-clip-headline a { color: inherit; text-decoration: none; }
+.pl-clip-headline a:hover { text-decoration: underline; text-underline-offset: 0.12em; text-decoration-thickness: 1px; }
+.pl-clip-headline a:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; border-radius: 2px; }
+/* a little more room between each figure and its label (2026-10-13): 4px to 10px (8px on a phone) */
+.pl-merge-stats > .pl-merge-stat, .pl-merge-stats > .pl-merge-stat:is(*) { row-gap: 10px; }
+@media (width < 760px) { .pl-merge-stats > .pl-merge-stat, .pl-merge-stats > .pl-merge-stat:is(*) { row-gap: 8px; } }
+/* each label on one line (2026-10-13, the team's ask), from 1280px where the column has the room:
+   the tail no longer breaks, labels 13px, the gaps either side of the dividers a step tighter, the
+   article card 22rem and the space between the two columns 40px. Below 1280 the labels keep two lines. */
+@media (width >= 1280px) {
+  .pl-merge-tail { display: inline; }
+  .pl-merge-stats dt { font-size: 0.8125rem; }
+  .pl-merge-stats, .pl-merge-stats:is(*) { gap: clamp(0.75rem, 1.1vw, 1rem); }
+  .pl-merge-main > .pl-merge-stats { padding-inline: var(--space-6); }
+  .pl-merge, .pl-merge:is(*) { grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); column-gap: var(--space-10, 2.5rem); }
+}
+/* the plate wider (2026-10-13, the team's ask): the left column's full width on desktop, the four
+   figures and their dividers spread evenly across it (the same space either side of each divider) */
+@media (width >= 1056px) {
+  .pl-merge-main > .pl-merge-stats, .pl-merge-main > .pl-merge-stats:is(*) { width: 100%; justify-content: space-between; padding-inline: var(--space-8); }
+}
+/* (2026-10-13, the team's ask) the dividers lighter (white at 16%, was 28%) and the plate's padding a
+   step less: 20 x 24px on desktop (was 24 x 32), 12px on a phone (was 16) */
+.pl-merge-stats > .pl-merge-rule { background: rgb(255 255 255 / 0.16); }
+@media (width >= 1056px) {
+  .pl-merge-main > .pl-merge-stats, .pl-merge-main > .pl-merge-stats:is(*) { padding: var(--space-5) var(--space-6); }
+}
+@media (width < 760px) { .pl-merge-stats, .pl-merge-stats:is(*) { padding: var(--space-3); } }
+/* the article's opening lines: three at most (2026-10-13) */
+.pl-clip-story > :last-child { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+/* phones (2026-10-13, the team's ask): the plate roomier and taller: 20px inside, 28px between the
+   two rows, 16px between the columns, 8px between each figure and its label; the label broken where
+   it reads ("Top-quartile / average CTC", "Average hike / vs. pre-SSB") */
+@media (width < 760px) {
+  .pl-merge-stats, .pl-merge-stats:is(*) { padding: var(--space-5); row-gap: var(--space-7, 1.75rem); column-gap: var(--space-4); }
+  .pl-merge-stats > .pl-merge-stat, .pl-merge-stats > .pl-merge-stat:is(*) { row-gap: var(--space-2); }
+  .pl-merge-tail { display: block; }
+}
+/* (2026-10-13, the team's ask) the two sides the same height on desktop: the article card sets the
+   row, and the left column runs exactly its height, the title level with the card's top and the
+   stats plate's foot level with the card's foot. The banner's padding gives the photo its room. */
+@media (width >= 1056px) {
+  .pl-merge, .pl-merge:is(*) { min-height: 0; align-items: stretch; padding-block: var(--space-12, 3rem); }
+  .pl-merge > .pl-clip, .pl-merge > .pl-clip:is(*) { align-self: stretch; }
+  .pl-merge-main, .pl-merge-main:is(*) { justify-content: space-between; padding-block: 0; }
+  .pl-merge-main > .pl-merge-stats { margin-top: 0; }
+}
+/* (2026-10-13, the team's ask) no blur on the photo, only the overlay: the two blurred copies of
+   the photo are hidden, and the stats plate is a tint with no frost of its own; the dark gradient
+   (::after) is the one thing over the photo */
+.pl-merge-bg img.pl-merge-blur, .pl-merge-bg img.pl-merge-blur:is(*) { display: none; }
+.pl-merge-bg img:not(.pl-merge-blur) { filter: none !important; transform: none !important; }
+html body .pl-merge-stats { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+/* (2026-10-13, the team's ask) one blur, growing towards the foot: a single blurred copy of the
+   photo, faded in from the middle down (sharp at the top, soft under the stats); the overlay over it */
+.pl-merge-bg img.pl-merge-blur-deep, .pl-merge-bg img.pl-merge-blur-deep:is(*) {
+  display: block; filter: blur(10px) !important; transform: scale(1.04) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 45%, #000 80%); mask-image: linear-gradient(to bottom, transparent 45%, #000 80%);
+}
+@media (width < 1056px) {
+  .pl-merge-bg img.pl-merge-blur-deep, .pl-merge-bg img.pl-merge-blur-deep:is(*) {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 15%, #000 40%); mask-image: linear-gradient(to bottom, transparent 15%, #000 40%);
+  }
+}
+/* phones and tablets (2026-10-13, the team's ask): the stats sit over the faces, so the photo behind
+   the plate is blurred (the system's glass blur) for the figures to read; desktop keeps its one
+   blur at the foot */
+@media (width < 1056px) {
+  html body .pl-merge-stats { -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(0.7) !important; backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(0.7) !important; }
+}
+
+/* ── (2026-10-27, the user's ask) the eye on the figures: the photo darker behind them (a heavier
+   shade over all of it, heaviest at the foot); the figures' sizes are in type-standard.css ── */
+.pl-merge-bg::after, .pl-merge-bg:is(*)::after { background: linear-gradient(to bottom, rgb(10 14 20 / 0.5) 0%, rgb(10 14 20 / 0.58) 40%, rgb(10 14 20 / 0.8) 75%, rgb(10 14 20 / 0.9) 100%); }

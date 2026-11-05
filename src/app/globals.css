@@ -1,0 +1,134 @@
+@import 'tailwindcss';
+@import '@kishanscaler/ssx-ui/styles.css';
+/* the curriculum, navbar and footer are plain CSS, not Tailwind: scanning them would add theme
+   variables the design never used (a second mono font, which changes the eyebrow) */
+@source not '../sections/curriculum';
+@source not '../sections/site';
+
+/*
+ * next/font self-hosts the two system families (see layout.tsx). Point the
+ * design system's font tokens at them, keeping the token's own fallbacks.
+ */
+:root {
+  --font-family-sans: var(--ssx-font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-family-mono: var(--ssx-font-mono), SFMono-Regular, Menlo, Consolas, 'Liberation Mono',
+    monospace;
+  /* Section titles at medium, the weight of the alumni cards' titles and the breakers' words (the
+     team's call, 2026-10-07); the package sets them semibold. */
+  --type-display-weight: var(--font-weight-medium);
+}
+
+/* Brand text in the SSB brand's green, the logo's (`ssb-light-9`, #1D925B), not the package's
+   `content-brand` for SSB light, its darkest step (#004A1E, near black at eyebrow size): the
+   team's call, 2026-10-07. Eyebrows, labels and every other `content-brand` text follow. Light
+   theme only: the dark theme's brand text is already a light green. */
+[data-brand='ssb']:not([data-theme='dark']) {
+  --content-brand: var(--color-ssb-light-9);
+}
+
+/* The carousel rows (alumni, faculty, live projects, the impact foundation) start on the page's
+   content edge and run off to the right edge of the window, uncut (the team's call, 2026-10-06:
+   capping them to the page's column clipped the last card at that edge). */
+
+/* ── One visual language down the page ───────────────────────────────────────
+   The lab's sections share a header (green eyebrow, display heading, grey sub-line, 48px to the
+   content) and a rhythm (64px above and below a section, 40px on phones: the system's `default`
+   rung, tokens; the team's call, 2026-10-07, closer than `roomy`'s 96 / 48). Our curriculum blocks
+   and main's Placements showcase were built apart and differed; here they are brought in line.
+   Scoped to the home page (.pv-home), so the curriculum's own page and lab are unchanged. */
+
+/* rhythm: each curriculum block is a section like the rest; its own inner padding is dropped */
+/* (2026-10-08, the team's ask for more air: the system's `roomy` rung, 96px / 48px, in place of the
+   `default` rung's 64 / 40 chosen on 2026-10-07) */
+main [data-slot='section'][data-density='roomy'], .pv-page.pv-home { padding-block: var(--space-12); }
+@media (min-width: 672px) {
+  main [data-slot='section'][data-density='roomy'], .pv-page.pv-home { padding-block: var(--space-24); }
+}
+.pv-home .sj-shell { padding-top: 0; padding-bottom: 0; }
+.pv-home .sj-shell > .sj-ai, .pv-home .sj-shell > .sj-learn { margin-top: 0; padding-top: 0; }
+/* no rule above Learn by doing: no other section on the page opens with a line */
+.pv-home .sj-shell > .sj-learn { border-top: 0; }
+
+/* header: Learn by doing and the AI curriculum take the page's header */
+.pv-home .sj-learn-head, .pv-home .sj-ai-head { gap: 12px; }
+.pv-home .sj-learn-head > :first-child, .pv-home .sj-ai-head > :first-child { color: var(--content-brand); }
+/* the eyebrow at the page's size and weight (the curriculum's scope sets it a step smaller) */
+.pv-home .sj-learn-head > :first-child, .pv-home .sj-ai-head > :first-child { font-size: 0.75rem; line-height: 1.33; font-weight: 700; }
+.pv-home .sj-learn-head h2, .pv-home .sj-ai-head h2 { font-size: var(--type-display-size); line-height: var(--type-display-lh); letter-spacing: var(--type-display-tracking); font-weight: var(--type-display-weight); }
+.pv-home .sj-learn-head .sj-lede, .pv-home .sj-ai-head .sj-lede { color: var(--content-secondary); }
+/* 48px (40 on phones) from the header to the content, as under every other header */
+.pv-home .sj-learn { gap: 40px; }
+@media (min-width: 672px) { .pv-home .sj-learn { gap: 48px; } }
+
+/* corners: main's Placements showcase uses a larger corner than every other card (8px) */
+main section[aria-labelledby^='placements'] { --story-radius: var(--radius-lg); }
+main section[aria-labelledby^='placements'] :is(.rounded-2xl, .rounded-xl, .pl-figure-box, .pl-story) { border-radius: var(--radius-lg); }
+
+/* ── The design system's radii, across the page (the team's ask, 2026-10-08) ─────────────────────
+   Cards 8px (radius-lg, the package's Card); chips, tags, small controls and the panels inset in
+   a card 4px (radius-md, the package's Button). A frameless card's photo is its edge: 8px. The sections set their own radii (12–24px, and
+   pills); they are brought in line here, in one place, rather than in each section's file.
+   Left alone: the hero's framed video (its corners drawn by the scroll moment), the film player's
+   tooltip (YouTube's own), and round things (avatars, dots). */
+:is(main, footer) :is(
+    .pl-app-inner, .pl-figure-box, .sj-tl-item, .sj-ps-view, .sj-pb-card, .sj-ai-outcome,
+    .imm-feature, .imm-feature__media, .sfb-card, .pt-switch, .sj-ps-switch, .cr-list,
+    .sj-visual
+  ) { border-radius: var(--radius-lg) !important; }
+:is(main, footer, header, nav, aside) :is(
+    .pl-chip, .vc-tag, .why-story-tag, .sj-ps-tab, .in-lc-watch, .creator-card__badge, .sj-tool-mono,
+    .cr-item, .cn-arrow, .cn-dots,
+    .imm-feature__body, .creator-card__foot, .sj-ps-copy, .sj-pb-text
+  ) { border-radius: var(--radius-md) !important; }
+/* the carousel controls' own radius token, so their entrance (a clip to that radius) agrees */
+.cn { --cn-radius: var(--radius-md) !important; }
+
+/* ── One header, every section (2026-10-08, the team's ask: consistent hierarchy, a quieter
+   sub-line) ──────────────────────────────────────────────────────────────────────────────────
+   eyebrow (12px, 700, tracked) → 8px → title (the display size: 36px / 28px, medium) → 8px →
+   sub-line at the body size (16px, not the large 18px), 1.6 leading, in grey, at most ~70
+   characters a line. Every section header is the design system's display Heading followed by a
+   large Text; this brings them to one setting wherever they sit. */
+main :is(h2, h3).type-display + p.type-body-lg {
+  font-size: var(--type-body-size);
+  line-height: 1.6;
+  max-width: 40rem;
+  color: var(--content-secondary);
+  text-wrap: pretty;
+}
+main div:has(> :is(h2, h3).type-display + p.type-body-lg) { row-gap: var(--space-2); }
+/* career prep's title on phones was a step under every other (24px): the display size, as the rest */
+.pv-home .sj-career-header h2 { font-size: var(--type-display-size); line-height: var(--type-display-lh); letter-spacing: var(--type-display-tracking); font-weight: var(--type-display-weight); }
+/* the curriculum's own headers (plain CSS, not the Heading + Text pair): the same gaps and sub-line */
+.pv-home :is(.sj-ai-head, .sj-learn-head, .sj-career-header) { row-gap: var(--space-2) !important; }
+.pv-home :is(.sj-ai-head, .sj-learn-head, .sj-career-header) > :is(h2, h3) + p {
+  font-size: var(--type-body-size) !important; line-height: 1.6 !important; max-width: 40rem; color: var(--content-secondary); text-wrap: pretty; }
+
+/* One gap between the cards of every sideways row (2026-10-13, the team's ask): 16px, the mentors
+   row's, at every width (some rows ran 12px, the shorts 8px on a phone) */
+html body :is(.rs-row, .h-scroller, .fs-row, .sj-ai-track, .in-reels-row, .fc-grid, .pt-stack-row, .creator-row, .fc-drift-set, .alumni-drift-set, .rs-drift-set) {
+  column-gap: var(--space-4) !important;
+}
+
+/* ── One header (2026-10-23, the team's ask: every section's as the Singapore immersion's): the green
+   eyebrow, a sentence-case statement, its second half in the secondary ink, a quiet sub-line ── */
+main .h-tail, main .sj-ai-accent { color: var(--content-secondary) !important; }
+
+/* Phones, lighter headers (2026-10-23, the team's ask: "too text heavy on m-web, shorten the header and
+   subtext so it looks premium"): each section's eyebrow, the black statement and a short sub-line;
+   the grey second half is desktop's. Kept: Built at SSB's whole title (its second half is the
+   punchline) and Admissions' (its grey part ends the sentence), Kamath's quote, the curriculum's
+   download button. */
+@media (width < 672px) {
+  main :is(h2, p.type-display) .h-tail, main h2 .sj-ai-accent, main h2.sg-title span { display: none !important; } /* p.type-display: a tab's heading stacked under another (the founders') */ /* Admissions' title kept whole: its grey part ends the sentence */
+}
+
+/* ── m-web (2026-10-27, the user's ask: section headers too big on a phone, sections a little closer)
+   Every section title on a phone 24px (the display token, was 28), its sub-line 14px (was 16), and
+   40px between sections (was 48). The eyebrow stays 12px: the type floor. ── */
+@media (width < 672px) {
+  main { --type-display-size: 1.5rem; }
+  main :is(h2, h3).type-display + p.type-body-lg { font-size: 0.875rem; line-height: 1.55; }
+  main [data-slot='section'][data-density='roomy'], .pv-page.pv-home { padding-block: var(--space-10); }
+}

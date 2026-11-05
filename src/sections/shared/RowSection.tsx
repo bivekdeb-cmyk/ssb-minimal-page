@@ -1,0 +1,135 @@
+'use client';
+
+import * as React from 'react';
+import { Container, Heading, Section, Text } from '@kishanscaler/ssx-ui';
+
+import { useSectionEntrance } from '@/sections/faculty/useSectionEntrance';
+import { ScrollDots } from './ScrollDots';
+import { useRows } from './useRows';
+import './row-section.css';
+import { Title } from '@/sections/shared/Title';
+
+/**
+ * A section with the site's header (eyebrow, title, line, arrows at the right)
+ * over a row of cards that starts on the content edge and runs off the window's
+ * right edge, with progress dots: the Alumni layout, for any cards. Each child
+ * becomes one card of the row; `cardWidth` sets its width (phones: 82vw at most).
+ * `after` renders under the row, inside the section. Cards open as Faculty's do.
+ * `heading` replaces the eyebrow, title and line with a heading of the section's own (Beyond
+ * Placements' turn); it must be an h2 with the id `${id}-title`. `title` still names the row.
+ */
+export function RowSection({
+  id,
+  eyebrow,
+  title,
+  sub,
+  itemName,
+  cardWidth = '20rem',
+  after,
+  heading,
+  nav = true,
+  drift = false,
+  stacked = false,
+  children,
+}: {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  sub?: string;
+  /** What one card is, for the controls' labels. */
+  itemName: string;
+  cardWidth?: string;
+  after?: React.ReactNode;
+  heading?: React.ReactNode;
+  /** The arrows and dots under the row (off: a row that fits, or one swiped by hand). */
+  nav?: boolean;
+  /** The cards in two rows drifting sideways, as Alumni's and Faculty's (in place of the row and its dots). */
+  drift?: boolean;
+  /** Two still rows, each card over another, scrolled by hand with the dots (2026-10-23, as Alumni's). */
+  stacked?: boolean;
+  children: React.ReactNode;
+}) {
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const rowRef = React.useRef<HTMLUListElement>(null);
+  const rows = useRows(2);
+  useSectionEntrance(sectionRef, { decks: ['.rs-row > li > article', '.rs-drift-set > li > article'] });
+
+  const items = React.Children.toArray(children);
+
+  return (
+    <Section ref={sectionRef} density="roomy" aria-labelledby={`${id}-title`} className="overflow-x-clip">
+      <Container>
+        <div
+          data-enter="header"
+          className="mb-10 flex flex-col gap-6 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
+        >
+          {heading ?? (
+            <div className="flex max-w-(--size-measure-max) flex-col gap-3">
+              {eyebrow ? (
+                <Heading as="p" size="eyebrow" className="text-content-brand" data-enter="eyebrow">
+                  {eyebrow}
+                </Heading>
+              ) : null}
+              <Heading as="h2" size="display" id={`${id}-title`} data-enter="headline">
+                <Title text={title} />
+              </Heading>
+              {sub ? (
+                <Text size="lg" tone="secondary" data-enter="sub">
+                  {sub}
+                </Text>
+              ) : null}
+            </div>
+          )}
+        </div>
+      </Container>
+
+      {drift ? (
+        // two rows, the top one drifting left and the bottom one right, each its cards twice over so
+        // the loop has no seam; held on hover, still under reduced motion
+        <div className="rs-drift" style={{ '--rs-card': cardWidth } as React.CSSProperties}>
+          {[0, 1].map((r) => {
+            const mine = items.filter((_, i) => i % 2 === r);
+            return (
+              <div
+                key={r}
+                className="rs-drift-row"
+                data-dir={r ? 'back' : undefined}
+                style={{ '--n': mine.length } as React.CSSProperties}
+              >
+                {[0, 1].map((copy) => (
+                  <ul
+                    key={copy}
+                    className="rs-drift-set"
+                    aria-label={copy ? undefined : title}
+                    aria-hidden={copy ? true : undefined}
+                  >
+                    {mine.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <ul
+          ref={rowRef}
+          className="rs-row"
+          data-stacked={stacked || undefined}
+          aria-label={title}
+          style={{ '--rs-card': cardWidth } as React.CSSProperties}
+        >
+          {items.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
+      )}
+      {nav && !drift ? (
+        <ScrollDots scroller={rowRef} count={stacked ? Math.ceil(items.length / rows) : items.length} itemName={itemName} fill="solid" autoplay={!stacked} />
+      ) : null}
+
+      {after}
+    </Section>
+  );
+}

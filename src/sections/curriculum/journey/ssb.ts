@@ -1,0 +1,346 @@
+/**
+ * SSB (Scaler School of Business) curriculum content: five terms.
+ *
+ * Sources, captured 2026-09-28:
+ *   [DOC]   the curriculum doc + overview slide shared by the team (Term 1 in
+ *           full; the one-line summaries of all five terms; career prep).
+ *   [SSB]   the live page, scaler.com/school-of-business, "Future-proof
+ *           curriculum" tabs (Terms 2–5: in-class, workshops, out-class videos).
+ *   [PROPOSED] / [CONFIRM] as in data.ts.
+ *
+ * Subjects sit in the same two lanes as SST so every concept works unchanged:
+ * `business` = management, strategy, finance, marketing, operations;
+ * `tech` = data, tech, product and AI. The lane names come from `labels`.
+ * An out-class challenge is a project; `video` is the reference it links to.
+ */
+import type { Journey, Labels } from './data';
+import { JOURNEY } from './data';
+import type { Brand } from './config';
+
+const labels: Labels = {
+  ...JOURNEY.labels,
+  byYear: 'By term',
+  years: 'The five terms',
+  chooseYear: 'Choose a term',
+  outcome: 'By the end of the term',
+  learn: 'In class',
+  build: 'Out of class',
+  flagship: 'Flagship challenge',
+  highlights: 'Programme highlights',
+  portfolioTitle: 'Everything you build across five terms.', // [PROPOSED]
+  skills: '{n} course{s}',
+  projects: '{n} live project{s}',
+  yearLabel: 'Term {n}',
+  fullYear: 'See the full term',
+  lessOfYear: 'Hide the full term',
+  prevYear: 'Previous term',
+  nextYear: 'Next term',
+  pickYear: 'Pick a term',
+  filterProjects: 'Filter challenges by term',
+  laneTech: 'Data, Tech & AI',
+  laneBusiness: 'Business',
+  laneShared: 'Across both',
+  workshops: 'Masterclasses & workshops',
+  watch: 'Watch',
+};
+
+export const SSB_JOURNEY: Journey = {
+  eyebrow: 'Future-proof curriculum', // [SSB]
+  title: 'A curriculum built on building.|Not theory.', // [DOC] (2026-10-23: the page's one title pattern)
+  lede: 'Build industry-preferred skills through practical learning', // [SSB]
+  facts: [
+    // [SSB] programme overview
+    '150+ hours of AI learning across 25+ tools',
+    '10+ AI workshops spanning industries',
+    '2 real business builds',
+    '10+ company-sourced projects',
+    '3–6 month mandatory internship',
+  ],
+  disclaimer: '',
+  projectsTotal: '2 real business builds, 10+ company-sourced projects', // [SSB]
+  labels,
+  years: [
+    {
+      year: 1,
+      name: 'Foundations & First Build', // [DOC]
+      description:
+        'Learn core business principles like economics, accounting and marketing, and use them straight away by selling on the street and launching your first D2C brand.', // [DOC]
+      summary: 'Economics, accounting and marketing; sell on the street, launch a D2C brand.',
+      ship: 'Your first revenue, pitch and P&L, from the D2C brand you launch', // [PROPOSED] from the outcome
+      visual: 'ssbT1',
+      outcome: 'First revenue, first pitch, first P&L.', // [DOC]
+      skills: {
+        // [DOC] Management & Strategy, Finance, Marketing | Data, Tech & Product, AI
+        business: ['Managerial Economics', 'Business Communications', 'Financial Reporting & Analysis 1', 'Marketing Strategies'],
+        tech: ['Business Statistics', 'AI Foundations & No-Code Business Tools'],
+        shared: [],
+      },
+      workshops: ['MS Excel Fundamentals', 'Structured Thinking', 'Build Your Own AI Chatbot'], // [DOC]
+      projects: [
+        // [DOC] out class (videos)
+        { title: 'D2C Startup Challenge', desc: 'Launch a live D2C brand with ₹25K funding and a ₹5L+ revenue target in 6 weeks.', flagship: true, image: 'y1Flagship', video: 'Year 1 cohort generated ₹15L+ revenue in 1 month', short: '₹15L+ revenue in 1 month' },
+        { title: 'Street-Selling Challenge', desc: 'Sell a product to strangers in a day to learn persuasion and customer empathy.', image: 'pCreator', video: 'Caffeine Clash (C1), Go Zero Ice-cream Challenge (C3)' },
+        { title: 'Idea Pitch Tank', desc: 'Pitch a startup idea to a panel in Week 1.', image: 'pGtm', video: 'Scaler Spark Tank' },
+      ],
+      syllabus: null,
+      // the website deck's own copy ("SSB Website vF | Sep'26", 2026-10-28)
+      deck: {
+        line: 'Learn core business principles like economics, accounting and marketing, and use them straight away by selling on the street and launching your first D2C brand.',
+        outClass: [
+          { image: 'pCreator', title: 'Street-Selling Challenge', desc: 'Sell a product to strangers in a day to learn persuasion and customer empathy.', ref: 'Caffeine Clash (C1), Go Zero Ice-cream Challenge (C3)' },
+          { image: 'y1Flagship', title: 'D2C Startup Challenge', desc: 'Launch a live D2C brand with ₹25K funding and a ₹5L+ revenue target in 6 weeks.', ref: 'Year 1 cohort generated ₹15L+ revenue in 1 month' },
+          { image: 'pGtm', title: 'Idea Pitch Tank', desc: 'Pitch a startup idea to a panel in Week 1.', ref: 'Scaler Spark Tank' },
+        ],
+        inClass: [
+          { area: 'Management & Strategy', items: ['Managerial Economics', 'Business Communications'] },
+          { area: 'Finance', items: ['Financial Reporting & Analysis 1'] },
+          { area: 'Marketing', items: ['Marketing Strategies'] },
+          { area: 'Data, Tech & Product', items: ['Business Statistics'] },
+          { area: 'AI', items: ['AI Foundations & No-Code Business Tools'] },
+        ],
+        outcome: 'First revenue, first pitch, first P&L.',
+        workshops: ['MS Excel Fundamentals', 'Structured Thinking', 'Build Your Own AI Chatbot'],
+      },
+    },
+    {
+      year: 2,
+      name: 'Strategy, Product & AI Fluency', // [DOC]
+      description:
+        'Master strategy, consumer behaviour and product basics, pitch real expansion plans to founders and ship your first AI product with zero code.', // [DOC]
+      summary: 'Strategy, consumer behaviour, product; pitch founders, ship a no-code AI app.',
+      ship: 'Your first AI product with zero code, and a pitch to real founders', // [PROPOSED] from the summary
+      visual: 'ssbT2',
+      outcome: null, // [CONFIRM] not on the live page
+      skills: {
+        // [SSB] term 2
+        business: ['Global Macroeconomics', 'Intro to Business Strategy', 'Financial Reporting & Analysis 2', 'Consumer Behaviour'],
+        tech: ['Introduction to Product Management', 'Building Voice, Visual & Workflow AI Experiences'],
+        shared: [],
+      },
+      workshops: ['The Art of Business Decks', 'Design Thinking'], // [SSB]
+      projects: [
+        // [SSB] term 2 videos
+        { title: 'Founder Expansion Pitch', desc: 'Pitch a ₹200cr expansion plan to the founders of Mokobara.', flagship: true, image: 'y2Flagship', video: 'MBA Students Pitch ₹200cr Expansion Plan to Mokobara Founders', short: '₹200cr plan, pitched to Mokobara' },
+        { title: 'No-Code AI Build', desc: 'Build an AI product with zero coding knowledge.', image: 'pAgents', video: 'n8n AI Workshop' },
+      ],
+      syllabus: null,
+      // the website deck's own copy ("SSB Website vF | Sep'26", 2026-10-28)
+      deck: {
+        line: 'Master strategy, consumer behaviour and product basics, pitch real expansion plans to founders and ship your first AI product with zero code.',
+        outClass: [
+          { image: 'y2Flagship', title: 'Founder Consulting Sprint', desc: 'Solve a live expansion problem and pitch it directly to the founders.', ref: 'Mokobara, a ₹200 Cr APAC expansion strategy' },
+          { image: 'pAgents', title: 'Zero-Code AI Build Sprint', desc: 'MBA students ship an AI product with no engineering background.', ref: 'A Splitwise clone, a negotiation AI coach' },
+          { image: 'pBuilder', title: 'Venture Ideation', desc: 'Form startup teams and pressure-test ideas with mentors.', ref: 'HUSTLE Ideation' },
+          { image: 'pCargo', title: 'Industry Immersion I', desc: 'Time on manufacturing floors to see production and supply chains up close.' },
+        ],
+        inClass: [
+          { area: 'Management & Strategy', items: ['Global Macroeconomics', 'Intro to Business Strategy'] },
+          { area: 'Finance', items: ['Financial Reporting & Analysis 2'] },
+          { area: 'Marketing', items: ['Consumer Behaviour'] },
+          { area: 'Data, Tech & Product', items: ['Intro to Product Management'] },
+          { area: 'AI', items: ['Building Voice, Visual & Workflow AI Experiences'] },
+        ],
+        outcome: 'First founder-facing strategy and first shipped AI product.',
+        workshops: ['The Art of Business Decks', 'Design Thinking', 'SQL Querying Workshop', 'LinkedIn & Personal Branding'],
+      },
+    },
+    {
+      year: 3,
+      name: 'Build & Get Career Ready', // [DOC]
+      description: "Learn to sell, raise capital and research markets while building your startup's MVP and a placement-ready resume.", // [DOC]
+      summary: 'Sales, fundraising and market research while you build your MVP and resume.',
+      ship: 'A working MVP for your startup and a placement-ready resume', // [DOC]
+      visual: 'ssbT3',
+      outcome: null, // [CONFIRM]
+      skills: {
+        // [SSB] term 3
+        business: ['The Science of Selling', 'Corporate Finance 1', 'Corporate Finance 2', 'Market Research'],
+        tech: ['Product Strategy & Execution', 'Optimization & Decision Making', 'Automation & Product Integrations for Ops and Growth'],
+        shared: [],
+      },
+      workshops: ['Resumes 101', 'Hiring Assignments 101'], // [SSB]
+      projects: [
+        // [SSB] term 3 videos
+        { title: 'Company-Sourced GTM Project', desc: 'Build a ₹50cr go-to-market plan for a prebiotic soda brand and present it to its founder.', flagship: true, image: 'y3Flagship', video: 'MBA students’ bold ₹50cr GTM plan shocks prebiotic soda founder', short: '₹50cr GTM plan for a soda brand' },
+        { title: 'Hustle Ideation', desc: 'Work on the next billion-dollar idea and pitch it to VCs.', image: 'pBuilder', video: 'Hustle Ideation with Siddhant: students pitch to VCs' },
+      ],
+      syllabus: null,
+      // the website deck's own copy ("SSB Website vF | Sep'26", 2026-10-28)
+      deck: {
+        line: "Learn to sell, raise capital and research markets while building your startup's MVP and a placement-ready resume.",
+        outClass: [
+          { image: 'y3Flagship', title: 'GTM Challenge', desc: 'Build a full go-to-market plan and defend it before a real founder.', ref: '₹50 Cr GTM plan for a prebiotic soda founder' },
+          { image: 'pFitness', title: 'Live Market Simulation', desc: 'Trade under real market conditions.', ref: 'Stockathon with StockGro' },
+          { image: 'pHackathon', title: 'Build an MVP', desc: 'Turn the startup idea into a working product in the Innovation Lab with ₹50K funding.', ref: 'HUSTLE MVP' },
+          { image: 'pRouting', title: 'Industry Immersion II', desc: 'Time at quick-commerce backend ops and a fashion brand HQ.' },
+          { image: 'fPlacement', title: 'Internship' },
+        ],
+        inClass: [
+          { area: 'Management & Strategy', items: ['The Science of Selling'] },
+          { area: 'Finance', items: ['Corporate Finance Part I', 'Corporate Finance Part II (E)'] },
+          { area: 'Marketing', items: ['Market Research'] },
+          { area: 'Data, Tech & Product', items: ['Fundamental Data Analysis', 'Product Strategy & Execution (E)'] },
+          { area: 'Operations', items: ['Optimization for Decision Making (E)'] },
+          { area: 'AI', items: ['Automation & Product Integrations for Ops and Growth'] },
+        ],
+        outcome: 'A working MVP, a founder-tested GTM plan, and a placement-ready resume.',
+        workshops: ['Resumes 101', 'Hiring Assignments 101', 'Project Management using Asana/Jira/Notion', 'Designing on Canva'],
+      },
+    },
+    {
+      year: 4,
+      name: 'Advanced Domain Specialisation', // [DOC]
+      description:
+        'Choose your electives across Strategy, Finance, Marketing, Product and Operations, take your startup to market and build business AI agents.', // [DOC]
+      summary: 'Electives across five domains; take your startup to market, build AI agents.',
+      ship: 'Your startup live in the market, and business AI agents you built', // [PROPOSED] from the summary
+      visual: 'ssbT4',
+      outcome: null, // [CONFIRM]
+      skills: {
+        // [SSB] term 4 (electives)
+        business: ['Corporate Strategy for Startups', 'Valuation', 'Branding', 'Digital Marketing', 'Supply Chain Management'],
+        tech: ['Product Metrics & Analytics', 'Intro to SQL', 'Open-Source AI & Model Customization', 'Designing & Deploying Business AI Agents'],
+        shared: [],
+      },
+      workshops: ['Personal Interview', 'Case Solving & Guesstimates, Part 1'], // [SSB]
+      projects: [
+        // [SSB] term 4 shows the D2C challenge video again; its second video has no title of its own [CONFIRM]
+        { title: 'Take Your Startup to Market', desc: 'Launch and grow the startup you built in Term 3.', flagship: true, image: 'fFounder', video: 'D2C Startup Challenge: can these B-school students build a ₹50 lakh dropshipping business?', short: 'A ₹50 lakh dropshipping business' },
+      ],
+      syllabus: null,
+      // the website deck's own copy ("SSB Website vF | Sep'26", 2026-10-28)
+      deck: {
+        line: 'Choose your electives across Strategy, Finance, Marketing, Product and Operations, take your startup to market and build business AI agents.',
+        outClass: [
+          { image: 'pRecs', title: 'Product Teardown Project', desc: 'Map conversion friction on a live platform and build a prioritised fix roadmap.', ref: 'Ajio, covering discovery through search, product page and checkout' },
+          { image: 'pAnswer', title: '48-Hour AI Hackathon', desc: 'Build and demo a working AI prototype in two days.' },
+          { image: 'pCreator', title: 'Creator-preneur Track (opt-in)', desc: 'Grow a personal brand or work embedded at Jio Creative Labs.', ref: 'Tanisha Singhal (12.6M views, 13 brand deals); Jio Dhan Dhana Dhan campaign' },
+          { image: 'pSocial', title: 'Creator Challenge', desc: 'Build and monetise a personal brand on Instagram or YouTube to learn the influencer economy first-hand.', or: true },
+          { image: 'fPlacement', title: 'Internship' },
+        ],
+        inClass: [
+          { area: 'Management & Strategy', items: ['Corporate Strategy'] },
+          { area: 'Finance', items: ['Valuation'] },
+          { area: 'Marketing', items: ['Branding', 'Digital Marketing'] },
+          { area: 'Data, Tech & Product', items: ['Product Metrics & Analytics', 'Intro to SQL'] },
+          { area: 'Operations', items: ['Operations & Supply Chain'] },
+          { area: 'AI', items: ['Open-Source AI & building Business AI Agents'] },
+        ],
+        outcome: 'A domain portfolio and a second revenue or traction proof point.',
+        workshops: ['Personal Interviews Part 1', 'Case Solving & Guesstimates Part 1', 'MixPanel for Product Analytics', 'Supply Chain Simulation (Beer Game)'],
+      },
+    },
+    {
+      year: 5,
+      name: 'Pitch to VCs. Get Placed', // [DOC]
+      description: 'Learn deal-making and investing, pitch your startup to VCs on Demo Day and walk into placements with founder-level proof of work.', // [DOC]
+      summary: 'Deal-making and investing; pitch VCs on Demo Day, then walk into placements.',
+      ship: 'A Demo Day pitch to VCs, and founder-level proof of work', // [DOC]
+      visual: 'ssbT5',
+      outcome: null, // [CONFIRM]
+      skills: {
+        // [SSB] term 5. The live page repeats Term 4's two AI courses here [CONFIRM]
+        business: ['Negotiations', 'Intro to PE & VC', 'Investment Analysis & Portfolio Management', 'Pricing', 'Retail Management', 'Business of Online Marketplaces'],
+        tech: ['Python for Data Analysis', 'Open-Source AI & Model Customization', 'Designing & Deploying Business AI Agents'],
+        shared: [],
+      },
+      workshops: ['Personal Interview', 'Case Solving & Guesstimates, Part 2'], // [SSB]
+      projects: [
+        { title: 'Demo Day', desc: 'Pitch your startup to VCs.', flagship: true, image: 'pHackathon' }, // [DOC] summary
+        { title: 'D2C Start-Up Challenge', desc: 'Build a D2C brand with a student of Scaler School of Business.', image: 'pSocial', video: 'D2C Start-Up Challenge with a student of Scaler School of Business' }, // [SSB] [CONFIRM]
+      ],
+      syllabus: null,
+      // the website deck's own copy ("SSB Website vF | Sep'26", 2026-10-28)
+      deck: {
+        line: 'Learn deal-making and investing, pitch your startup to VCs on Demo Day and walk into placements with founder-level proof of work.',
+        outClass: [
+          { image: 'fFounder', title: 'VC Demo Day', desc: 'Pitch the startup to real investors, with funding that can scale up to ₹25L.', ref: 'HUSTLE Final Pitches; Anupam Mittal offered ₹50L to Hummusapiens (July 2026)' },
+          { image: 'pSchema', title: 'Tech in Finance Lab', desc: 'Hands-on work with blockchain, crypto, DAOs, Solana and algorithmic trading strategies.', ref: 'Tech in Finance and Algorithmic Trading workshops' },
+          { image: 'pAssistant', title: 'AI Domain Workshop', desc: 'Apply AI to a specific industry problem.' },
+        ],
+        inClass: [
+          { area: 'Management & Strategy', items: ['Negotiations'] },
+          { area: 'Finance', items: ['Intro to PE & VC', 'Investment Analysis & Decision Making'] },
+          { area: 'Marketing', items: ['Pricing'] },
+          { area: 'Data, Tech & Product', items: ['Python for Data Analysis'] },
+          { area: 'Operations', items: ['Business of Online Marketplaces'] },
+          { area: 'AI', items: ['Scaling AI Products: Strategy, Pricing & ROI'] },
+        ],
+        outcome: 'Graduate with founder experience, a VC-tested pitch, and interview readiness.',
+        workshops: ['Personal Interviews Part 2', 'Case Solving & Guesstimates Part 2', 'Algorithmic Trading', 'Fundamental Analysis using Screener'],
+      },
+    },
+  ],
+  // [SSB concept] ssb-school-concept.vercel.app, "The AI journey"; images are that site's assets
+  // [SSB] "Learn by doing", from the SSB concept site; videos from the school's YouTube channel
+  // (views and upload dates captured from YouTube, 2026-09-30)
+  learn: {
+    eyebrow: 'Learn by doing',
+    title: 'Build two real businesses. Pitch to VCs.',
+    titleAccent: 'Graduate with founder experience.',
+    lede: 'Real markets, real customers, real feedback.', // shortened (2026-10-23)
+    items: [
+      {
+        n: '01',
+        label: 'D2C Startup Challenge',
+        title: 'Take a brand from zero to its first customers.',
+        desc: 'Sourcing, branding, packaging, pricing and selling in a six-week challenge. Teams receive ₹25,000 in startup funding and target ₹5L+ revenue.',
+        image: '/learn/d2c.jpg', // the video's own YouTube thumbnail (assets/learn)
+        video: { id: 's0KKS3FxNUU', title: 'D2C Startup Challenge - Scaler School of Business', channel: 'Scaler School of Business', seconds: 61, views: 761, published: '2025-11-20' },
+      },
+      {
+        n: '02',
+        label: 'The Hustle Program',
+        title: 'Take an MVP to a founder-ready pitch.',
+        desc: 'Build, earn revenue and pitch a startup with ₹50,000 in initial funding and a pathway to funding up to ₹25L, backed by Lightrock, Peak XV and Sidhant Goyal.',
+        image: '/learn/hustle.jpg', // the video's own YouTube thumbnail
+        video: { id: '6V9RgMnFFaU', title: 'Next $Billion Dollar Idea? Business School Students Pitch to VCs', channel: 'Scaler School of Business', seconds: 951, views: 1582, published: '2025-04-19' },
+      },
+    ],
+  },
+  ai: {
+    eyebrow: 'The AI journey',
+    title: 'A 150-hour AI curriculum.',
+    titleAccent: 'From no-code to AI agents.',
+    lede: '25+ AI tools · 5 AI products · 3 hackathons · No coding needed', // the team's curriculum doc (2026-10-07); before, the main landing page's line
+    terms: [
+      // Titles, descriptions and outcomes from the team's curriculum doc (2026-10-07); the outcomes'
+      // leading "AI Product #n" taken off (the team's ask, 2026-10-08).
+      // AI journey images (2026-10-07, the team's call): the Scaler Innovation Lab, from the live pages
+      // (scaler.com/school-of-business: the lab space, 1; scaler.com/school-of-technology, ~2000px: the
+      // Ninad AI voice demo, 2; 3: students working a process through at a table, from the SSB page (Maximem's founder, then Gradonix's screen, were there first); a robotic hand, 4; 5: SST students building together on a laptop and phone (xSpecies' founder, then Flow's product screen, the big
+      // faded name above it left out; a lab tour and NeoSapiens' founders were tried first),
+      // in public/ai-terms/real. SST photos 3 and 5 had a caption bar at their foot, cropped off the files; the
+      // strip's imagePos frames the rest. Tried the same day and dropped: generated photos, the live page's green AI slides, campus
+      // photos, and startups' product screenshots.
+      { term: 1, name: 'Work Smarter with AI', desc: 'Use AI to research, write, analyse and present faster, then build your first app just by describing it.', tools: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'NotebookLM', 'Lovable'], outcome: 'From the Vibe Coding Hackathon, e.g. a Splitwise-style expense splitter', image: '/ai-terms/real/term1-lab.webp', imagePos: '50% 60%', imageTall: '/ai-terms/term1-tall.jpg?v=3', icon: 'wand' },
+      { term: 2, name: 'Create with AI', desc: 'Go beyond text and build AI that can speak, see, listen and generate images and video. Use it for anything from a customer-support voice bot and training videos to product demos and visual reports.', tools: ['ElevenLabs', 'Vapi', 'Midjourney', 'HeyGen', 'Gemini', 'ChatGPT'], outcome: 'From the AI Agent Hackathon, e.g. a language-learning voice assistant', image: '/ai-terms/real/term2-lab-voice.webp', imagePos: '50% 30%', imageTall: '/ai-terms/term2-tall.jpg?v=3', icon: 'wave' },
+      { term: 3, name: 'Automate with AI', desc: 'Connect everyday tools so that repetitive work in sales, marketing and operations runs on its own.', tools: ['Zapier', 'n8n', 'Make', 'Airtable', 'Notion'], outcome: 'An automation that runs a real business process, e.g. a case-interview practice tool', image: '/ai-terms/real/term3-students.webp', imagePos: '50% 40%', imageTall: '/ai-terms/term3-tall.jpg?v=3', icon: 'cycle' },
+      { term: 4, name: 'Build AI Agents', desc: 'Build AI agents that research, decide and complete tasks on their own, like a digital teammate.', tools: ['Relevance AI', 'CrewAI', 'Hugging Face', 'Ollama'], outcome: 'From the 48-Hour AI Hackathon, e.g. a negotiation-training AI coach', image: '/ai-terms/real/term4-lab-robotics.webp', imagePos: '50% 35%', imageTall: '/ai-terms/term4-tall.jpg?v=3', icon: 'robot' },
+      { term: 5, name: 'Scale AI products', desc: 'Learn where AI creates real value in a business, how to price it and build its ROI case, and take your product to market.', tools: ['Julius AI', 'Microsoft Copilot', 'Cursor'], outcome: 'A capstone launched to real users with a go-to-market plan, e.g. a party icebreaker AI game', image: '/ai-terms/real/term5-students.webp', imagePos: '50% 40%', imageTall: '/ai-terms/term5-tall.jpg?v=3', icon: 'rocket' },
+    ],
+  },
+  careerPrep: {
+    // [DOC]
+    title: 'Career prep from month one.|Not the final term.',
+    // ours (2026-10-07), from the phases below, for the team to confirm: every curriculum section has a subtext
+    lede: '1:1 counselling to salary negotiation, in three phases.', // shortened (2026-10-23)
+    start: 'Month 1',
+    stats: [
+      { value: '1,100+', label: 'Mock Interviews', icon: 'interviews', feature: true },
+      { value: '150+', label: 'Hours of Career Prep', icon: 'hours' },
+      { value: '300+', label: 'Hours of 1:1 Problem-Solving', icon: 'oneToOne' },
+      { value: '200+', label: 'Hours of Domain Prep', icon: 'domain' },
+      { value: '400+', label: 'Hours of Behavioural Sessions', icon: 'behaviour' },
+    ],
+    // [COPY] the descs are the items rewritten as one sentence: confirm the wording
+    phases: [
+      { name: 'Clarity', items: ['1:1 counselling', 'resume reviews', 'mentor allocation'], desc: '1:1 counselling and resume reviews, with a mentor assigned to you.', icon: 'clarity' },
+      { name: 'Building', items: ['role-specific practicums', 'portfolio building', 'communication workshops'], desc: 'Role-specific practicums, portfolio building and communication workshops.', icon: 'building' },
+      { name: 'Executing', items: ['employer outreach', 'mock interviews', 'salary negotiation'], desc: 'Employer outreach, mock interviews and salary negotiation.', icon: 'executing' },
+    ],
+  },
+};
+
+/** The content a brand shows: SST AI & B (4 years) or SSB (5 terms). */
+export const journeyFor = (brand: Brand): Journey => (brand === 'ssb' ? SSB_JOURNEY : JOURNEY);

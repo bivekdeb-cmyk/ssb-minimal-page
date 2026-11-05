@@ -1,0 +1,206 @@
+/* =========================================================
+   Phone card stack (CardStack): one card in front, its neighbours tucked
+   behind it, smaller and dimmed; glass arrows on the front card's edges;
+   optional progress dots underneath. The cards stack in one grid cell, so
+   the stage is as tall as the tallest card. Set on the root by CardStack:
+   --fc-card-w, --fc-shift, --fc-side-scale, --fc-interval.
+   ========================================================= */
+.fc-stage {
+  position: relative;
+  display: grid;
+  touch-action: pan-y;
+}
+.fc-slide {
+  grid-area: 1 / 1;
+  justify-self: center;
+  width: var(--fc-card-w);
+  transition:
+    transform var(--motion-duration-slower) var(--motion-easing-expressive-in-out),
+    filter var(--motion-duration-slower) var(--motion-easing-expressive-in-out),
+    opacity var(--motion-duration-slower) var(--motion-easing-expressive-in-out);
+  will-change: transform;
+}
+.fc-slide > * {
+  height: 100%;
+}
+.fc-slide[data-pos='0'] {
+  z-index: 3;
+}
+.fc-slide[data-pos='-1'],
+.fc-slide[data-pos='1'] {
+  z-index: 2;
+  filter: brightness(0.55) saturate(0.6);
+}
+.fc-slide[data-pos='-1'] {
+  transform: translateX(calc(var(--fc-shift) * -1)) scale(var(--fc-side-scale));
+}
+.fc-slide[data-pos='1'] {
+  transform: translateX(var(--fc-shift)) scale(var(--fc-side-scale));
+}
+.fc-slide[data-pos='far-left'],
+.fc-slide[data-pos='far-right'] {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+.fc-slide[data-pos='far-left'] {
+  transform: translateX(calc(var(--fc-shift) * -1)) scale(0.7);
+}
+.fc-slide[data-pos='far-right'] {
+  transform: translateX(var(--fc-shift)) scale(0.7);
+}
+.fc-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+}
+.fc-arrow[data-side='prev'] {
+  left: calc((100% - var(--fc-card-w)) / 2);
+}
+.fc-arrow[data-side='next'] {
+  left: calc((100% + var(--fc-card-w)) / 2);
+}
+
+/* ---- Progress dots: one per card. The current one stretches into a pill
+   that fills: over the autoplay interval in a card stack (CardStack), or
+   with the row's scroll position (ScrollDots). ---- */
+.fc-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-5);
+}
+.fc-dot {
+  display: grid;
+  place-items: center;
+  /* a comfortable tap area around a tiny dot */
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.fc-dot__fill {
+  position: relative;
+  display: block;
+  width: var(--space-1-5);
+  height: var(--space-1-5);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--border-control);
+  opacity: 0.45;
+  transition:
+    width var(--motion-duration-normal) var(--motion-easing-productive-in-out),
+    opacity var(--motion-duration-normal) var(--motion-easing-productive-in-out);
+}
+.fc-dot[aria-current='true'] .fc-dot__fill {
+  width: var(--space-5);
+  opacity: 1;
+  background: var(--border-decorative);
+}
+.fc-dot[aria-current='true'] .fc-dot__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--content-brand);
+  transform-origin: left center;
+}
+/* A scroller's dots: the current fill follows the row's position. */
+.fc-dot[data-progress] .fc-dot__fill::after {
+  transform: scaleX(var(--fc-dot-progress, 0));
+}
+.fc-dot[data-playing] .fc-dot__fill::after {
+  animation: fc-dot-fill var(--fc-interval) linear both;
+}
+@keyframes fc-dot-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.fc-dot:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-slide,
+  .fc-dot__fill {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   Phone carousel (CardStack), as Apple's galleries on a phone: a row that scrolls sideways
+   and snaps to each card, the next peeking in. It runs edge to edge (out of its Container's
+   gutter) while each card snaps to the gutter. --fs-card-w is a share of the carousel's width
+   (cqw: the root is the size container).
+   ========================================================= */
+.fs {
+  container-type: inline-size;
+}
+.fs-row {
+  --fs-gutter: calc(50vw - 50cqw);
+  display: flex;
+  gap: var(--space-3);
+  margin: 0 calc(var(--fs-gutter) * -1);
+  padding: 0 var(--fs-gutter);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--fs-gutter);
+  scrollbar-width: none;
+}
+.fs-row::-webkit-scrollbar {
+  display: none;
+}
+.fs-slide {
+  flex: 0 0 var(--fs-card-w);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.fs-slide > * {
+  height: 100%;
+}
+/* The card on show brings its text in, as Apple's captions do: line after line (kicker, name,
+   role, logo), each sliding in from the right and fading up a beat after the one before, as the
+   card settles; the others' text waits out of sight. Lines are the text block's children; their
+   `translate` and the section entrance's `transform` are separate properties, and the entrance
+   clears its opacity once played, so the two never fight. */
+.fs-slide :is(.meet-card__content, .lp-content, .alumni-card__body) > * {
+  transition:
+    opacity 0.45s var(--motion-easing-productive-in-out, ease),
+    translate 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fs-slide:not([data-active]) :is(.meet-card__content, .lp-content, .alumni-card__body) > * {
+  opacity: 0;
+  translate: 40px 0;
+  transition-duration: 0.2s;
+  transition-delay: 0s;
+}
+.fs-slide[data-active] :is(.meet-card__content, .lp-content, .alumni-card__body) > * {
+  transition-delay: 0.1s;
+}
+.fs-slide[data-active] :is(.meet-card__content, .lp-content, .alumni-card__body) > :nth-child(2) {
+  transition-delay: 0.18s;
+}
+.fs-slide[data-active] :is(.meet-card__content, .lp-content, .alumni-card__body) > :nth-child(3) {
+  transition-delay: 0.26s;
+}
+.fs-slide[data-active] :is(.meet-card__content, .lp-content, .alumni-card__body) > :nth-child(4) {
+  transition-delay: 0.34s;
+}
+.fs-slide[data-active] :is(.meet-card__content, .lp-content, .alumni-card__body) > :nth-child(n + 5) {
+  transition-delay: 0.42s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fs-slide :is(.meet-card__content, .lp-content, .alumni-card__body) > * {
+    transition: none;
+    opacity: 1 !important;
+    translate: none !important;
+  }
+}

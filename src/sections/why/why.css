@@ -1,0 +1,572 @@
+/* Why SSB (WhySection), on the page's white (`surface-page`; the faint grey `surface-subtle` until
+   2026-10-07, the team's call). */
+
+/* ---- The breaker (WhyBreaker): the clip full bleed, the words white over it ---- */
+
+/* Desktop: the clip fills the breaker, Nikhil on its left; the words sit over
+   it at the right in white (a dark island) on a progressive blur, a dark frost
+   strengthening toward them, who said it a footnote under them; the clip fades out into the page under them. Both edges are the page's
+   (Container: the nav's). Phone: the clip at the top, a blurred copy of it
+   under it to the foot; the words and the figures over its lower
+   part on a frost rising behind them, all white; then it fades out into the
+   page (the team's calls). */
+.why-breaker {
+  --why-ground: var(--surface-page);
+  --why-shade: var(--color-neutral-dark-2);
+  --why-line: color-mix(in oklab, var(--on-image-ink) 35%, transparent);
+  /* Phone: the height the clip is framed for (its face clear above the words). */
+  /* compact since 2026-10-07 (the team: every breaker shorter; then "slightly" taller again): it
+     was max(40rem, 92svh), then max(34rem, 80svh) */
+  --why-clip: max(36rem, 86svh);
+  /* How far the clip takes to fade out into the page at the breaker's foot. */
+  --why-fade: 5rem;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--why-ground);
+}
+@media (width >= 1056px) {
+  .why-breaker {
+    --why-fade: 6rem;
+    display: grid;
+    /* compact since 2026-10-07, then a little taller again: it was clamp(34rem, 80svh, 46rem),
+       then clamp(28rem, 64svh, 38rem) */
+    min-height: clamp(30rem, 72svh, 42rem);
+  }
+}
+.why-breaker-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+/* The clip's own opacity eases out over its foot (a mask, not a colour laid
+   over it), so it melts into the page instead of greying. */
+.why-breaker-media {
+  mask-image: linear-gradient(
+    to top,
+    transparent 0,
+    rgb(0 0 0 / 0.05) calc(var(--why-fade) * 0.125),
+    rgb(0 0 0 / 0.15) calc(var(--why-fade) * 0.25),
+    rgb(0 0 0 / 0.3) calc(var(--why-fade) * 0.375),
+    rgb(0 0 0 / 0.5) calc(var(--why-fade) * 0.5),
+    rgb(0 0 0 / 0.7) calc(var(--why-fade) * 0.625),
+    rgb(0 0 0 / 0.85) calc(var(--why-fade) * 0.75),
+    rgb(0 0 0 / 0.95) calc(var(--why-fade) * 0.875),
+    #000 var(--why-fade)
+  );
+}
+.why-breaker-stage {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  overflow: hidden;
+  will-change: transform;
+}
+/* The clip at 16:9. Phone: framed for --why-clip, a little larger than the
+   screen is tall (exactly: zoomed out, 2026-10-07), centred on his face (35% across) and raised 2% (10% cut his head under the nav), so
+   his face sits in the top half, clear of the words; its foot melts into the copy under
+   it. Desktop: drawn 12% larger than covering the breaker (zoomed out from 25%, the
+   team's call, 2026-10-07), shifted so he sits in its left third, his face about 27%
+   across. The shift is bounded by the zoom: at 1.12 the frame covers both edges only
+   while shifted between 45% and 55% of its width. */
+.why-breaker-clip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: calc(var(--why-clip) * 16 / 9);
+  height: calc(var(--why-clip));
+  max-width: none;
+  object-fit: cover;
+  translate: -35% -2%;
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 90%);
+}
+@media (width >= 1056px) {
+  .why-breaker-clip {
+    width: calc(max(100cqw, 177.78cqh) * 1.12);
+    height: calc(max(100cqh, 56.25cqw) * 1.12);
+    translate: -55% -6%;
+    mask-image: none;
+  }
+}
+/* Kamath's breaker (data-fit="height", 2026-10-07; the team: "zoom out, then place him"). Covering
+   a band wider than 16:9 cropped the frame's top and bottom away and drew him huge, his head at the
+   band's top edge, worse once the breakers grew taller. Here the clip is drawn at the band's full
+   height (4% over), so all of the frame shows, him in it with room over his head; its left edge
+   just off the band (-6%) puts his face about a quarter of the way across. On a band wider than the
+   clip it ends before the right edge: it feathers out into its own poster (a still, not a second
+   video, which halves the frame rate), blurred far past recognition and covering the stage; the
+   words' frost over that side hides the seam. */
+@media (width >= 1056px) {
+  .why-breaker[data-fit='height'] .why-breaker-stage::before {
+    content: '';
+    position: absolute;
+    inset: -8%;
+    background: var(--why-poster) center / cover no-repeat var(--why-shade);
+    filter: blur(32px) saturate(1.1);
+  }
+  .why-breaker[data-fit='height'] .why-breaker-clip {
+    left: 0;
+    width: calc(177.78cqh * 1.04);
+    height: calc(100cqh * 1.04);
+    translate: -6% 0;
+    mask-image: linear-gradient(to right, #000 62%, transparent 96%);
+  }
+}
+/* Phone: the copy under it, covering the whole breaker. It is blurred by the
+   frost over it (.why-breaker-copy::before), so it needs no filter of its own;
+   above the frost the sharp clip covers it. Hidden (and not played) on desktop. */
+.why-breaker-haze {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+@media (width >= 1056px) {
+  .why-breaker-haze {
+    display: none;
+  }
+}
+/* Desktop's layers over the clip: the progressive blur behind the words
+   (blurred and darkened, clear over Nikhil, full under the words). On a phone the copy's own layers
+   do this (.why-breaker-top, .why-breaker-foot). */
+.why-breaker-blur {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+@media (width >= 1056px) {
+  .why-breaker-blur {
+    display: block;
+  }
+  .why-breaker-blur {
+    background: color-mix(in oklab, var(--why-shade) 45%, transparent);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    backdrop-filter: blur(24px) saturate(1.2);
+    mask-image: linear-gradient(to right, transparent 42%, #000 64%);
+  }
+}
+
+/* The page's width; on desktop the breaker's height, the copy centred in it
+   (a touch above centre: more room under it, where the clip fades). */
+.why-breaker-inner {
+  position: relative;
+}
+@media (width >= 1056px) {
+  .why-breaker-inner {
+    display: flex;
+    align-items: center;
+    container-type: inline-size;
+  }
+}
+/* Phone: the clip's top half clear above the copy. Desktop: two columns, who
+   he is at the left level with the figures, the words and figures at the right
+   (the right edge the page's), the fade under them. */
+.why-breaker-copy {
+  padding-block: calc(var(--why-clip) * 0.48) var(--why-fade);
+}
+@media (width >= 1056px) {
+  .why-breaker-copy {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) min(46%, 36rem);
+    grid-template-areas:
+      '. lead'
+      '. foot';
+    /* Less room above than below, so the centred copy sits a little high, level
+       with the clip's picture above its faded foot. */
+    padding-block: var(--space-12) var(--why-fade);
+  }
+  .why-breaker-top {
+    display: contents;
+  }
+  .why-breaker-lead {
+    grid-area: lead;
+  }
+}
+
+/* Phone: the words, then the figures, all on a frost rising from clear over his face to a
+   blurred dark, on to the breaker's foot. */
+@media (width < 1056px) {
+  .why-breaker-copy {
+    position: relative;
+  }
+  .why-breaker-copy::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: calc(var(--why-clip) * 0.48 - 6rem) calc(var(--space-gutter) * -1) 0;
+    background: color-mix(in oklab, var(--why-shade) 55%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    backdrop-filter: blur(20px) saturate(1.2);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 6rem,
+      #000 calc(100% - var(--why-fade)),
+      transparent
+    );
+  }
+  .why-breaker-top {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Who said it, a footnote under the words, a step over the figures' text size, white. */
+.why-breaker-credit {
+  margin-top: var(--space-3);
+  color: var(--on-image-ink);
+}
+/* The words at the display size, medium (several lines: kept quiet, the team's
+   call), pure white. */
+.why-breaker-words {
+  margin-top: var(--space-4);
+  font-size: var(--type-display-size);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  letter-spacing: var(--type-display-tracking);
+  text-wrap: pretty;
+  color: var(--on-image-ink);
+}
+
+/* The figures, white over the clip, a line over each. */
+/* A clear gap between the words and the figures (the team's call); on desktop
+   wider, which lifts the words (the figures hold their place at the foot). */
+.why-breaker-foot {
+  margin-top: var(--space-8);
+}
+@media (width >= 1056px) {
+  .why-breaker-foot {
+    grid-area: foot;
+    margin-top: var(--space-12);
+  }
+}
+/* As Apple sets its spec figures: a line over each, the figure, a line of
+   text, then the source's logo (one tone) and its note. */
+.why-breaker-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+}
+.why-breaker-stat {
+  padding-top: var(--space-5);
+  border-top: var(--border-width-hair) solid var(--why-line);
+}
+.why-breaker-ink {
+  color: var(--on-image-ink);
+}
+.why-breaker-note {
+  color: var(--on-image-ink-secondary);
+}
+.why-breaker-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-4);
+}
+.why-breaker-source img {
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* A figure's line clips it, so it slides up into place (WhyMotion). */
+.why-slide {
+  overflow: hidden;
+}
+.why-slide > span {
+  display: inline-block;
+}
+
+/* ---- The turn: a line ending in a role that keeps changing ---- */
+
+.why-roles {
+  margin-bottom: var(--space-12);
+  max-width: 52rem;
+}
+/* Desktop: the page's full width, so "But SSB prepares you for roles like"
+   and the role fit on one line (the team's call; ~1,080px with the longest role
+   at 36px). Where they don't (up to ~1,130px wide), the role wraps whole. */
+@media (width >= 1056px) {
+  .why-roles {
+    max-width: none;
+    margin-bottom: var(--space-16);
+  }
+}
+/* As wide as the longest role (every role stacked in one cell), so turning over
+   never moves the line; clipped, so each slides through it. */
+.why-roll {
+  display: inline-grid;
+  vertical-align: bottom;
+  overflow: hidden;
+  /* The logo's green (the team asked for brighter than the deep `content-brand`); at the display
+     size it clears 3:1 on the page's white. The page is pinned light, so the light step is safe. */
+  color: var(--color-ssb-light-9);
+}
+.why-role {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+.why-role + .why-role {
+  visibility: hidden;
+}
+/* "old MBA": italic (its own face, layout.tsx), a line drawn through it, and
+   grey. WhyMotion holds it in ink (data-pending) until the line arrives, then
+   draws the line from the left as the words fade to grey; without it they show
+   struck and grey. Kept on one line so the line is one stroke; the line, not
+   text-decoration, so it can be drawn. */
+.why-strike {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--content-secondary);
+  transition: color var(--motion-duration-slower) var(--motion-easing-productive-in-out);
+}
+.why-strike[data-pending] {
+  color: inherit;
+}
+.why-strike em {
+  font-family: var(--font-sans-italic), var(--ssx-font-sans), sans-serif;
+  font-style: italic;
+}
+/* The line: an SVG path, straight for now (a hand-drawn squiggle was tried,
+   2026-10-07; swapping the path brings it back), stretched across the words
+   just past their ends. 2.2 units of the 14-unit box is ~0.08em, so it scales
+   with the type. Drawn in full here (dashoffset 0); WhyMotion draws it on. */
+.why-strike-line {
+  position: absolute;
+  top: calc(56% - 0.25em);
+  right: -0.04em;
+  left: -0.06em;
+  height: 0.5em;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* ---- The answer: three chapters that stack as the page scrolls ---- */
+
+/* Each card holds under the sticky nav (4rem), a step lower than the one
+   before, so the stack shows each card's top edge; the next scrolls up over it
+   (the AI journey's scroll: WhyMotion shrinks the covered cards and, for a card
+   taller than the screen, lowers its hold so all of it is seen first).
+   The space under each card is how long it holds. Under reduced motion they
+   simply follow one another. */
+.why-chapters {
+  --why-top: calc(4rem + var(--space-4));
+  --why-step: var(--space-3);
+  display: grid;
+}
+@media (width >= 1056px) {
+  .why-chapters {
+    --why-top: calc(4rem + var(--space-8));
+    --why-step: var(--space-4);
+  }
+}
+.why-chapter {
+  position: sticky;
+  top: calc(var(--why-top) + var(--i) * var(--why-step));
+  padding-bottom: var(--space-16);
+}
+.why-chapter:last-child {
+  padding-bottom: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .why-chapter {
+    position: static;
+    padding-bottom: var(--space-4);
+  }
+}
+.why-card {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border: var(--border-width-hair) solid var(--border-subtle);
+  /* 8px, as every card on the page (the team's call, 2026-10-07: one roundness); it was 16 */
+  border-radius: var(--radius-lg);
+  background: var(--surface-default);
+  /* no shadow (the AI journey's cards have none): the hairline edge carries it */
+  transform-origin: 50% 0;
+}
+@media (width >= 1056px) {
+  .why-card {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+.why-card-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-10);
+  padding: var(--space-6);
+}
+@media (width >= 672px) {
+  .why-card-copy {
+    padding: var(--space-10);
+  }
+}
+/* The story: its photo fills the box, its words sit at the foot in white. Inset
+   in the card: under the chapter's copy below desktop (so a stacked card's top
+   still shows its word), beside it on desktop. Taller on a phone, where the
+   words take more of the box. */
+.why-story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: 0 var(--space-3) var(--space-3);
+  overflow: hidden;
+  /* 8px, the card's own (one roundness, 2026-10-07); concentric (4px) read near-square, the team */
+  border-radius: var(--radius-lg);
+  aspect-ratio: 4 / 5;
+}
+@media (width >= 672px) {
+  .why-story {
+    aspect-ratio: 16 / 9;
+  }
+}
+@media (width >= 1056px) {
+  .why-story {
+    margin: var(--space-3) var(--space-3) var(--space-3) 0;
+  }
+}
+/* The photo blurs progressively under the words (as the Placements showcase's
+   cards do): two blurred copies on it, each revealed by its own gradient, softly
+   then deeply toward the foot, under a dark scrim. Copies, not backdrop-filter,
+   which would re-run as the page scrolls. Every layer is scaled up alike, so
+   they stay aligned while each blur's transparent rim falls outside the box;
+   the layer is composited, so the stack's shrinking never re-blurs it. */
+.why-story-media {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.why-story-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+}
+/* The blur starts just above the words, so faces higher in the photo stay
+   sharp; the scrim is dark enough at the foot for white over a light photo
+   (GradeSense's screens). */
+.why-story-blur-soft {
+  filter: blur(8px);
+  mask-image: linear-gradient(to bottom, transparent 46%, #000 64%);
+}
+.why-story-blur-deep {
+  filter: blur(20px);
+  mask-image: linear-gradient(to bottom, transparent 60%, #000 86%);
+}
+.why-story-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    color-mix(in oklab, var(--surface-image-scrim) 62%, transparent) 60%,
+    color-mix(in oklab, var(--surface-image-scrim) 92%, transparent) 100%
+  );
+}
+@media (width >= 672px) {
+  .why-story-blur-soft {
+    mask-image: linear-gradient(to bottom, transparent 52%, #000 70%);
+  }
+  .why-story-blur-deep {
+    mask-image: linear-gradient(to bottom, transparent 66%, #000 90%);
+  }
+  .why-story-scrim {
+    background: linear-gradient(
+      to bottom,
+      transparent 36%,
+      color-mix(in oklab, var(--surface-image-scrim) 62%, transparent) 66%,
+      color-mix(in oklab, var(--surface-image-scrim) 92%, transparent) 100%
+    );
+  }
+}
+/* "Example", a light glass chip at the photo's top left, in line with the
+   words (the showcase's chips, quiet). Nothing between it and the photo may
+   have a mask, filter or opacity, or its glass would blur nothing. */
+.why-story-tag {
+  position: absolute;
+  top: var(--space-6);
+  left: var(--space-6);
+  display: inline-flex;
+  align-items: center;
+  height: var(--space-8);
+  padding-inline: var(--space-3);
+  border: var(--border-width-hair) solid color-mix(in oklab, var(--surface-default) 50%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--surface-default) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  color: var(--content-primary);
+}
+@media (width >= 672px) {
+  .why-story-tag {
+    top: var(--space-8);
+    left: var(--space-8);
+  }
+}
+.why-story-copy {
+  position: relative;
+  max-width: 38rem;
+  padding: var(--space-6);
+}
+@media (width >= 672px) {
+  .why-story-copy {
+    padding: var(--space-8);
+  }
+}
+
+/* The finished stack leaves as one piece (2026-10-07), as the AI journey's does. A sticky chapter
+   is pushed out when the list's end reaches the foot of its box, so each chapter's foot padding is
+   the step of every chapter after it (the room between chapters in the flow is a top margin
+   instead). The chapters keep their steps as they scroll away together. --why-n: how many. */
+.why-chapters { --why-n: 3; }
+.why-chapter, .why-chapter:last-child { padding-bottom: calc((var(--why-n) - 1 - var(--i)) * var(--why-step)); }
+.why-chapter + .why-chapter { margin-top: var(--space-16); }
+@media (prefers-reduced-motion: reduce) {
+  .why-chapter, .why-chapter:last-child { padding-bottom: 0; }
+  .why-chapter + .why-chapter { margin-top: var(--space-4); }
+}
+
+/* the chapters' icons in the logo's green, as the term cards' and the rest of the page's (2026-10-07) */
+.why-chapter-icon { color: var(--color-ssb-light-9); }
+
+/* The argument out front (2026-10-12): "Why the traditional MBA doesn't work" as the title, at the
+   display size, bold; "traditional MBA" in the logo's green, lifted for the dark. The quote under
+   it a step quieter: smaller, and at 80% white. */
+.why-breaker-kicker {
+  margin: 0;
+  font-size: var(--type-display-size);
+  font-weight: var(--font-weight-bold, 700);
+  line-height: 1.1;
+  letter-spacing: var(--type-display-tracking);
+  color: var(--on-image-ink);
+  text-wrap: balance;
+}
+/* white like the rest (2026-10-12: the green taken off, the team's ask) */
+.why-breaker-kicker-em {
+  color: inherit;
+}
+.why-breaker-kicker + .why-breaker-words {
+  margin-top: var(--space-6);
+  font-size: var(--type-h2-size, 1.5rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--on-image-ink) 82%, transparent);
+}

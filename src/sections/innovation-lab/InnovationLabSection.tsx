@@ -1,0 +1,458 @@
+'use client';
+
+import * as React from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Container, Heading, Section, Text } from '@kishanscaler/ssx-ui';
+import { ease, motionTokens, prefersReducedMotion, useMotion } from '@kishanscaler/ssx-ui/motion';
+
+import { labBand, labBand as defaultBand, labTurn, labVentures } from '@/content/innovation-lab';
+import type { Venture } from '@/content/community';
+import { VentureCard } from '@/sections/community/VentureCard';
+import { BuiltCards, type BuiltCard } from '@/sections/built/BuiltCards';
+import '@/sections/community/community.css';
+import { Accent } from '@/sections/shared/Accent';
+import { RowSection } from '@/sections/shared/RowSection';
+import { Title } from '@/sections/shared/Title';
+import './innovation-lab.css';
+import { offsetPx } from '@/lib/motion-offset';
+
+const { duration: d, stagger: st } = motionTokens;
+const offset = offsetPx; // px, not the tokens' rem: see motion-offset.ts
+
+/** Where the scroll moment plays (innovation-lab.css gives the track its length under the same query). */
+const LIVE = '(min-width: 1056px) and (min-height: 640px)';
+/** The share of the moment the photo takes to pull back into its tile; the rest is a hold. */
+const CLOSE = 0.82;
+/** How far out (and how much larger) the other tiles start, as a multiple of where they land. */
+const SPREAD = 1.28;
+/** The mosaic's places for the photos after the first, in order (innovation-lab.css). */
+export const AREAS = ['a', 'b', 'd', 'e'] as const;
+
+/**
+ * The Scaler Innovation Lab (2026-10-07). One moment, on desktop: the lab's photo of students
+ * building a drone arrives full-bleed, sticks under the nav, and the camera pulls back: its frame
+ * closes into the middle tile of a mosaic of the lab (a robotic hand, the glass-walled labs, a
+ * drone in flight, a mentor trying a student's build), the other tiles settling in from beyond
+ * the edges as the header (eyebrow, heading, line, as the curriculum's) and the three figures
+ * (green, at its right) come up over them. Then the startups the lab incubates, as Beyond
+ * Placements' cards, under a subheading (one section: a smaller heading, closer).
+ *
+ * The frame closes with `clip-path` and the photo inside it only ever scales down, so it stays
+ * sharp; the tiles move by transforms. Below desktop, on a short screen and under reduced motion
+ * the mosaic is simply there (its tiles wipe open as the faculty cards do, the head fades up).
+ *
+ * The photos are Scaler's own, from its Innovation Lab page (public/media/CREDITS.md). Tried that
+ * day, before them, on the team's footage of the lab (Rubenius' film: soft, busy, watermarked):
+ * the copy over it as a breaker, in turn (the team's verdicts): centred over a black gradient
+ * ("very bad, make it classy"); a blur rising behind the copy melting into the page ("gradient
+ * and fade looking weird"); one even blur ("make it premium"); a feathered backdrop; the hero's
+ * layout on black; that blur over a cropped clip ("getting cropped, looks bad"); the clip uncropped
+ * with the copy on a blur from the left ("ghatiya"); then the footage framed under the name and
+ * figures, on white ("looks flat, doesn't excite anyone"). After this moment, that day: the
+ * photos simply rising in under the header; the figures in a band of their own, then on green
+ * tiles in the grid ("looks like Lumia"), then in a box above it; the team came back to this
+ * ("go with the older layout"). Before all that: a sticky pitch beside count-up stat cards and a
+ * framed row of banner cards (in git history).
+ */
+/** `band`, `turn` and `ventures` replace the defaults (the deck variant, /v7: the deck's heading and its four startups). */
+export function InnovationLabSection({
+  band = labBand,
+  turn = labTurn,
+  ventures = labVentures,
+  variant,
+  builtCards = false,
+}: {
+  /** The startups on the student startups' cards (BuiltCards, its deck look), every field kept (/v7, 2026-10-28). */
+  builtCards?: boolean;
+  band?: typeof labBand;
+  turn?: typeof labTurn;
+  ventures?: Venture[];
+  /** 'deck' (/v7, 2026-10-28): the figures in a row under the heading, the mosaic shorter (deck.css). */
+  variant?: 'deck';
+} = {}) {
+  return (
+    <>
+      <LabBand band={band} variant={variant} />
+      {builtCards ? (
+        <BuiltCards
+          id="sil"
+          variant="deck"
+          content={{ eyebrow: '', title: '', titleTail: '', label: 'Startups incubated in the Innovation Lab', companies: ventures.map(toBuiltCard) }}
+          heading={
+          // a subheading within the lab's section (the team's call): h3, a step smaller
+          <Heading
+            as="h3"
+            size="1"
+            id="sil-title"
+            data-enter="headline"
+            className="lab-sub max-w-(--size-measure-max) [text-wrap:balance]"
+          >
+            <span className="block">
+              <Accent text={turn.setup} word={turn.accent} />
+            </span>
+            <span className="block">{turn.lead}</span>
+          </Heading>
+          }
+        />
+      ) : (
+      <RowSection
+        id="sil"
+        title="Startups incubated in the Innovation Lab"
+        heading={
+          // a subheading within the lab's section (the team's call): h3, a step smaller
+          <Heading
+            as="h3"
+            size="1"
+            id="sil-title"
+            data-enter="headline"
+            className="lab-sub max-w-(--size-measure-max) [text-wrap:balance]"
+          >
+            <span className="block">
+              <Accent text={turn.setup} word={turn.accent} />
+            </span>
+            <span className="block">{turn.lead}</span>
+          </Heading>
+        }
+        itemName="startup"
+        cardWidth="38rem"
+        // two still rows, as Alumni (2026-10-23, the team's ask; was drifting)
+        stacked
+      >
+        {ventures.map((v) => (
+          <VentureCard key={v.company} {...v} />
+        ))}
+      </RowSection>
+      )}
+    </>
+  );
+}
+
+/** A lab startup on the student startups' card: its banner shown whole in its own colours,
+ *  the sector over the name, the founders by name with their role, the line, the link. */
+function toBuiltCard(v: Venture): BuiltCard {
+  const names = v.founders.length > 1 ? `${v.founders.slice(0, -1).map(first).join(', ')} & ${first(v.founders.at(-1)!)}` : v.founders[0];
+  return {
+    company: v.company,
+    sector: v.sector,
+    by: v.role ? `${names} · ${v.role}` : names,
+    blurb: v.description,
+    image: { src: v.banner?.src ?? v.image ?? '/internship/plate.webp', alt: `${v.company}`, width: 1133, height: 542 },
+    focus: [0.5, 0.5],
+    stat: v.stat,
+    href: v.href,
+    // shown whole in its own colours (2026-10-28, the user's ask: the logos were cropped)
+    banner: v.banner ? { top: v.banner.top, bottom: v.banner.bottom } : undefined,
+  };
+}
+const first = (name: string) => name.split(' ')[0];
+
+function LabBand({ band: labBand, variant }: { band: typeof defaultBand; variant?: 'deck' }) {
+  const scope = React.useRef<HTMLElement>(null);
+  useLabMotion(scope);
+  const [first, ...rest] = labBand.photos;
+
+  return (
+    <Section ref={scope} density="roomy" aria-labelledby="sil-band-title" className="lab" data-variant={variant}>
+      <div data-lab-track className="lab-track">
+        <div data-lab-stage className="lab-stage">
+          <Container className="lab-frame">
+            <div data-lab-head className="lab-head">
+              {/* the page's section header, as the curriculum's: eyebrow, heading, the line under it */}
+              <div className="lab-copy flex flex-col gap-3">
+                <Heading as="p" size="eyebrow" className="text-content-brand">
+                  {labBand.eyebrow}
+                </Heading>
+                <Heading as="h2" size="display" id="sil-band-title">
+                  {/* keeps "non-technical" whole: it broke after "non-" */}
+                  <Title text={labBand.title} />
+                </Heading>
+                <Text size="lg" tone="secondary">
+                  {labBand.line}
+                </Text>
+              </div>
+              <ul className="lab-stats">
+                {labBand.stats.map((s) => (
+                  <li key={s.label} className="lab-stat">
+                    {/* a span a character, for the figure written in letter by letter; inline, so it
+                        still reads (and copies) as one word */}
+                    <p className="lab-stat-value">
+                      {Array.from(s.value).map((ch, i) => (
+                        <span key={i} data-lab-char>
+                          {ch}
+                        </span>
+                      ))}
+                    </p>
+                    <p className="lab-stat-label">{s.label}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div data-lab-mosaic className="lab-mosaic">
+              {/* the first photo's tile: the moment lifts the photo out of it, over the whole stage */}
+              <div data-lab-slot className="lab-slot">
+                <figure data-lab-hero className="lab-tile lab-hero">
+                  <img
+                    src={first.src}
+                    srcSet={first.srcSet}
+                    sizes="100vw"
+                    alt={first.alt}
+                    width={1890}
+                    height={1138}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: first.position }}
+                  />
+                </figure>
+              </div>
+              {rest.map((photo, i) => (
+                <figure key={photo.src} data-lab-tile data-area={AREAS[i]} className="lab-tile">
+                  <img
+                    src={photo.src}
+                    srcSet={photo.srcSet}
+                    // the tile crops a landscape photo to a tall box: it is drawn wider than the tile
+                    sizes="(min-width: 1056px) 44vw, 50vw"
+                    alt={photo.alt}
+                    width={1400}
+                    height={843}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: photo.position }}
+                  />
+                </figure>
+              ))}
+            </div>
+          </Container>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+/** Each figure's characters, figure by figure. */
+const figuresIn = (root: HTMLElement) =>
+  gsap.utils
+    .toArray<HTMLElement>('.lab-stat-value', root)
+    .map((figure) => gsap.utils.toArray<HTMLElement>('[data-lab-char]', figure));
+
+/**
+ * The figures written in letter by letter (the team's ask, 2026-10-07): each character fades in
+ * out of a slight blur, a stagger after the one before, each figure starting a beat after the
+ * last. Opacity and filter only, on inline spans, so nothing moves and the words stay whole.
+ */
+function writeFigures(figures: HTMLElement[][]) {
+  const tl = gsap.timeline();
+  figures.forEach((chars, i) =>
+    tl.to(
+      chars,
+      {
+        opacity: 1,
+        filter: 'blur(0px)',
+        duration: d.slower,
+        ease: ease('expressiveEntrance'),
+        stagger: st.base * 1.5,
+      },
+      i * d.normal,
+    ),
+  );
+  return tl;
+}
+
+/**
+ * The lab's motion. On desktop (LIVE, with motion), the scroll moment: the track is tall (CSS) and
+ * its stage sticks under the nav; scrubbed to the scroll, the first photo, laid over the whole
+ * stage, is trimmed by `clip-path` from the stage's edges to its tile's (its corners rounding in)
+ * while it scales down about the tile's centre just enough to keep covering it; the other tiles
+ * come in from SPREAD times their distance from it, at SPREAD times their size, under it; the head
+ * fades up once the frame has closed halfway, and once it is half in, the figures are written in
+ * letter by letter (writeFigures), once. Every box is measured on refresh, untransformed.
+ * Otherwise, an entrance: the head fades up and its figures are written in, each tile wipes open
+ * as it is reached. Campus life (CommunitySections) plays it too, on the same markup hooks and
+ * `lab-*` classes; anything over its middle tile (`data-lab-overlay`) comes up with the head.
+ */
+export function useLabMotion(scope: React.RefObject<HTMLElement | null>) {
+  useMotion(
+    () => {
+      const root = scope.current;
+      if (!root || prefersReducedMotion(root)) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const one = <T extends Element = HTMLElement>(hook: string) => root.querySelector<T>(`[${hook}]`);
+      const track = one('data-lab-track');
+      const stage = one('data-lab-stage');
+      const head = one('data-lab-head');
+      const mosaic = one('data-lab-mosaic');
+      const slot = one('data-lab-slot');
+      const hero = one('data-lab-hero');
+      const photo = hero?.querySelector('img');
+      const tiles = gsap.utils.toArray<HTMLElement>('[data-lab-tile]', root);
+      // anything laid over the middle tile (campus life's follow buttons) comes up with the head
+      const overlays = gsap.utils.toArray<HTMLElement>('[data-lab-overlay]', root);
+      if (!track || !stage || !head || !mosaic || !slot || !hero || !photo) return;
+      // the deck pages (2026-10-28): no appear effects, the figures simply there; the scroll moment kept
+      const calm = !!root.closest('[data-entrance="calm"]');
+      const figures = calm ? [] : figuresIn(root);
+      const chars = figures.flat();
+      let writing: gsap.core.Timeline | null = null;
+      const unwrite = () => {
+        writing?.kill();
+        writing = null;
+        gsap.set(chars, { clearProps: 'opacity,filter' });
+      };
+
+      const mm = gsap.matchMedia();
+
+      mm.add(LIVE, () => {
+        root.setAttribute('data-lab-live', '');
+
+        // The stage's box, the tile the photo closes into and each other tile's offset from that
+        // tile's centre, all in the stage's coordinates.
+        const geo = { top: 0, right: 0, bottom: 0, left: 0, cx: 0, cy: 0, scale: 1, radius: 0, rise: 0 };
+        let offsets = tiles.map(() => ({ x: 0, y: 0 }));
+        const measure = () => {
+          gsap.set(tiles, { clearProps: 'transform' });
+          const s = stage.getBoundingClientRect();
+          const r = slot.getBoundingClientRect();
+          geo.top = r.top - s.top;
+          geo.left = r.left - s.left;
+          geo.right = s.right - r.right;
+          geo.bottom = s.bottom - r.bottom;
+          geo.cx = geo.left + r.width / 2;
+          geo.cy = geo.top + r.height / 2;
+          // scaled about the tile's centre, the photo must still cover the tile on every side
+          const half = [r.width / 2 / geo.cx, r.width / 2 / (s.width - geo.cx)];
+          const tall = [r.height / 2 / geo.cy, r.height / 2 / (s.height - geo.cy)];
+          geo.scale = Math.min(1, Math.max(...half, ...tall) * 1.02);
+          geo.radius = parseFloat(getComputedStyle(tiles[0] ?? slot).borderTopLeftRadius) || 0;
+          // the head rises the system's entrance offset, in px
+          geo.rise = offset.enter;
+          offsets = tiles.map((tile) => {
+            const b = tile.getBoundingClientRect();
+            return { x: b.left - s.left + b.width / 2 - geo.cx, y: b.top - s.top + b.height / 2 - geo.cy };
+          });
+        };
+
+        const at = { closed: 0, head: 0 };
+        gsap.set(chars, { opacity: 0, filter: 'blur(6px)' });
+        const render = () => {
+          const p = at.closed;
+          const out = SPREAD - 1;
+          hero.style.clipPath = `inset(${geo.top * p}px ${geo.right * p}px ${geo.bottom * p}px ${
+            geo.left * p
+          }px round ${geo.radius * p}px)`;
+          gsap.set(photo, {
+            scale: 1 + (geo.scale - 1) * p,
+            transformOrigin: `${geo.cx}px ${geo.cy}px`,
+          });
+          tiles.forEach((tile, i) =>
+            gsap.set(tile, {
+              x: offsets[i].x * out * (1 - p),
+              y: offsets[i].y * out * (1 - p),
+              scale: 1 + out * (1 - p),
+            }),
+          );
+          gsap.set(head, { opacity: at.head, y: (1 - at.head) * geo.rise });
+          if (overlays.length) gsap.set(overlays, { opacity: at.head });
+          if (!writing && at.head > 0.5) writing = writeFigures(figures);
+        };
+        measure();
+        render();
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          onUpdate: render,
+          scrollTrigger: {
+            // from the stage sticking under the nav (its CSS `top`) to its track's end
+            trigger: track,
+            start: () => `top top+=${parseFloat(getComputedStyle(stage).top) || 0}`,
+            end: 'bottom bottom',
+            // the hero's smoothing: light, so a quick flick doesn't outrun the moment
+            scrub: d.slow,
+            invalidateOnRefresh: true,
+            onRefresh: () => {
+              measure();
+              render();
+            },
+          },
+        });
+        tl.to(at, { closed: 1, duration: CLOSE, ease: ease('expressiveInOut') }, 0)
+          .to(at, { head: 1, duration: CLOSE * 0.4, ease: ease('expressiveEntrance') }, CLOSE * 0.5)
+          .to({}, { duration: 1 - CLOSE });
+
+        return () => {
+          root.removeAttribute('data-lab-live');
+          hero.style.clipPath = '';
+          gsap.set([photo, head, ...tiles, ...overlays], { clearProps: 'transform,transformOrigin,opacity' });
+          unwrite();
+        };
+      });
+
+      mm.add(`not all and ${LIVE}`, () => {
+        if (calm) return;
+        const enter = ease('expressiveEntrance');
+        const long = d.slower;
+        gsap.fromTo(
+          head,
+          { autoAlpha: 0, y: offset.enter },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: d.slowest,
+            ease: enter,
+            clearProps: 'transform,opacity,visibility',
+            scrollTrigger: { trigger: head, start: 'clamp(top 85%)', toggleActions: 'play none none none' },
+          },
+        );
+        gsap.set(chars, { opacity: 0, filter: 'blur(6px)' });
+        // once each (guards, not `once: true`, which threw on a mid-page reload: see useSectionEntrance)
+        ScrollTrigger.create({
+          trigger: head,
+          start: 'clamp(top 85%)',
+          onEnter: () => {
+            if (writing) return;
+            writing = writeFigures(figures).delay(d.slow);
+          },
+        });
+        // each tile wipes open bottom to top as it is reached (those arriving together one stagger
+        // apart), its photo settling from a slight zoom: the faculty cards' entrance
+        const cards = [hero, ...tiles];
+        const radius = getComputedStyle(hero).borderTopLeftRadius || '0px';
+        gsap.set(cards, { clipPath: `inset(100% 0% 0% 0% round ${radius})` });
+        const opened = new WeakSet<Element>();
+        ScrollTrigger.batch(cards, {
+          start: 'clamp(top 85%)',
+          onEnter: (batch) =>
+            batch.filter((card) => !opened.has(card) && opened.add(card)).forEach((card, i) => {
+              gsap.to(card, {
+                clipPath: `inset(0% 0% 0% 0% round ${radius})`,
+                duration: long * 1.25,
+                delay: i * st.base * 1.5,
+                ease: ease('expressiveInOut'),
+                clearProps: 'clipPath',
+              });
+              gsap.fromTo(
+                card.querySelector('img'),
+                { scale: 1.18 },
+                {
+                  scale: 1,
+                  duration: long * 1.5,
+                  delay: i * st.base * 1.5,
+                  ease: enter,
+                  clearProps: 'transform',
+                },
+              );
+            }),
+        });
+        return () => {
+          gsap.set(cards, { clearProps: 'clipPath' });
+          unwrite();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    scope,
+    [],
+  );
+}

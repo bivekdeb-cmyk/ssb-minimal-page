@@ -1,0 +1,57 @@
+/* The people tabs: a sunken pill of tabs, a dark pill sliding under the one on show (the career
+   prep stats' switcher). Tokens only. */
+.pt-switch-wrap { display: flex; margin-bottom: var(--space-8); min-width: 0; }
+.pt-switch { position: relative; display: flex; max-width: 100%; padding: 4px; border-radius: var(--radius-lg); background: var(--surface-sunken); overflow-x: auto; scrollbar-width: none; }
+.pt-switch::-webkit-scrollbar { display: none; }
+.pt-tab { all: unset; box-sizing: border-box; position: relative; z-index: 1; flex: none; cursor: pointer; padding: 10px 20px; border-radius: var(--radius-md); font-size: 0.9375rem; line-height: 1.3; font-weight: var(--font-weight-medium); white-space: nowrap; color: var(--content-secondary); transition: color 260ms ease; }
+.pt-tab:hover { color: var(--content-primary); }
+.pt-tab[aria-selected='true'] { color: var(--surface-page); }
+.pt-tab:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.pt-pill { position: absolute; top: 4px; bottom: 4px; left: 0; border-radius: var(--radius-md); background: var(--content-primary); transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), width 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+/* the panel coming on: a short rise and fade */
+.pt-panel { animation: pt-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes pt-in { from { opacity: 0; transform: translateY(12px); } }
+@media (max-width: 671px) { .pt-switch-wrap { margin-bottom: var(--space-6); } .pt-tab { padding: 9px 16px; font-size: 0.875rem; } }
+@media (prefers-reduced-motion: reduce) { .pt-pill { transition: none; } .pt-panel { animation: none; } }
+
+
+/* The tabs' slot: at the header's right (beside the header's foot); left-aligned above the cards
+   on phones, on the header's edge. The switcher is a flat white ground with a hairline, the tab on show in brand green. */
+.pt-tabs { display: flex; flex: none; justify-content: flex-start; min-width: 0; max-width: 100%; }
+.pt-tabs .pt-switch-wrap { margin: 0; max-width: 100%; }
+.pt-tabs .pt-switch { border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: none; }
+/* the tab on show: brand green, square-cornered to the design system (radius-md inside the lg ground) */
+.pt-tabs .pt-tab { border-radius: var(--radius-md); }
+.pt-tabs .pt-tab[aria-selected='true'] { color: var(--content-on-brand-solid); }
+.pt-tabs .pt-pill { border-radius: var(--radius-md); background: var(--surface-brand-solid); }
+.pt-tabs[hidden] { display: none; }
+
+/* the tabs' sub-lines stacked in one cell: the tallest sets the height, only the active one shows */
+.pt-subs { display: grid; }
+.pt-subs > * { grid-area: 1 / 1; visibility: hidden; }
+.pt-subs > [data-on] { visibility: visible; }
+
+/* ── Still rows (2026-10-23, the team's ask: mentors and the founding team as photo cards, one row, no
+   ticker): the plain row at every width, phones too (in place of the card stack), cards about four
+   across the content on desktop, a card and a peek on a phone. ── */
+.pt-panel[data-still] .h-scroller { display: flex; scroll-snap-type: x mandatory; }
+.pt-panel[data-still] .h-scroller > li { width: calc((min(100vw, var(--size-container-max)) - 2 * var(--space-gutter) - 3 * var(--space-4)) / 4); scroll-snap-align: start; }
+@media (width < 1056px) { .pt-panel[data-still] .h-scroller > li { width: 18rem; } }
+@media (width < 672px) { .pt-panel[data-still] .h-scroller > li { width: 72vw; } }
+.pt-panel[data-still] .meet-card__content { gap: var(--space-1-5); padding: var(--space-5); }
+
+/* the company line, as the faculty cards': its mark in a box, its name beside it in white */
+.mc-co { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); min-width: 0; }
+.mc-co__mark { display: grid; flex: none; place-items: center; width: 2.5rem; height: 2.5rem; overflow: hidden; border-radius: var(--radius-md); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12); }
+.mc-co__mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.mc-co__mark[data-inset] img { width: 78%; height: 78%; }
+.mc-co__name { min-width: 0; font-size: 1rem; line-height: 1.25; font-weight: var(--font-weight-medium); color: var(--on-image-ink, #fff); }
+/* the company line on the other photo-card rows too (PeopleShowcase: the Impact Foundation) */
+.ssx-card .mc-co { margin-top: var(--space-3); }
+
+/* the tabs under the header, on its left edge (2026-10-23, the team's ask; as Campus life's) */
+.pt-section .mb-8:has(> .pt-tabs:not([hidden])) { flex-direction: column !important; align-items: flex-start !important; gap: var(--space-6); }
+
+/* phones (2026-10-23, the team's ask: "so much gap"): only the active tab's title and sub-line take room;
+   stacked, the other tab's longer title left a blank line under the heading */
+@media (width < 672px) { .pt-subs > :not([data-on]) { display: none; } }

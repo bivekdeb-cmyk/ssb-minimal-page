@@ -1,0 +1,141 @@
+/* The internship section. Tokens only; follows data-brand / data-theme. */
+
+.in-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ── the numbers: the Placements grid's stat panel (its classes), three cells ──
+   One column on a phone, a row of three from the `sm` breakpoint; a hairline between cells. */
+@media (min-width: 672px) { .in-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.in-stat[data-rule] { border-top-width: 1px; border-top-style: solid; }
+@media (min-width: 672px) { .in-stat[data-rule] { border-top-width: 0; border-left-width: 1px; border-left-style: solid; } }
+.in-stat { --card-radius: 0px; }
+.in-functions-line { margin-top: var(--space-3); }
+.in-carousel { min-width: 0; margin-top: var(--space-12, 3rem); }
+
+/* ── the learner card: the alumni card (alumni.css), with what it does not cover ── */
+/* no portrait yet: the initials, plain, where the person would stand in the empty room */
+.in-lc-badge { position: absolute; left: 23%; top: 50%; translate: -50% -50%; color: var(--on-image-ink); font-size: 3.5rem; line-height: 1; font-weight: var(--font-weight-medium); letter-spacing: -0.01em; }
+/* our lines can run longer than the alumni set's (a role and a company before SSB): the text
+   column sits a little tighter so a three-line headline and a two-line "pre SSB" both fit */
+.in-lc .alumni-card__body { gap: var(--space-3); padding-top: var(--space-6); padding-bottom: var(--space-5); }
+.in-lc .alumni-card__value { text-wrap: balance; }
+/* a company with no mark: its initial, in ink, on the white tile */
+.in-lc .alumni-card__tile[data-letter] { color: #171717; font-size: 1.25rem; font-weight: var(--font-weight-bold); }
+.in-lc-link { position: absolute; inset: 0; display: grid; color: inherit; text-decoration: none; }
+.in-lc-link:focus-visible { outline: 2px solid var(--border-focus); outline-offset: -2px; }
+
+/* ── the carousel: the lab's card stack ─────────────────────────────────────
+   The stack sets its own layout (card-stack.css). Here: the slot the alumni card scales into,
+   and the stage's width, so the front card (86% of it) is as wide as an alumni card. */
+.in-slot { position: relative; aspect-ratio: 3 / 2; }
+.in-stack { max-width: calc(30rem / 0.86); margin-inline: auto; }
+/* the glass arrows are for phones (m-web) only */
+@media (min-width: 672px) { .in-stack .fc-arrow { display: none; } }
+/* desktop: spread out. The stage is the full column; the front card stays 30rem, and each
+   neighbour's outer edge meets the stage's edge, so most of it shows. (The stack sets its
+   --fc-* values inline as shares of the stage; these replace them with lengths.) */
+@media (min-width: 960px) {
+  .in-stack { max-width: none; container-type: inline-size; --fc-card-w: 30rem !important; --fc-shift: calc(50cqi - 30rem * 0.43) !important; }
+  .in-stack .fc-slide[data-pos='-1'], .in-stack .fc-slide[data-pos='1'] { filter: brightness(0.72) saturate(0.8); }
+}
+/* desktop, the front card in focus (2026-10-07): larger (36rem), its neighbours smaller (0.72)
+   and blended back into the page: paler, desaturated, softly blurred. Each neighbour's outer
+   edge still meets the stage's edge. */
+@media (min-width: 960px) {
+  .in-stack { --fc-card-w: 36rem !important; --fc-side-scale: 0.72 !important; --fc-shift: calc(50cqi - 36rem * 0.36) !important; }
+  .in-stack .fc-slide[data-pos='-1'], .in-stack .fc-slide[data-pos='1'] { opacity: 0.5; filter: saturate(0.4) blur(2px); }
+  .in-stack .fc-slide[data-pos='0'] > * { box-shadow: 0 30px 60px -28px rgb(0 0 0 / 0.45); border-radius: var(--radius-lg); }
+}
+/* phones: the stage runs edge to edge, so the front card is 86vw, as in the alumni row */
+@media (max-width: 671px) { .in-stack { margin-inline: calc(var(--space-gutter) * -1); } }
+
+/* ── the companies: the Placements grid's logo frame (its classes), one logo to a cell ── */
+.in-companies { margin-top: var(--space-12, 3rem); }
+.in-logos { list-style: none; margin: 0; padding: 0; }
+.in-logos > li { display: grid; place-items: center; padding: 0 var(--space-3); }
+/* every logo in the same box, as the Placements tiles: at most 128 x 36 */
+.in-logos img { display: block; max-width: min(128px, 72%); max-height: 36px; width: auto; height: auto; object-fit: contain; }
+
+/* the stats panel and the logo frame take the cards' corner (the alumni, faculty and curriculum
+   cards' --radius-lg), not the Placements panels' larger one */
+.in-stats, .in-logos { border-radius: var(--radius-lg); }
+
+/* the logos cascade in when the grid is scrolled to: each rises a little and fades in, one after
+   another along the rows, 45ms apart. The cells and their hairlines are there from the start. */
+.in-logos img { opacity: 0; transform: translateY(12px) scale(0.96); transition: opacity 520ms ease, transform 640ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.in-logos[data-in] img { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 45ms); }
+@media (prefers-reduced-motion: reduce) { .in-logos img { opacity: 1; transform: none; transition: none; } }
+
+/* ── the video card's cue: a frosted pill with a white play disc, so it reads as "press to watch" ── */
+.in-lc-watch { display: inline-flex; align-items: center; gap: 14px; align-self: flex-start; padding: 8px 22px 8px 8px; border-radius: 999px;
+  background: rgb(255 255 255 / 0.14); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.32), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --in-watch-blur: blur(10px) saturate(1.3); -webkit-backdrop-filter: var(--in-watch-blur); backdrop-filter: var(--in-watch-blur);
+  transition: background 220ms ease; }
+.alumni-card:hover .in-lc-watch { background: rgb(255 255 255 / 0.22); }
+.in-lc-watch-play { position: relative; flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #171717; }
+.in-lc-watch-play svg { width: 16px; height: 16px; translate: 1px 0; }
+/* the ring: it leaves the disc and fades, slowly, again and again */
+.in-lc-watch-play::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 2px rgb(255 255 255 / 0.7); animation: in-watch-ring 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
+@keyframes in-watch-ring { from { transform: scale(1); opacity: 0.8; } 70%, to { transform: scale(1.7); opacity: 0; } }
+.in-lc-watch-text { display: grid; gap: 1px; text-align: start; }
+.in-lc-watch-label { font-size: 11px; line-height: 1.3; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(255 255 255 / 0.72); }
+.in-lc-watch-value { font-size: 16px; line-height: 1.3; font-weight: 600; color: #fff; white-space: nowrap; }
+@media (max-width: 671px) { .in-lc-watch { gap: 10px; padding: 6px 16px 6px 6px; } .in-lc-watch-play { width: 36px; height: 36px; } .in-lc-watch-value { font-size: 14px; } .in-lc-watch-label { font-size: 10px; } }
+@media (prefers-reduced-motion: reduce) { .in-lc-watch-play::after { animation: none; opacity: 0; } }
+
+/* the figures in the logo's green (2026-10-07, the team's ask), as Beyond Placements' "companies.";
+   the unit the same green, a step lighter */
+.in-figure { color: var(--color-ssb-light-9); }
+.in-figure .pl-unit { color: color-mix(in srgb, var(--color-ssb-light-9) 72%, #fff); }
+
+/* The numbers as Placements' cohort boxes (2026-10-07): grey boxes, gaps between, no frame or hairlines.
+   One column on a phone, three across from sm. */
+.in-boxes { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+@media (width >= 672px) { .in-boxes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } }
+.in-boxes .pl-figure-box { border-radius: var(--radius-2xl); }
+
+/* ── success stories as shorts (2026-10-09): a row of 9:16 cards, the content's left edge to the
+   window's right, a card at a time ── */
+.in-reels { position: relative; }
+.in-reels-row {
+  --reels-inset: calc(max(0px, (100vw - var(--size-container-max)) / 2) + var(--space-gutter));
+  display: grid; grid-auto-flow: column; grid-auto-columns: 15rem; gap: var(--space-3);
+  margin: 0 calc(var(--reels-inset) * -1); padding: 0 var(--reels-inset) var(--space-2); list-style: none;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--reels-inset); scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.in-reels-row::-webkit-scrollbar { display: none; }
+.in-reels-row > li { scroll-snap-align: start; }
+@media (width < 672px) { .in-reels-row { grid-auto-columns: 62vw; } }
+.in-reel { all: unset; position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; overflow: hidden; border-radius: var(--radius-lg); background: #111; cursor: pointer; isolation: isolate; }
+.in-reel:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.in-reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+.in-reel:hover video { transform: scale(1.03); }
+.in-reel-shade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(0 0 0 / 0.25) 0%, transparent 22%, transparent 50%, rgb(0 0 0 / 0.78) 100%); }
+/* (2026-10-27, performance) a solid shade, no backdrop blur: over a playing video it re-blurred every frame */
+.in-reel-sound { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: rgb(0 0 0 / 0.55); color: #fff; }
+.in-reel-sound svg { width: 16px; height: 16px; }
+.in-reel-copy { position: absolute; inset: auto 16px 16px; display: grid; gap: 4px; color: #fff; }
+.in-reel-name { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; color: rgb(255 255 255 / 0.8); }
+.in-reel-line { font-size: 1.0625rem; line-height: 1.3; font-weight: 600; text-wrap: balance; }
+.in-reels-nav { display: flex; justify-content: center; gap: var(--space-2); margin-top: var(--space-6); }
+.in-reels-nav button { all: unset; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--surface-sunken); color: var(--content-primary); cursor: pointer; }
+.in-reels-nav button:disabled { opacity: 0.4; cursor: default; }
+.in-reels-nav button:focus-visible { outline: 2px solid var(--border-focus); }
+.in-reels-nav svg { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: reduce) { .in-reel video { transition: none; } }
+/* inside the curriculum rail's column: no bleed past it (the first card was cut at the left) */
+.in-reels-row { margin: 0; padding: 0 0 var(--space-2); scroll-padding-inline: 0; }
+/* m-web (2026-10-09): two shorts in view, not one; the copy a step smaller to suit */
+@media (width < 672px) {
+  .in-reels-row { grid-auto-columns: 44vw; gap: var(--space-2); }
+  .in-reel-copy { inset: auto 10px 10px; }
+  .in-reel-name { font-size: 0.6875rem; }
+  .in-reel-line { font-size: 0.875rem; }
+  .in-reel-sound { top: 8px; right: 8px; width: 26px; height: 26px; }
+  .in-reel-sound svg { width: 13px; height: 13px; }
+  .in-reels-nav { margin-top: var(--space-4); }
+}
+.in-reels-nav[hidden] { display: none; }
+
+/* the stories on /v7 (2026-10-28): no frame, a heading of their own over the reels */
+.in-reels-head .in-reels-title { margin-bottom: var(--space-6); font-weight: var(--font-weight-medium); }
+@media (width < 672px) { .in-reels-head .in-reels-title { margin-bottom: var(--space-4); } }

@@ -1,0 +1,316 @@
+/* The /v7 footer (DeckFooter.tsx): the links and actions at the top, the legal line, then the site's
+   tagline at the foot at the page's largest size, edge to edge of the container. Light, static,
+   minimal, generous room. Tokens only. */
+.dkft {
+  overflow: hidden;
+  padding-top: var(--space-20, 5rem);
+  border-top: 1px solid var(--border-decorative);
+  background: var(--surface-page);
+}
+
+/* ── the working part ───────────────────────────────────────────────────────────────────────────── */
+.dkft-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) repeat(3, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+.dkft-brand { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); }
+.dkft-brand-line {
+  max-width: 24rem;
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: 1.6;
+  color: var(--content-secondary);
+}
+.dkft-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.dkft-col { padding-top: var(--space-2); }
+.dkft-col-title {
+  margin: 0 0 var(--space-5);
+  font-size: var(--type-label-size);
+  line-height: 1;
+  font-weight: var(--font-weight-medium);
+  color: var(--content-secondary);
+}
+.dkft-col ul { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.dkft-col a {
+  font-size: var(--type-body-size);
+  line-height: 1.4;
+  color: var(--content-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.dkft-col a:hover { color: var(--color-ssb-light-9); }
+.dkft-col a:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; border-radius: 2px; }
+.dkft-place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5, 6px);
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: 1.4;
+  color: var(--content-primary);
+}
+.dkft-place svg { width: 1rem; height: 1rem; color: var(--content-secondary); }
+.dkft-note { margin: var(--space-2) 0 0; font-size: var(--type-label-size); line-height: 1.5; color: var(--content-secondary); }
+
+.dkft-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-16);
+  padding: var(--space-5) 0;
+  border-block: 1px solid var(--border-decorative);
+}
+.dkft-legal p { margin: 0; font-size: var(--type-caption-size); line-height: 1.4; color: var(--content-secondary); }
+.dkft-top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5, 6px);
+  font-size: var(--type-label-size);
+  font-weight: var(--font-weight-medium);
+  color: var(--content-primary);
+  text-decoration: none;
+}
+.dkft-top svg { width: 0.875rem; height: 0.875rem; transition: transform 0.2s ease; }
+.dkft-top:hover svg { transform: translateY(-2px); }
+
+/* ── the tagline at the foot: one line the container's width, its descenders just clear of the
+   footer's edge ─────────────────────────────────────────────────────────────────────────────────── */
+.dkft-statement {
+  margin: var(--space-10) 0 0;
+  padding-bottom: var(--space-6);
+  font-size: clamp(3rem, 9.6vw, 8.9rem);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  color: var(--content-primary);
+}
+.dkft-statement span { color: var(--color-ssb-light-9); }
+
+/* a tablet: the brand across the top, the three columns under it */
+@media (width < 1056px) {
+  .dkft-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-10) var(--space-8); }
+  .dkft-brand { grid-column: 1 / -1; }
+  .dkft { padding-bottom: calc(var(--bn-apply-h, 120px)); }
+}
+/* a phone: the actions full width, the links two across; the tagline on two lines */
+@media (width < 672px) {
+  .dkft { padding-top: var(--space-12); }
+  .dkft-actions { width: 100%; }
+  .dkft-actions > * { flex: 1 1 100%; justify-content: center; }
+  .dkft-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8) var(--space-6); }
+  .dkft-grid > .dkft-col:last-child { grid-column: 1 / -1; }
+  .dkft-legal { flex-direction: column; align-items: flex-start; margin-top: var(--space-10); }
+  .dkft-statement { margin-top: var(--space-8); font-size: 17vw; line-height: 0.95; white-space: normal; }
+}
+/* (first look) the tagline ran 50px past the container: a size that fits; room under it for the
+   floating section nav on desktop */
+@media (width >= 672px) {
+  .dkft-statement { font-size: clamp(3rem, 9.1vw, 8.45rem); }
+}
+@media (width >= 1056px) {
+  .dkft-statement { padding-bottom: var(--space-24, 6rem); }
+}
+
+/* (later: the legal line moved to the very foot, under the tagline) one hairline over it, the tagline
+   closer to the links above, the floating nav's room now under the legal line */
+.dkft-legal { margin-top: 0; border-bottom: 0; padding: var(--space-6) 0 var(--space-8); }
+.dkft-statement { margin-top: var(--space-16); padding-bottom: var(--space-8) !important; }
+@media (width >= 1056px) { .dkft-legal { padding-bottom: var(--space-24, 6rem); } }
+@media (width < 672px) { .dkft-statement { margin-top: var(--space-12); } .dkft-legal { margin-top: 0; } }
+
+/* ── (later, 2026-10-28, the user's ask: "a premium gradient of our brand greens, as the first fold")
+   the footer framed as the first fold is (a rounded panel inset from the page's edges), its ground a
+   lit mesh of the brand's greens: a deep green base, the brand green glowing up from the lower left,
+   a softer light at the top right, a fine grain; the type white, the tagline's last word in a light
+   brand mint, the hairlines white at low strength ───────────────────────────────────────────────── */
+.dkft {
+  position: relative;
+  isolation: isolate;
+  margin: 0 var(--space-3) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--pg-white);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(70% 90% at 8% 108%, var(--pg-green-47-a55) 0%, var(--pg-logo-green-a35) 32%, transparent 64%),
+    radial-gradient(55% 70% at 100% 0%, var(--pg-mint-soft-a22) 0%, transparent 62%),
+    radial-gradient(60% 60% at 60% 60%, var(--pg-green-36-a35) 0%, transparent 70%),
+    linear-gradient(160deg, var(--pg-green-23) 0%, var(--pg-green-14) 55%, var(--pg-green-06) 100%);
+}
+.dkft-brand-line,
+.dkft-col-title,
+.dkft-note,
+.dkft-legal p,
+.dkft-place svg { color: var(--pg-white-a66); }
+.dkft-col a,
+.dkft-place,
+.dkft-top,
+.dkft-statement { color: var(--pg-white); }
+.dkft-col a:hover { color: var(--pg-mint-soft); }
+.dkft-statement span { color: var(--pg-green-53); }
+.dkft-legal { border-top-color: var(--pg-white-a16); }
+/* the logo in white on the green */
+.dkft-brand > :first-child { filter: brightness(0) invert(1); }
+@media (width < 672px) {
+  .dkft { margin: 0 var(--space-2) var(--space-2); }
+}
+/* (first look) the mesh read flat: the brand green glowing stronger from the lower left, a clearer
+   light at the top right, a lift through the middle */
+.dkft {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(60% 80% at 0% 100%, var(--pg-green-49-a75) 0%, var(--pg-logo-green-a55) 30%, transparent 66%),
+    radial-gradient(45% 60% at 100% 0%, var(--pg-mint-soft-a40) 0%, var(--pg-logo-green-a18) 40%, transparent 70%),
+    radial-gradient(50% 55% at 62% 70%, var(--pg-logo-green-a40) 0%, transparent 72%),
+    linear-gradient(155deg, var(--pg-green-29) 0%, var(--pg-green-19) 45%, var(--pg-green-11) 100%);
+}
+
+/* ── (later, 2026-10-28, the user's reference: a luminous, soft mesh gradient; "why the black border";
+   even padding around; Apply now white, the brochure an outline) ──────────────────────────────────
+   the wrap holds the page's own ground on all four sides, an even 16px (12px on a phone); the frame's
+   ground a bright, soft mesh of the brand's greens after the reference: a deep green corner at the top
+   left, the brand green through the middle, a pale mint bloom of light at the right, a diagonal beam of
+   light across, a fine grain over all */
+.dkft-wrap { padding: var(--space-4); background: var(--surface-page); }
+.dkft {
+  margin: 0;
+  overflow: hidden;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* the bloom of light at the right */
+    radial-gradient(42% 70% at 78% 38%, var(--pg-green-65-a85) 0%, var(--pg-green-58-a55) 28%, transparent 62%),
+    /* a cooler light low at the right edge */
+    radial-gradient(40% 60% at 104% 92%, var(--pg-green-51-a80) 0%, transparent 70%),
+    /* the deep corner at the top left */
+    radial-gradient(60% 70% at 0% 0%, var(--pg-green-16-a95) 0%, var(--pg-green-28-a60) 40%, transparent 72%),
+    /* the brand green body */
+    linear-gradient(120deg, var(--pg-green-34) 0%, var(--pg-logo-green) 38%, var(--pg-green-43) 64%, var(--pg-green-46) 100%);
+}
+/* the diagonal beam of light (as the reference's), soft, behind the type */
+.dkft::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  left: 18%;
+  width: 22%;
+  height: 160%;
+  transform: rotate(-32deg);
+  background: linear-gradient(to right, transparent, var(--pg-white-a16) 45%, var(--pg-white-a22) 55%, transparent);
+  filter: blur(24px);
+  pointer-events: none;
+}
+/* the type held a touch stronger over the bright ground */
+.dkft-brand-line,
+.dkft-col-title,
+.dkft-note,
+.dkft-legal p,
+.dkft-place svg { color: var(--pg-white-a78); }
+.dkft-statement { text-shadow: 0 1px 24px var(--pg-green-16-a18); }
+.dkft-statement span { color: var(--pg-green-66); }
+.dkft-col a:hover { color: var(--pg-green-64); }
+.dkft-legal { border-top-color: var(--pg-white-a28); }
+
+/* Apply now white, its text the deep brand green; the brochure an outline, no fill, white text */
+.dkft .dkft-apply,
+.dkft .dkft-apply:is(:hover, :focus-visible) {
+  border-color: var(--pg-white);
+  background: var(--pg-white);
+  color: var(--color-ssb-light-11);
+}
+.dkft .dkft-apply:hover { background: var(--pg-white-a90); }
+.dkft .dkft-brochure,
+.dkft .dkft-brochure:is(:hover, :focus-visible) {
+  border: 1px solid var(--pg-white-a85);
+  background: transparent;
+  color: var(--pg-white);
+  box-shadow: none;
+}
+.dkft .dkft-brochure:hover { background: var(--pg-white-a10); }
+@media (width < 672px) {
+  .dkft-wrap { padding: var(--space-3); }
+  .dkft { margin: 0; }
+}
+/* the wrap's ground the page's own (bg-page, as <main>), so no seam shows between them; the bloom up and
+   to the right, clear of the tagline, so "build." keeps its contrast */
+.dkft {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(38% 55% at 84% 8%, var(--pg-green-65-a80) 0%, var(--pg-green-58-a50) 30%, transparent 64%),
+    radial-gradient(40% 60% at 104% 96%, var(--pg-green-51-a75) 0%, transparent 70%),
+    radial-gradient(60% 70% at 0% 0%, var(--pg-green-16-a95) 0%, var(--pg-green-28-a60) 40%, transparent 72%),
+    radial-gradient(50% 60% at 30% 100%, var(--pg-green-22-a55) 0%, transparent 70%),
+    linear-gradient(120deg, var(--pg-green-34) 0%, var(--pg-logo-green) 38%, var(--pg-green-43) 64%, var(--pg-green-46) 100%);
+}
+.dkft-statement span { color: var(--pg-green-62); }
+
+/* (later, 2026-10-28, the user's ask: "too much light; no accessibility issue; premium greens") the
+   bloom of near-white light gone: a deep, rich mesh of the brand's greens, every part of it dark enough
+   for white text (the lightest, #16714a at the lower right, holds 5.6:1 with white; the body ~8:1) */
+.dkft {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* the brand green glowing low at the right */
+    radial-gradient(55% 75% at 100% 100%, var(--pg-green-37-a95) 0%, var(--pg-green-32-a60) 40%, transparent 72%),
+    /* a soft emerald light at the top right */
+    radial-gradient(45% 60% at 88% 0%, var(--pg-green-35-a85) 0%, transparent 70%),
+    /* a cooler, deeper pool at the lower left */
+    radial-gradient(55% 70% at 0% 100%, var(--pg-green-09-a90) 0%, transparent 70%),
+    linear-gradient(135deg, var(--pg-green-17) 0%, var(--pg-green-21) 45%, var(--pg-green-27) 100%);
+}
+.dkft::before { background: linear-gradient(to right, transparent, var(--pg-white-a05) 45%, var(--pg-white-a07) 55%, transparent); }
+.dkft-statement { text-shadow: none; }
+.dkft-statement span { color: var(--pg-green-54); }
+.dkft-col a:hover { color: var(--pg-green-57); }
+.dkft-brand-line,
+.dkft-col-title,
+.dkft-note,
+.dkft-legal p,
+.dkft-place svg { color: var(--pg-white-a74); }
+.dkft-legal { border-top-color: var(--pg-white-a18); }
+/* (later: "the logo a bit bigger; the campus's full address") the logo a step larger; the address
+   under the campus, in the column's quiet tone */
+.dkft-brand > :first-child { height: 3.5rem !important; width: auto !important; }
+.dkft-address {
+  margin: var(--space-3) 0 0;
+  font-style: normal;
+  font-size: var(--type-label-size);
+  line-height: 1.6;
+  color: var(--pg-white-a74);
+}
+@media (width < 672px) { .dkft-brand > :first-child { height: 3rem !important; } }
+/* the campus column wider, so each line of the address holds on one line */
+@media (width >= 1056px) {
+  .dkft-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1.5fr); }
+}
+.dkft-address { white-space: nowrap; }
+@media (width < 420px) { .dkft-address { white-space: normal; } }
+
+/* (later, 2026-10-28, the user's ask: "rounded corners with padding on all sides") the footer inset
+   again: a card 16px clear of the page's edges on every side (12 on a phone), 8px corners, on the
+   page's own ground (white on /v7, the green-black on /v8) */
+.dkft-wrap { padding: var(--space-4) !important; }
+.dkft { border-radius: var(--radius-lg) !important; overflow: hidden; }
+@media (width < 672px) { .dkft-wrap { padding: var(--space-3) !important; } }
+
+/* (later, 2026-10-28, the user's ask: "flat colour", a lighter dark green than the sections above it,
+   so it stands apart) one flat forest green, no gradient, no grain, no sheen; white text (10:1), the
+   quiet lines near-white, "build." a pale mint */
+.dkft { background: var(--pg-green-24) !important; }
+.dkft::before { content: none !important; }
+.dkft-brand-line,
+.dkft-col-title,
+.dkft-note,
+.dkft-address,
+.dkft-legal p,
+.dkft-place svg { color: var(--pg-white-a88) !important; }
+.dkft-col a,
+.dkft-place,
+.dkft-statement { color: var(--pg-white) !important; }
+.dkft-statement span { color: var(--pg-green-61) !important; }
+.dkft-col a:hover { color: var(--pg-green-63) !important; }
+.dkft-legal { border-top-color: var(--pg-white-a22) !important; }

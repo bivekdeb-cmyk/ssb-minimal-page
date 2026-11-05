@@ -1,0 +1,473 @@
+/* =========================================================
+   Immersions beyond the classroom: two landscape features,
+   then the creator lab's success stories.
+   ========================================================= */
+
+/* ---- The features: side by side on the web, stacked on phones. ---- */
+.imm-features {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1056px) {
+  .imm-features {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* A feature is a light card, as the Learn-by-doing video cards: a hairline frame, the scene edge
+   to edge across its head, the title and its line under it. */
+.imm-feature {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 60%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--surface-page);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.02);
+  color: var(--content-primary);
+}
+/* The image files are 948 x 544 with a blur over their right half. The frame shows the clear
+   left 46% only: the image is drawn 215% wide from the frame's left edge, centred on its height. */
+.imm-feature__media {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  aspect-ratio: 5 / 4;
+  background: var(--surface-sunken);
+}
+.imm-feature__photo {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 215%;
+  max-width: none;
+  height: auto;
+  translate: 0 -50%;
+}
+.imm-feature__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+.imm-feature__title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--content-primary);
+}
+.imm-feature__text {
+  margin: 0;
+  font-size: var(--type-body-sm-size);
+  line-height: 1.55;
+  color: var(--content-secondary);
+  text-wrap: pretty;
+}
+/* Two across from the `sm` breakpoint (the cards are upright now, so they pair earlier). */
+@media (min-width: 672px) {
+  .imm-features {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ---- The creators: three across from 672px; a swipe row on phones. ---- */
+.creator-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.creator-dots {
+  display: none;
+}
+@media (max-width: 671px) {
+  /* The row runs edge to edge; its padding keeps the first card on the gutter. */
+  .creator-wrap {
+    padding-inline: 0;
+  }
+  .creator-row {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-inline: var(--space-gutter);
+    scroll-padding-inline: var(--space-gutter);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .creator-row::-webkit-scrollbar {
+    display: none;
+  }
+  .creator-row > li {
+    flex: none;
+    width: 82vw;
+    scroll-snap-align: start;
+  }
+  .creator-dots {
+    display: block;
+  }
+}
+
+.creator-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  aspect-ratio: 702 / 750;
+  border-radius: var(--radius-lg);
+  background: var(--surface-inverse);
+  color: var(--on-image-ink);
+  text-align: center;
+}
+.creator-card__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Shade at the top for the name, and a deep fade at the foot for the stats. */
+.creator-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / 0.45), transparent 32%),
+    linear-gradient(to top, rgb(0 0 0 / 0.9) 4%, rgb(0 0 0 / 0.55) 26%, transparent 46%);
+  pointer-events: none;
+}
+.creator-card__head,
+.creator-card__foot {
+  position: relative;
+  z-index: 1;
+}
+.creator-card__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-5) 0;
+}
+.creator-card__badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+  margin-bottom: var(--space-1);
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-brand-solid);
+  color: var(--content-on-brand-solid);
+  font-size: var(--type-caption-size);
+  line-height: 1.4;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
+}
+.creator-card__badge svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+/* On hover, a band of light sweeps across the badge. */
+.creator-card__badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+@keyframes creator-shimmer {
+  to {
+    transform: translateX(120%);
+  }
+}
+@media (hover: hover) {
+  .creator-card:hover .creator-card__badge::after {
+    animation: creator-shimmer 1100ms var(--motion-easing-productive-in-out) infinite;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .creator-card:hover .creator-card__badge::after {
+    animation: none;
+  }
+}
+.creator-card__name {
+  margin: 0;
+  font-size: var(--type-h1-size);
+  line-height: var(--type-h1-lh);
+  letter-spacing: var(--type-h1-tracking);
+  font-weight: var(--font-weight-semibold);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.25);
+}
+.creator-card__niche {
+  margin: 0;
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-lh);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.3);
+}
+
+.creator-card__foot {
+  padding: 0 var(--space-5) var(--space-5);
+}
+/* "Achievements" in a white pill, on a hairline across the card. */
+.creator-card__rule {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 var(--space-5);
+}
+.creator-card__rule::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  border-top: var(--border-hair) solid rgb(255 255 255 / 0.35);
+}
+.creator-card__rule span {
+  position: relative;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: #171717;
+  font-size: var(--type-caption-size);
+  line-height: 1.4;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
+}
+/* Three stats, value over label, split by thin rules. */
+.creator-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+}
+.creator-card__stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-1);
+}
+.creator-card__stats > div + div {
+  border-left: var(--border-hair) solid rgb(255 255 255 / 0.3);
+}
+.creator-card__stats dd {
+  margin: 0;
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-lh);
+  font-weight: var(--font-weight-semibold);
+}
+.creator-card__stats dt {
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-lh);
+  color: var(--on-image-ink-secondary);
+}
+
+/* The scenes are back (2026-10-06), in a lower 4:3 frame: the clear left part of each image,
+   set a little above centre so the Jio sign fits whole. */
+.imm-feature__media { aspect-ratio: 4 / 3; }
+.imm-feature__photo { translate: 0 -47%; }
+/* Lower again: 3:2, the image drawn a little smaller (195% wide) so the Jio sign still fits whole. */
+.imm-feature__media { aspect-ratio: 3 / 2; }
+.imm-feature__photo { width: 195%; translate: 0 -46.5%; }
+
+/* ── The features as career prep's slides (2026-10-07, the team's ask) ──
+   The scene fills the card, in a grey frame; the title and its line sit on a frosted glass bar
+   at the card's foot, in white, as career prep's figures sit on theirs. Dark glass, not career
+   prep's green: these are photos. */
+.imm-feature {
+  position: relative;
+  display: block;
+  aspect-ratio: 5 / 4;
+  border: 8px solid var(--surface-sunken);
+  border-radius: 24px;
+  box-shadow: none;
+  background: var(--surface-sunken);
+}
+.imm-feature__media {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 16px;
+}
+.imm-feature__photo { width: 215%; translate: 0 -50%; }
+.imm-feature__body {
+  --imm-glass: blur(22px) saturate(1.5);
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  gap: 6px;
+  padding: 18px 22px;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 18px;
+  background: rgb(12 18 15 / 0.42);
+  -webkit-backdrop-filter: var(--imm-glass);
+  backdrop-filter: var(--imm-glass);
+}
+.imm-feature__title { color: #fff; }
+.imm-feature__text { color: rgb(255 255 255 / 0.86); }
+@media (max-width: 671px) {
+  .imm-feature { aspect-ratio: 4 / 5; }
+  .imm-feature__body { right: 10px; bottom: 10px; left: 10px; padding: 14px 16px; }
+}
+/* (both lines are two lines now, so the bars match at their own height: no fixed min-height) */
+
+/* The creator cards' achievements on the immersions' glass bar (2026-10-07, the team's ask): the
+   rule, pill and stats sit in one frosted panel at the card's foot; the shade under them lighter. */
+.creator-card::after {
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / 0.45), transparent 32%),
+    linear-gradient(to top, rgb(0 0 0 / 0.45) 0%, transparent 40%);
+}
+.creator-card__foot {
+  --cc-glass: blur(22px) saturate(1.5);
+  margin: 0 var(--space-3) var(--space-3);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 18px;
+  background: rgb(12 18 15 / 0.42);
+  -webkit-backdrop-filter: var(--cc-glass);
+  backdrop-filter: var(--cc-glass);
+}
+/* a shorter glass bar (2026-10-07), so more of the face shows: "Achievements" plain (no pill, no
+   rule), the figures a step smaller, less padding */
+.creator-card__foot { padding: var(--space-3) var(--space-3) var(--space-3); }
+.creator-card__rule { margin: 0 0 var(--space-2); }
+.creator-card__rule::before { content: none; }
+.creator-card__rule span { padding: 0; border-radius: 0; background: none; color: var(--on-image-ink-secondary); font-size: 0.6875rem; }
+.creator-card__stats dd { font-size: var(--type-h4-size, 1.25rem); line-height: 1.2; }
+.creator-card__stats dt { font-size: var(--type-caption-size); line-height: 1.3; }
+.creator-card__stats > div { gap: 2px; }
+
+/* no grey frame round the scene (2026-10-13, the team's ask): the photo is the card, its corners the
+   cards' 8px */
+.imm-feature, .imm-feature:is(*) { border: 0; background: none; border-radius: var(--radius-lg); overflow: hidden; }
+.imm-feature__media, .imm-feature__media:is(*) { border-radius: var(--radius-lg); }
+
+/* the creator cards' achievements bar, roomier (2026-10-13, the team's ask): 16px from
+   "Achievements" to the figures (was 8), 6px from each figure to its label (was 2) */
+.creator-card__rule, .creator-card__rule:is(*) { margin-bottom: var(--space-4); }
+.creator-card__stats > div, .creator-card__stats > div:is(*) { gap: 6px; }
+/* the dividers between the creator cards' figures fainter (2026-10-13, the team's ask): white 14%, was 30% */
+.creator-card__stats > div + div, .creator-card__stats > div + div:is(*) { border-left-color: rgb(255 255 255 / 0.14); }
+/* phones (2026-10-13, the team's ask): the immersion cards shorter, 4:3 not 4:5 */
+@media (width < 672px) { .imm-feature, .imm-feature:is(*) { aspect-ratio: 4 / 3; } }
+
+/* Phones (2026-10-23, the team's ask: "make it a carousel, the next card a bit visible"): the immersions
+   one swipe row, each card 84% of the screen so the next peeks in, with the page's dots under it */
+.imm-features-dots { display: none; }
+@media (width < 672px) {
+  .imm-features, .imm-features:is(*) { display: flex; flex-direction: row; gap: var(--space-3); margin-inline: calc(var(--space-gutter) * -1); padding: 0 var(--space-gutter) var(--space-1);
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: var(--space-gutter); scrollbar-width: none; }
+  .imm-features::-webkit-scrollbar { display: none; }
+  .imm-features > li, .imm-features > li:is(*) { flex: 0 0 84%; min-width: 0; scroll-snap-align: start; }
+  .imm-features-dots { display: block; margin-top: var(--space-4); }
+}
+/* phones: the carousel's cards a step taller, square (was 4:3), so more of the photo shows over the panel (2026-10-23, the team's ask) */
+@media (width < 672px) { .imm-feature, .imm-feature:is(*) { aspect-ratio: 1 / 1; } }
+
+/* ── (2026-10-27, the user's ask) the three domestic immersions, after Masters' Union's "1 Day
+   Immersions": a subheading, then three cards across (a swipe row on a phone). Each: the photo
+   (16:10, 8px corners) with "At a" and the place large in white over a shade at its foot; under it
+   the name, a hairline, the line in grey. Then the creator-preneur track as one wide feature. ── */
+.imm-sub { display: flex; flex-direction: column; gap: var(--space-2); max-width: 40rem; margin-bottom: var(--space-6); }
+.imm-sub__title { font-weight: var(--font-weight-medium); }
+.imm-trips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); margin: 0; padding: 0; list-style: none; }
+.imm-trip { display: flex; flex-direction: column; min-width: 0; }
+.imm-trip__media { position: relative; overflow: hidden; aspect-ratio: 16 / 10; border-radius: var(--radius-lg); background: var(--surface-inverse); }
+.imm-trip__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.imm-trip__media::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.72) 0%, rgb(0 0 0 / 0.35) 45%, rgb(0 0 0 / 0) 75%); }
+.imm-trip__place { position: absolute; z-index: 1; left: var(--space-5); right: var(--space-5); bottom: var(--space-5); margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem); line-height: 1.02; letter-spacing: -0.03em; font-weight: var(--font-weight-semibold, 600); color: #fff; text-wrap: balance; }
+.imm-trip__place span { display: block; font-weight: var(--font-weight-medium); font-size: 0.8em; }
+.imm-trip__name { margin: var(--space-4) 0 0; padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--type-h3-size); line-height: 1.3; font-weight: var(--font-weight-semibold, 600); color: var(--content-primary); }
+.imm-trip__text { margin: var(--space-3) 0 0; font-size: var(--type-body-size); line-height: 1.55; color: var(--content-secondary); }
+.imm-trips-dots { display: none; }
+@media (width >= 672px) and (width < 1056px) { .imm-trips { gap: var(--space-4); } .imm-trip__place { left: var(--space-4); bottom: var(--space-4); } }
+@media (width < 672px) {
+  .imm-trips { display: flex; gap: var(--space-3); margin-inline: calc(var(--space-gutter) * -1); padding: 0 var(--space-gutter) var(--space-1);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--space-gutter); scrollbar-width: none; }
+  .imm-trips::-webkit-scrollbar { display: none; }
+  .imm-trips > li { flex: 0 0 84%; min-width: 0; scroll-snap-align: start; }
+  .imm-trips-dots { display: block; margin-top: var(--space-4); }
+  .imm-trip__place { left: var(--space-4); bottom: var(--space-4); font-size: 1.75rem; }
+  .imm-trip__text { font-size: var(--type-body-sm-size); }
+}
+
+/* (later) taller cards and a smaller place, so three lines fit in a third of the column: 4:3, the
+   place 22–28px; a file whose scene is its left half drawn at twice the box's width */
+.imm-trip__media { aspect-ratio: 4 / 3; }
+.imm-trip__place { font-size: clamp(1.375rem, 1.9vw, 1.75rem); line-height: 1.05; }
+.imm-trip__photo[data-left-half] { width: 200%; max-width: none; }
+
+/* the creator-preneur track: one wide card, the scene's clear left half at the left, the copy beside it */
+.imm-track { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: var(--space-8); margin-top: var(--space-12);
+  padding: var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-page); }
+.imm-track__media { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius-lg); background: var(--surface-inverse); }
+.imm-track__photo { position: absolute; top: 0; left: 0; width: 200%; max-width: none; height: 100%; object-fit: cover; object-position: 0% 50%; }
+.imm-track__body { display: flex; flex-direction: column; gap: var(--space-2); padding-right: var(--space-6); }
+@media (width < 672px) {
+  .imm-track { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin-top: var(--space-10); }
+  .imm-track__body { padding: 0 var(--space-2) var(--space-2); }
+  .imm-trip__place { font-size: 1.5rem; }
+}
+
+/* (later, 2026-10-27, the user's ask: "as the other cards, to the theme") the trips as the page's
+   cards, the AI terms': a light card, a hairline edge, 8px corners, the photo across its head (no type
+   over it), then the place and its line inside 20px of padding. The track's photo card is gone: its
+   heading and line sit over the creators. */
+.imm-trip { overflow: hidden; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-page); }
+.imm-trip__media { border-radius: 0; aspect-ratio: 16 / 10; }
+.imm-trip__media::after { content: none; }
+.imm-trip__body { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-5); }
+.imm-trip__name { margin: 0; padding: 0; border: 0; font-size: var(--type-h3-size); line-height: 1.3; }
+.imm-trip__text { margin: 0; font-size: var(--type-body-sm-size); line-height: 1.5; }
+.imm-trips > li { display: flex; }
+.imm-trips > li > .imm-trip { flex: 1; }
+.imm-sub--track { margin-top: var(--space-16); }
+@media (width < 672px) { .imm-sub--track { margin-top: var(--space-12); } }
+
+/* (later) the company's logo (or, until named, the place) over a hairline, then the line, as Masters'
+   Union's cards */
+.imm-trip__body { gap: 0; }
+.imm-trip__name { display: flex; align-items: center; min-height: 2rem; padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-subtle); }
+.imm-trip__logo { display: block; width: auto; max-width: 70%; object-fit: contain; }
+.imm-trip__text { margin-top: var(--space-3); }
+
+/* ── (later, 2026-10-27, the user's ask: "same as the Masters' Union screenshot") no card: the photo
+   (16:9, 8px corners) with "At a" and the place in white, large, over a shade at its foot; under it,
+   flush with the photo's edge, the company's mark over a hairline, then the line in grey ── */
+.imm-trip { overflow: visible; border: 0; border-radius: 0; background: none; }
+.imm-trip__media { aspect-ratio: 16 / 10; border-radius: var(--radius-lg); }
+.imm-trip__media::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, rgb(0 0 0 / 0.28) 45%, rgb(0 0 0 / 0) 72%); }
+.imm-trip__place { display: block; position: absolute; z-index: 1; left: var(--space-5); right: var(--space-5); bottom: var(--space-5); margin: 0;
+  font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.02; letter-spacing: -0.03em; font-weight: 600; color: #fff; text-wrap: balance; }
+.imm-trip__place span { display: block; margin-bottom: 0.15em; font-weight: var(--font-weight-medium); }
+.imm-trip__body { gap: 0; padding: var(--space-4) 0 0; }
+.imm-trip__name { display: flex; align-items: center; min-height: 2.25rem; padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-subtle); }
+.imm-trip__mark { font-size: 1.125rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; color: var(--content-primary); }
+.imm-trip__text { margin-top: var(--space-3); font-size: 0.9375rem; line-height: 1.55; color: var(--content-secondary); }
+@media (width < 672px) { .imm-trip__place { left: var(--space-4); bottom: var(--space-4); font-size: 1.5rem; } }
+
+/* ── (later, 2026-10-27, the user's ask) back to the page's card, no type over the photo, the company's
+   logo as the card's heading: a light card with a hairline edge, the photo across its head (16:10),
+   then 20px in: the logo (28px tall, its own colours), 12px, the line ── */
+.imm-trip { overflow: hidden; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface-page); }
+.imm-trip__media { border-radius: 0; }
+.imm-trip__media::after { content: none; }
+.imm-trip__body { padding: var(--space-5); }
+.imm-trip__name { min-height: 0; padding: 0; border: 0; }
+.imm-trip__logo { height: 1.75rem; max-width: 60%; }
+.imm-trip__text { margin-top: var(--space-3); font-size: 0.875rem; }

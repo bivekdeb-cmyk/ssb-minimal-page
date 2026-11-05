@@ -1,0 +1,104 @@
+'use client';
+
+import * as React from 'react';
+import type { ResolvedLogo } from '@/lib/logos';
+
+/** Twenty-four cells (6 × 4 from the tablet up, 3 × 8 on a phone; alumni.css). */
+const CELLS = 24;
+/** One cell turns every this many ms. */
+const EVERY = 1000;
+
+function Logo({ logo }: { logo: ResolvedLogo }) {
+  return logo.src ? (
+    // eslint-disable-next-line @next/next/no-img-element -- at its display size, no layout shift
+    <img
+      src={logo.src}
+      alt=""
+      width={logo.width}
+      height={logo.height}
+      loading="lazy"
+      decoding="async"
+      className="peers-flip-logo"
+      // its width at one visual weight (`resolveLogos`), scaled to the cell in CSS
+      style={logo.width ? ({ '--w': `${logo.width}px` } as React.CSSProperties) : undefined}
+    />
+  ) : (
+    <span className="type-h3 whitespace-nowrap text-content-secondary">{logo.wordmark}</span>
+  );
+}
+
+/**
+ * "Your peers come from" (2026-10-09): the logos in a grid of white cells, two rows on desktop. Every
+ * couple of seconds one cell, picked at random, flips over (a turn on its horizontal axis) to a logo
+ * not on show: the cell's face is replaced by one carrying the new logo, which turns in.
+ * Still under reduced motion. Screen readers get the full list.
+ */
+export function PeersFlip({ logos, label }: { logos: ResolvedLogo[]; label: string }) {
+  const n = Math.min(CELLS, logos.length);
+  // per cell: the logo index on each face, and how far it has turned (in half turns)
+  const [cells, setCells] = React.useState(() =>
+    Array.from({ length: n }, (_, i) => ({ faces: [i, i] as [number, number], turns: 0 })),
+  );
+  const gridRef = React.useRef<HTMLUListElement>(null);
+
+  React.useEffect(() => {
+    if (logos.length <= n || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let last = -1;
+    // only while the grid is on screen (2026-10-27, performance): ticking off screen, its reading of the
+    // cells' layout (offsetParent) forced the whole page to lay out again every second, an 80–120ms task
+    let onScreen = false;
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+    });
+    if (gridRef.current) io.observe(gridRef.current);
+    const id = window.setInterval(() => {
+      const grid = gridRef.current;
+      if (!grid || document.hidden || !onScreen) return;
+      // only the cells this breakpoint shows
+      const visible = Array.from(grid.children).flatMap((el, i) => ((el as HTMLElement).offsetParent ? [i] : []));
+      if (!visible.length) return;
+      setCells((prev) => {
+        const shown = new Set(visible.map((i) => prev[i].faces[prev[i].turns % 2]));
+        const pool = logos.map((_, k) => k).filter((k) => !shown.has(k));
+        const choices = visible.filter((i) => i !== last);
+        const at = choices[Math.floor(Math.random() * choices.length)];
+        if (at === undefined || !pool.length) return prev;
+        last = at;
+        const next = pool[Math.floor(Math.random() * pool.length)];
+        return prev.map((c, i) => {
+          if (i !== at) return c;
+          const faces = [...c.faces] as [number, number];
+          faces[(c.turns + 1) % 2] = next;
+          return { faces, turns: c.turns + 1 };
+        });
+      });
+    }, EVERY);
+    return () => {
+      window.clearInterval(id);
+      io.disconnect();
+    };
+  }, [logos, n]);
+
+  return (
+    <>
+      <ul className="sr-only" aria-label={label}>
+        {logos.map((l) => (
+          <li key={l.name}>{l.name}</li>
+        ))}
+      </ul>
+      <ul ref={gridRef} className="peers-flip" aria-hidden>
+        {cells.map((c, i) => (
+          <li key={i} className="peers-flip-cell">
+            {/* one face: a new logo remounts it (its key), and it turns in on its horizontal axis
+                (CSS). No hidden back face: Safari drew those mirrored. */}
+            <div key={`${c.turns}`} className="peers-flip-card" data-turned={c.turns ? '' : undefined}>
+              <div className="peers-flip-face">
+                <Logo logo={logos[c.faces[c.turns % 2]]} />
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}

@@ -1,0 +1,477 @@
+/* The deck's remaining sections: the pieces their shared row and cards don't cover. */
+
+/* Campus life: the Innovation Lab's mosaic and moment (innovation-lab.css, the `lab-*` classes; the
+   team's ask, 2026-10-07): the cohort in the middle, the campus either side. The photos around it
+   zoom a little under the pointer (the middle one is the moment's, which moves it itself). */
+.cm .lab-tile[data-area] img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cm .lab-tile[data-area]:hover img {
+    transform: scale(1.05);
+  }
+}
+
+/* The lab's extra room above (innovation-lab.css: it follows the curriculum) is the lab's alone:
+   campus life follows a section like any other. */
+main section.lab.cm[data-density='roomy'] {
+  margin-top: 0;
+}
+
+/* Follow campus life: two glass buttons floating on the cohort photo, at its lower left (light,
+   transparent glass: white type and Instagram's glyph in white over the photo, 4px corners), under
+   "Follow us on"). In the slot's cell, over the photo; on desktop the
+   moment brings them up with the heading (data-lab-overlay). Nothing between them and the photo
+   has a filter, mask or opacity below 1, or the glass would blur nothing. */
+/* the buttons share the photo's grid cell, at its lower left: placed by the grid, not by
+   position, since the slot must stay unpositioned (the moment lifts the photo out over the whole
+   stage, positioned against it) */
+.cm-slot > * {
+  grid-area: 1 / 1;
+}
+.cm-social {
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  justify-self: start;
+  margin: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: calc(100% - var(--space-8));
+}
+.cm-glass {
+  --cm-glass: blur(18px) saturate(1.5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 var(--space-4) 0 var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--content-on-image) 35%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--content-on-image) 16%, transparent);
+  -webkit-backdrop-filter: var(--cm-glass);
+  backdrop-filter: var(--cm-glass);
+  color: var(--content-on-image);
+  font-size: var(--type-body-size);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s linear;
+}
+.cm-social__label {
+  flex-basis: 100%;
+  margin: 0 0 var(--space-1);
+  font-size: var(--type-caption-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+  color: var(--content-on-image);
+  /* legible over a light patch of the photo */
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.45);
+}
+.cm-glass:hover {
+  background: color-mix(in srgb, var(--content-on-image) 28%, transparent);
+}
+.cm-glass:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+.cm-glass .cm-ig {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+.cm-glass__note {
+  font-weight: var(--font-weight-regular, 400);
+  opacity: 0.8;
+}
+@media (max-width: 671px) {
+  .cm-social {
+    margin: var(--space-3);
+    max-width: calc(100% - var(--space-6));
+  }
+  .cm-glass {
+    height: 36px;
+    padding: 0 var(--space-3) 0 var(--space-2);
+    font-size: var(--type-caption-size);
+  }
+  .cm-glass .cm-ig {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Super Mentor Sessions: StoryCard's card and type (.sc), with a thumbnail that plays in place,
+   the role under the name, and the logo at the foot. */
+.tk-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  background: var(--surface-subtle);
+}
+.tk-media iframe,
+.tk-play,
+.tk-play img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.tk-play {
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+.tk-play img {
+  object-fit: cover;
+  transition: transform var(--motion-duration-slow) var(--motion-easing-productive-in-out);
+}
+.tk-play:hover img {
+  transform: scale(1.03);
+}
+.tk-play:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: -2px;
+}
+/* The play mark the section's other video cards use (MediaSlot's). */
+.tk-play-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-full);
+  background: var(--surface-overlay-scrim);
+  color: var(--content-on-image);
+  transform: translate(-50%, -50%);
+}
+.tk-play-mark svg {
+  width: 40%;
+  height: 40%;
+}
+.tk-body {
+  flex: 1;
+}
+.tk-role {
+  margin: calc(var(--space-1) * -1) 0 0;
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-lh);
+  font-weight: var(--font-weight-medium);
+  color: var(--content-primary);
+}
+/* The logo at the foot, in its own colours. */
+.tk-logo {
+  display: block;
+  height: 1.5rem;
+  width: auto;
+  max-width: 10rem;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  object-fit: contain;
+  object-position: left center;
+  box-sizing: content-box;
+}
+
+/* ---- Beyond Placements (2026-10-07, the team's brief) ---- */
+
+/* The turn, at the display size, in ink: the setup, then the answer, a line each on desktop. */
+.bp-turn {
+  max-width: 52rem;
+}
+
+/* A company (VentureCard): a card with a square photo (a rectangle below desktop) inset at its left (Why SSB's chapter cards'
+   inset: 12px in; 8px corners on the card and the square alike, as every card on the page: the
+   team's call, 2026-10-07, one roundness), its field on a glass chip and its
+   figure in white on a progressive blur; the copy at its right. Below sm, the photo over the copy.
+   A light hairline, white. */
+.vc {
+  display: grid;
+  height: 100%;
+  overflow: hidden;
+  border: var(--border-hair) solid color-mix(in srgb, var(--border-subtle) 60%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--surface-page);
+}
+@media (width >= 672px) {
+  .vc {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+}
+.vc-media {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: var(--space-3) var(--space-3) 0;
+  overflow: hidden;
+  /* a rectangle below desktop (the team's call, 2026-10-07: a square over the copy made a phone's
+     card tall), the square from desktop up */
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-dark-2);
+}
+@media (width >= 672px) {
+  .vc-media {
+    align-self: start;
+    margin: var(--space-3) 0 var(--space-3) var(--space-3);
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (width >= 1056px) {
+  .vc-media {
+    aspect-ratio: 1 / 1;
+  }
+}
+/* The photo and its blurred copies, one layer (the entrance settles it from a slight zoom). The
+   copies, not backdrop-filter, which would re-run as the row scrolls; every one scaled alike, so
+   they stay aligned while each blur's transparent rim falls outside the box. */
+.vc-layers {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.vc-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transform: scale(1.1);
+}
+.vc-plate {
+  transform: none;
+}
+/* A startup's banner (a white logo on a two-colour gradient, 1133 x 542): the square takes its
+   top and bottom colours, and the whole banner sits across its middle, its own top and bottom
+   faded into them, so the logo shows whole (cropped square, a wide logo lost its ends). */
+.vc-media[data-banner] {
+  background: linear-gradient(to bottom, var(--vc-top), var(--vc-bottom));
+}
+.vc-banner {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  translate: 0 -50%;
+  mask-image: linear-gradient(to bottom, transparent, #000 28%, #000 72%, transparent);
+}
+.vc-blur-soft {
+  filter: blur(8px);
+  mask-image: linear-gradient(to bottom, transparent 44%, #000 64%);
+}
+.vc-blur-deep {
+  filter: blur(20px);
+  mask-image: linear-gradient(to bottom, transparent 60%, #000 86%);
+}
+.vc-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 36%,
+    color-mix(in oklab, var(--surface-image-scrim) 55%, transparent) 66%,
+    color-mix(in oklab, var(--surface-image-scrim) 90%, transparent) 100%
+  );
+}
+/* Its field: Why SSB's light glass chip, at the photo's top left, in line with the figure. */
+.vc-tag {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  height: var(--space-6);
+  padding-inline: var(--space-2-5);
+  border: var(--border-width-hair) solid color-mix(in oklab, var(--surface-default) 50%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--surface-default) 72%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  color: var(--content-primary);
+}
+/* The figure: big, medium weight, white; what it counts under it. */
+.vc-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-4);
+  color: var(--on-image-ink);
+}
+.vc-stat-value {
+  font-size: var(--type-display-size);
+  line-height: 1.1;
+  letter-spacing: var(--type-display-tracking);
+  font-weight: var(--font-weight-medium);
+}
+.vc-stat-label {
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-lh);
+  color: var(--on-image-ink-secondary);
+}
+.vc-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-5);
+  /* 16px from the photo (it was 20/24px; the team: a little closer) */
+  padding: var(--space-4) var(--space-5) var(--space-6);
+}
+@media (width >= 672px) {
+  .vc-body {
+    padding: var(--space-6) var(--space-6) var(--space-5) var(--space-4);
+  }
+}
+.vc-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+/* The company, and an arrow to its site at the right, if it has one. */
+.vc-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.vc-link {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1) 0 0;
+  border-radius: var(--radius-full);
+  color: var(--content-secondary);
+  transition:
+    background-color var(--motion-duration-fast) linear,
+    color var(--motion-duration-fast) linear;
+}
+.vc-link:hover {
+  background: var(--surface-sunken);
+  color: var(--content-primary);
+}
+.vc-link:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+.vc-link svg {
+  width: 18px;
+  height: 18px;
+}
+/* Who built it: round photos (overlapping, ringed in the card's white), their names, and who
+   they are to it under them. */
+.vc-founders {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+}
+.vc-avatars {
+  display: flex;
+  flex: none;
+}
+.vc-avatar {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  box-shadow: 0 0 0 2px var(--surface-page);
+}
+.vc-avatar + .vc-avatar {
+  margin-left: calc(var(--space-2) * -1);
+}
+/* initials don't overlap: the one over would cut the other's letters ("SH" under "PM") */
+.vc-avatar-initials + .vc-avatar,
+.vc-avatar + .vc-avatar-initials {
+  margin-left: var(--space-1);
+}
+.vc-avatar-initials {
+  display: grid;
+  place-items: center;
+  background: var(--surface-sunken);
+  font-size: var(--type-caption-size);
+  font-weight: var(--font-weight-semibold);
+  color: var(--content-secondary);
+}
+.vc-who {
+  display: grid;
+  min-width: 0;
+}
+.vc-names {
+  font-size: var(--type-body-sm-size);
+  line-height: 1.35;
+  font-weight: var(--font-weight-medium);
+  color: var(--content-primary);
+}
+.vc-role {
+  font-size: var(--type-caption-size);
+  line-height: 1.4;
+  color: var(--content-secondary);
+}
+/* The line, three lines at most. */
+.vc-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Phones, in the drifting rows (2026-10-23, the team's ask): a compact card, so the two rows don't
+   fill the screen. A wide, short picture (3:1) with a smaller figure, the line two lines at most
+   (the card text keeps card-standard's 20px). */
+@media (width < 672px) {
+  .rs-drift .vc-media { aspect-ratio: 3 / 1; }
+  .rs-drift .vc-tag { top: var(--space-3); left: var(--space-3); }
+  .rs-drift .vc-stat { gap: 0; padding: var(--space-3); }
+  .rs-drift .vc-stat-value { font-size: var(--type-h2-size, 1.75rem); }
+  .rs-drift .vc-stat-label { font-size: var(--type-caption-size); }
+  .rs-drift .vc-body { gap: var(--space-3); }
+  .rs-drift .vc-text { -webkit-line-clamp: 2; line-clamp: 2; }
+  .rs-drift .vc-head { gap: var(--space-2); }
+  .rs-drift .vc-title h3 { font-size: var(--type-h3-size); line-height: var(--type-h3-lh); }
+  .rs-drift .vc-avatar { width: 28px; height: 28px; }
+  /* a startup's logo smaller and a little low, clear of the chip */
+  .rs-drift .vc-banner { left: 15%; width: 70%; top: 62%; }
+}
+
+/* ── Life beyond the classroom: the tabs (2026-10-23, the team's ask) ── */
+/* the switcher under the copy, on its left edge */
+.cm .lab-head:has(.cm-tabs) { flex-wrap: wrap; }
+.cm-tabs { width: 100%; margin-top: var(--space-6); }
+/* a chosen tab's photos fade in, tile by tile (no scroll moment off Campus) */
+.cm .lab-mosaic[data-gallery] .lab-tile > * { animation: cm-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.cm .lab-mosaic[data-gallery] .lab-tile:nth-child(n + 2) > * { animation-delay: 60ms; }
+@keyframes cm-in { from { opacity: 0; transform: scale(1.03); } }
+@media (prefers-reduced-motion: reduce) { .cm .lab-mosaic[data-gallery] .lab-tile > * { animation: none; } }
+/* the caption: a dark glass chip at the photo's foot */
+.lab-tile { position: relative; }
+.cm-cap { position: absolute; left: var(--space-3); bottom: var(--space-3); max-width: calc(100% - var(--space-6)); padding: var(--space-1-5) var(--space-2-5); border-radius: var(--radius-md);
+  background: rgb(23 23 23 / 0.55); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #fff; font-size: var(--type-caption-size); line-height: 1.3; font-weight: var(--font-weight-medium); }
+/* a photo to come: the page's dashed placeholder, naming it */
+.cm-ph { display: grid; place-items: center; width: 100%; height: 100%; padding: var(--space-4); border: 1.5px dashed var(--border-decorative); border-radius: inherit; background: var(--surface-sunken); text-align: center; }
+.cm-ph span { max-width: 22ch; font-size: var(--type-body-sm-size); line-height: 1.4; color: var(--content-secondary); }
+
+/* the tabs under the header, on its left edge (2026-10-23, the team's ask; they sat at its right) */
+section.cm .lab-head:has(.cm-tabs) { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+section.cm .cm-tabs { width: auto; max-width: 100%; margin-top: var(--space-6); }
+
+/* phones (2026-10-23, the fix for "m-web breaking"): the five tabs under the header ran 627px wide on a
+   390px phone and widened the whole page (the browser zoomed it out to fit). The tabs now scroll
+   sideways inside the page's width, and nothing in the head may grow past it. */
+section.cm .lab-head, section.cm .lab-track { min-width: 0; max-width: 100%; }
+section.cm .cm-tabs { max-width: min(100%, calc(100vw - 2 * var(--space-gutter))); }
+section.cm .cm-tabs .pt-switch-wrap, section.cm .cm-tabs .pt-switch { max-width: 100%; }
+section.cm .cm-tabs .pt-switch { overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+section.cm .cm-tabs .pt-switch::-webkit-scrollbar { display: none; }
+section.cm .cm-tabs .pt-tab { flex: none; }
