@@ -120,7 +120,8 @@
   }
   .lp-phone-row::-webkit-scrollbar { display: none; }
   .lp-phone-row > li { min-width: 0; aspect-ratio: 3 / 2; scroll-snap-align: start; }
-  .lp-phone-row .lp-card { height: 100%; aspect-ratio: auto; }
+  /* the card fills its landscape slot (it kept the portrait card's width, drawing square) */
+  .lp-phone-row .lp-card { width: 100%; height: 100%; aspect-ratio: auto; }
   /* the photo's own crop: a landscape box shows its middle band, not the top-anchored zoom the
      portrait card needs */
   .lp-phone-row .lp-card .ssx-card__media > img { transform: none; object-position: 50% 45%; }

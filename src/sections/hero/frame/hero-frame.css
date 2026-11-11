@@ -491,3 +491,9 @@ body:has(.hf-deadline) header.sn { top: var(--hf-bar, 0px); }
   .hf-actions > .hf-secondary { order: 2; }
   .hf[data-tone='light'] .hf-intake { color: #616161; }
 }
+
+/* phones (2026-11-11): the short line now fits beside the countdown, so it needs a gap there too */
+@media (width < 672px) {
+  .hf-deadline [data-slot='banner-message'] { column-gap: var(--space-2); row-gap: var(--space-1); }
+  .hf-deadline .hf-count { margin: 0; }
+}
