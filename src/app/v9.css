@@ -273,20 +273,27 @@ main[data-layout='minimal'] .m9 :is(.ad4-fine, .dkg-note, .ad4-fast, .dkg-credit
    so it takes the column's edges itself); below 1056px, the main page's sideways row */
 @media (width >= 1056px) {
   html body main[data-layout='minimal'] .m9 .dkf .dkf-row.dkf-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: none; grid-auto-flow: column;
+    /* (later that day, the user's ask: "scrollable rather than all facing upfront") one row scrolled
+       sideways, two cards and part of the third across the column */
+    grid-auto-columns: calc((var(--m9-col) - var(--space-4)) / 2.3);
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    scrollbar-width: thin; padding-bottom: var(--space-3);
     margin-left: var(--m9-edge);
     margin-right: var(--m9-right);
-    padding: 0;
+    padding-inline: 0;
   }
+  html body main[data-layout='minimal'] .m9 .dkf .dkf-card { scroll-snap-align: start; }
 }
 
 /* web (2026-11-11, the user's ask: the faculty and mentors' cards "distorted", "make the card bigger so
    there's some negative space"): at 2.85 to the column they were drawn at 57% of their 480 x 320
    design, the course and credentials crowding the logo. Now one card and 85% of the next across the
-   column, ~430px on a 1440 screen (90% of the design), two rows as before. Alumni untouched. */
+   column, ~430px on a 1440 screen (90% of the design), two rows as before. Alumni untouched.
+   (later that day: "too big, a bit smaller, the sweet spot") two cards and a third peeking, ~335px. */
 @media (width >= 1056px) {
   html body main[data-layout='minimal'] .m9 .fc-grid.fc-grid {
-    grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 1.85) !important;
+    grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 2.3) !important;
   }
 }
 
@@ -296,3 +303,9 @@ html body main[data-layout='minimal'] .m9-hero img.hf-film { top: 0; height: 100
 @media (width < 1056px) {
   html body main[data-layout='minimal'] .m9-hero img.hf-film { object-position: 50% 30%; }
 }
+
+/* campus life still (2026-11-11, the user's ask: "a static picture gallery, no appear animation"):
+   no scroll moment (CampusLifeSection still), so the track and stage drop their sticky heights */
+html body main[data-layout='minimal'] .cm .lab-track.lab-track { height: auto; }
+html body main[data-layout='minimal'] .cm .lab-stage.lab-stage { position: static; height: auto; overflow: visible; }
+html body main[data-layout='minimal'] .cm .lab-frame.lab-frame { height: auto; }

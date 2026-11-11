@@ -84,7 +84,7 @@ export default function V9Page() {
             <AdmissionsV4 backers={false} />
           </Tone>
           <Tone>
-            <CampusLifeSection clubs={false} />
+            <CampusLifeSection clubs={false} still />
           </Tone>
         </div>
         <StickyApply deadline={heroFrame.deadline} />
