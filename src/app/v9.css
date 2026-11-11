@@ -433,3 +433,9 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9 .dko-figs .dko-fig.dko-fig { gap: 6px; padding: 14px var(--space-4); }
 }
+
+/* phones (2026-11-11, the user's ask: "don't make it three short lines, let it flow with the page
+   width"): the founders' title wraps as the other section titles do, not balanced */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 #dkf-title { text-wrap: wrap; }
+}
