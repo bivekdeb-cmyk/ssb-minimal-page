@@ -404,11 +404,10 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
   html:has(main[data-layout='minimal']) body .dkft :is(.dkft-col a, .dkft-place) { font-size: 0.875rem; }
 }
 
-/* phones (2026-11-11, the user's ask: "proper, equal gaps", "centre Built by leaders from"): title, the
-   leaders' block, the line, 24px apart (the line sat 8 under the logos); the label 8 over its logos,
-   centred between two hairlines */
+/* phones (2026-11-11, the user's asks: "proper, equal gaps", then "nearer the headline, the gap too
+   much", the label left as it was): title, the leaders' block, the line, 16px apart (were 24 and 8);
+   the label 8 over its logos, its own design */
 @media (width < 672px) {
-  html body main[data-layout='minimal'] .m9-hero .hf-label { margin-top: var(--space-6); justify-content: center; }
-  html body main[data-layout='minimal'] .m9-hero .hf-label::before { content: ''; flex: 1 1 0%; height: 1px; background: #e5e5e5; }
-  html body main[data-layout='minimal'] .m9-hero .hf-line { margin-top: var(--space-6); }
+  html body main[data-layout='minimal'] .m9-hero .hf-label { margin-top: var(--space-4); }
+  html body main[data-layout='minimal'] .m9-hero .hf-line { margin-top: var(--space-4); }
 }
