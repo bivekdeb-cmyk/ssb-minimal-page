@@ -427,3 +427,9 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
   html body main[data-layout='minimal'] .m9 .peers-flip-cell { height: 2.75rem !important; }
   html body main[data-layout='minimal'] .m9 .peers-flip-logo[style] { width: min(calc(var(--w) * 0.62), 4.625rem); max-width: 82%; max-height: 1.375rem; }
 }
+
+/* phones (2026-11-11, the user's ask: the placement figures' tiles shorter): the figure 6px over its
+   label (was 16), the tile 14px in (was 20) */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .dko-figs .dko-fig.dko-fig { gap: 6px; padding: 14px var(--space-4); }
+}
