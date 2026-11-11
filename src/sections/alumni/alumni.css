@@ -450,3 +450,10 @@ html body .alumni-row {
   html body .alumni-card .alumni-card__value.alumni-card__value { font-size: 1.25rem; line-height: 1.2; }
   html body .alumni-card .alumni-card__step.alumni-card__step { gap: var(--space-4); }
 }
+
+/* the web (from 672px, 2026-11-11, the user's ask: "in web the size looks too small"): Post SSB / Pre SSB
+   a small step up, 13 / 16 in design units (was 12 / 14); the cards, name and role as they were */
+@media (width >= 672px) {
+  html body .alumni-card .alumni-card__label.alumni-card__label { font-size: 0.8125rem !important; }
+  html body .alumni-card .alumni-card__value.alumni-card__value { font-size: 1rem; line-height: 1.2; }
+}
