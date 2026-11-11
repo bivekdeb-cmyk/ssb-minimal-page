@@ -1,5 +1,5 @@
 import { Banner, Button, Heading, Text } from '@kishanscaler/ssx-ui';
-import { ArrowUpRight } from '@phosphor-icons/react/ssr';
+import { ArrowUpRight, CalendarBlank } from '@phosphor-icons/react/ssr';
 
 import type { HeroFrameContent } from '@/content/home';
 import { HeroFrameBarHeight } from './HeroFrameBarHeight';
@@ -65,6 +65,14 @@ export function HeroFrame({ content: c, variant, tone = 'light' }: { content: He
               <Button asChild size="lg" variant="secondary" className="hf-secondary">
                 <a href={c.secondaryCta.href}>{c.secondaryCta.label}</a>
               </Button>
+              {/* the intake's deadline under Apply Now (2026-11-11, the user's ask): its own line on
+                  desktop, between the two buttons on a phone (hero-frame.css) */}
+              {c.deadline ? (
+                <p className="hf-intake">
+                  <CalendarBlank weight="regular" aria-hidden="true" />
+                  {c.deadline.message}
+                </p>
+              ) : null}
             </div>
           </div>
 

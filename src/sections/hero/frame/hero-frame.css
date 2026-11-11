@@ -473,3 +473,21 @@ body:has(.hf-deadline) header.sn { top: var(--hf-bar, 0px); }
 }
 /* the wave (HeroFrameFlipLogos `wave`, /v7): a quicker turn, each tile a beat after the one before */
 .hf-flip[data-wave] .hf-flip-logo { animation-duration: 380ms; }
+
+/* the intake's deadline under Apply Now (2026-11-11, the user's ask): a calendar icon and the line, small,
+   on a row of its own under the buttons; on the film, white at the line's strength */
+.hf-intake {
+  display: flex; flex-basis: 100%; align-items: center; gap: var(--space-2);
+  /* 15px on the web, over the film (a step under the 16px line and buttons); 14px on a phone, below */
+  margin: 0; font-size: 0.9375rem; line-height: 1.4;
+  font-weight: var(--font-weight-medium); color: var(--on-image-ink);
+}
+.hf-actions .hf-intake svg { flex: none; width: 1.125rem; height: 1.125rem; }
+/* phones: the buttons stack, so the line goes straight under Apply Now, centred, the brochure after it */
+@media (width < 672px) {
+  .hf-actions > .hf-primary { order: 0; }
+  .hf-actions > .hf-intake { order: 1; justify-content: center; margin: var(--space-1) 0 var(--space-2); font-size: 0.875rem; }
+  .hf-actions .hf-intake svg { width: 1rem; height: 1rem; }
+  .hf-actions > .hf-secondary { order: 2; }
+  .hf[data-tone='light'] .hf-intake { color: #616161; }
+}

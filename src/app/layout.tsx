@@ -4,6 +4,10 @@ import './globals.css';
 import './type-standard.css';
 import './card-standard.css';
 import './color-standard.css';
+// one type scale for the page, loaded last (2026-11-11)
+import './typography.css';
+// photos inset in cards take the card's radius less the gap (2026-11-11)
+import './corners.css';
 
 const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],

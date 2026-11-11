@@ -112,7 +112,7 @@ export const heroFrame: HeroFrameContent = {
   // PLACEHOLDER date: the mock's countdown (1 day 2 hours out); the real Phase 1 deadline to come
   deadline: {
     // (review call, 21 Oct 2026) Intake 2 closes 27 Dec, as the fee table
-    message: 'Intake 2 applications close 27 Dec',
+    message: 'Applications for Intake 2 close on 27 Dec',
     shortMessage: 'Intake 2 closes 27 Dec',
     to: '2026-12-27T23:59:00+05:30',
     label: '27 Dec, 11:59 PM IST',
