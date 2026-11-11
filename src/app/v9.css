@@ -356,3 +356,19 @@ html body main[data-layout='minimal'] .cm.cm { padding-bottom: var(--space-16); 
 @media (width < 672px) {
   html body main[data-layout='minimal'] .cm.cm { padding-bottom: var(--space-10); }
 }
+
+/* (2026-11-11, the user's asks) the Cloudflare stand-in on phones: 12px under the phone field, the
+   deadline 12px under it */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .mf .mf-cf { margin-top: var(--space-3); }
+  html body main[data-layout='minimal'] .mf .mf-cf + .mf-deadline { margin-top: var(--space-3); }
+}
+
+/* the whole page on #FAFAFA (2026-11-11, the user's ask: "so the whites lift"): the page ground token
+   wherever the light theme is declared (every data-brand re-declares it), the footer's wrap too; white
+   cards stay white. The phone hero's photo fades into that ground, not white. */
+html:has(main[data-layout='minimal']) :is(body, [data-brand='ssb']:not([data-theme='dark'])) { --surface-page: #fafafa; }
+html:has(main[data-layout='minimal']) body { background: #fafafa; }
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9-hero .hf[data-tone='light'] .hf-frame { background: #fafafa; }
+}

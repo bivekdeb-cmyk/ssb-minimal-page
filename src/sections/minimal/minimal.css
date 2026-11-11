@@ -119,3 +119,19 @@
   html:has(main[data-layout='minimal']) body .dkft.dkft { padding-bottom: var(--space-4); }
   html:has(main[data-layout='minimal']) body .dkft.dkft .dkft-legal { padding-bottom: var(--space-4); }
 }
+
+/* (2026-11-11, the user's asks) the card's button at medium weight, not semibold; and the Cloudflare
+   check's stand-in above the deadline, in Turnstile's own look (a light grey box, the checkbox and its
+   prompt at the left, the brand and its links at the right) */
+.mf .mf-cta { font-weight: 500; }
+.mf-cf {
+  display: flex; align-items: center; gap: var(--space-3); box-sizing: border-box; height: 65px;
+  margin-top: var(--space-4); padding: 0 var(--space-4);
+  border: 1px solid #e0e0e0; border-radius: 4px; background: #fafafa; color: #232323;
+}
+.mf-cf-box { flex: none; width: 24px; height: 24px; border: 2px solid #c4c4c4; border-radius: 3px; background: #fff; }
+.mf-cf-label { flex: 1; min-width: 0; font-size: 0.875rem; line-height: 1.3; }
+.mf-cf-brand { display: flex; flex: none; flex-direction: column; align-items: flex-end; gap: 2px; }
+.mf-cf-name { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; color: #f38020; }
+.mf-cf-links { font-size: 0.625rem; color: #6b6b6b; }
+.mf .mf-cf + .mf-deadline { margin-top: var(--space-3); }

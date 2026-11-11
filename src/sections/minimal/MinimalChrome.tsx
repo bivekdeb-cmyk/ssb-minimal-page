@@ -127,6 +127,17 @@ export function MinimalForm({ id }: { id: string }) {
           </span>
           <input className="mf-input" type="tel" placeholder="Enter Mobile Number" aria-label="Mobile number" autoComplete="off" />
         </div>
+        {/* the Cloudflare check (2026-11-11, the user's ask): a static stand-in drawn as Turnstile's widget
+            (its "flexible" size: the card's full width, 65px tall), so the team sees where it sits; the
+            real widget replaces this block */}
+        <div className="mf-cf" data-placeholder="cloudflare-turnstile" aria-hidden="true">
+          <span className="mf-cf-box" />
+          <span className="mf-cf-label">Verify you are human</span>
+          <span className="mf-cf-brand">
+            <span className="mf-cf-name">CLOUDFLARE</span>
+            <span className="mf-cf-links">Privacy · Terms</span>
+          </span>
+        </div>
         <p className="mf-deadline">
           Early Bird Intake Application Deadline - <b>1st Nov 2026</b>
         </p>
