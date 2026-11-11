@@ -309,3 +309,35 @@ html body main[data-layout='minimal'] .m9-hero img.hf-film { top: 0; height: 100
 html body main[data-layout='minimal'] .cm .lab-track.lab-track { height: auto; }
 html body main[data-layout='minimal'] .cm .lab-stage.lab-stage { position: static; height: auto; overflow: visible; }
 html body main[data-layout='minimal'] .cm .lab-frame.lab-frame { height: auto; }
+
+/* ── phones only (2026-11-11, the user's ask: "proper text hierarchy" on mweb, the hero's copy up over
+   the photo, so part of the sign-up card shows in the first screen). The page's phone scale: section
+   titles 24, intros 14, card titles 16-18, body 13, small print 12. ── */
+@media (width < 672px) {
+  /* the hero: the photo a little taller, fading out over its lower half (the fade starting higher); the
+     copy pulled up over that fade; the facts strip off (the user: fine to lose it) */
+  html body main[data-layout='minimal'] .m9-hero .hf-film {
+    aspect-ratio: 4 / 3; object-position: 50% 25%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 22%, rgb(0 0 0 / 0.35) 50%, transparent 72%);
+    mask-image: linear-gradient(to bottom, #000 22%, rgb(0 0 0 / 0.35) 50%, transparent 72%);
+  }
+  html body main[data-layout='minimal'] .m9-hero .hf-body { margin-top: -7.5rem; padding-top: 0; }
+  html body main[data-layout='minimal'] .m9-hero .hf-title { font-size: 1.5rem; line-height: 1.25; }
+  html body main[data-layout='minimal'] .m9-hero .hf-line { margin-top: var(--space-2); font-size: 0.875rem; line-height: 1.5; }
+  html body main[data-layout='minimal'] .m9-hero .hf-side { margin-top: var(--space-5); }
+  html body main[data-layout='minimal'] .m9-hero .hf-side > .hf-facts { display: none; }
+
+  /* the sign-up card: its title a card title (18, under the sections' 24), the rest body and small
+     print, 16px in from its edge (was 24), the fields and button 40px tall */
+  html body main[data-layout='minimal'] .mf .mf-band { padding: var(--space-3) var(--space-4); }
+  html body main[data-layout='minimal'] .mf .mf-band-t { font-size: 0.8125rem; }
+  html body main[data-layout='minimal'] .mf .mf-form { padding: var(--space-4); }
+  html body main[data-layout='minimal'] .mf .mf-title { font-size: 1.125rem; line-height: 1.3; letter-spacing: -0.01em; }
+  html body main[data-layout='minimal'] .mf .mf-sub { margin: var(--space-1) 0 var(--space-3); font-size: 0.8125rem; line-height: 1.4; }
+  html body main[data-layout='minimal'] .mf :is(.mf-input, .mf-cc) { height: 2.5rem; font-size: 0.8125rem; }
+  html body main[data-layout='minimal'] .mf .mf-phone { margin-top: var(--space-2); }
+  html body main[data-layout='minimal'] .mf .mf-deadline { margin: var(--space-4) 0 var(--space-2); font-size: 0.75rem; }
+  html body main[data-layout='minimal'] .mf .mf-cta { height: 2.5rem; font-size: 0.875rem; }
+  html body main[data-layout='minimal'] .mf .mf-wa { margin-top: var(--space-3); font-size: 0.75rem; }
+  html body main[data-layout='minimal'] .mf .mf-terms { margin-top: var(--space-3); font-size: 0.75rem; }
+}
