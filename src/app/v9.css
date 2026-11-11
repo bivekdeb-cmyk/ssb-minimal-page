@@ -481,3 +481,12 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9 .ad4-ctas .ad4-link { align-self: center; justify-self: center; margin-inline: auto; }
 }
+
+/* phones (2026-11-11, the user's ask): no grey second half on the section titles ("Our founding cohort
+   tripled its pay", "Already at Blinkit…"); deck.css shows them on phones, as the page had them hidden
+   all day before that file was loaded again */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] :is(h2, p.type-display) .h-tail,
+  html body main[data-layout='minimal'] h2 .sj-ai-accent,
+  html body main[data-layout='minimal'] h2.sg-title span { display: none !important; }
+}
