@@ -476,3 +476,8 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
   html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc-p::before,
   html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc-p::after { width: 9px; margin-left: -4.5px; }
 }
+
+/* phones (2026-11-11, the user's ask): "Talk to an advisor" centred under Start application */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .ad4-ctas .ad4-link { align-self: center; justify-self: center; margin-inline: auto; }
+}
