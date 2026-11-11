@@ -372,3 +372,17 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9-hero .hf[data-tone='light'] .hf-frame { background: #fafafa; }
 }
+
+/* phones (2026-11-11, the user's ask): "Learn by Doing · Build startups & AI products · No tech background
+   required" as three chips, not a dotted line: white pills with the card stroke on the #FAFAFA ground,
+   12px under the logos, wrapping as they need */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9-hero .hf-line { --hf-dot-w: 0px; overflow: visible; margin-top: var(--space-3); }
+  html body main[data-layout='minimal'] .m9-hero .hf-line-in { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; }
+  html body main[data-layout='minimal'] .m9-hero .hf-dot { display: none; }
+  html body main[data-layout='minimal'] .m9-hero .hf-line-in > span {
+    display: inline-flex; align-items: center; padding: 6px var(--space-3);
+    border: 1px solid #e5e5e5; border-radius: 999px; background: #fff;
+    font-size: 0.75rem; line-height: 1.3; font-weight: 500; color: #3d3d3d;
+  }
+}
