@@ -341,3 +341,18 @@ html body main[data-layout='minimal'] .cm .lab-frame.lab-frame { height: auto; }
   html body main[data-layout='minimal'] .mf .mf-wa { margin-top: var(--space-3); font-size: 0.75rem; }
   html body main[data-layout='minimal'] .mf .mf-terms { margin-top: var(--space-3); font-size: 0.75rem; }
 }
+
+/* (2026-11-11, the user's asks) phones: the sign-up card flat, no shadow; the hero's "PGP in Management &
+   Technology" chip at the small-print size (12, was 14) */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9-inline .mf { box-shadow: none; }
+  html body main[data-layout='minimal'] .m9-hero .hf-eyebrow { padding: 3px var(--space-2); font-size: 0.75rem; line-height: 1.4; }
+}
+/* the footer without its Apply now and Download Brochure buttons (the page's own sign-up card and Apply
+   bar carry those), and campus life clear of it: the section's padding back at its foot (the lab's
+   rule drops it), 64px, 40px on a phone */
+html:has(main[data-layout='minimal']) body .dkft .dkft-actions { display: none; }
+html body main[data-layout='minimal'] .cm.cm { padding-bottom: var(--space-16); }
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .cm.cm { padding-bottom: var(--space-10); }
+}
