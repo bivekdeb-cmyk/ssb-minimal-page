@@ -439,3 +439,19 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9 #dkf-title { text-wrap: wrap; }
 }
+
+/* phones (2026-11-11, the user's ask: the room between a section's label, title and intro "too much"):
+   6px between them (was 10-12), the title's leading tight (1.15, was 1.25) and the intro's 1.45 (was
+   1.55), so the three read as one block; every section's header alike */
+@media (width < 672px) {
+  /* the shared header gap (typography.css, 10px on a phone) at 6px here; Faculty and Mentors' panel set apart */
+  html:has(main[data-layout='minimal']) { --tp-head-gap: 6px; }
+  html body main[data-layout='minimal'] .m9 .pt-panel { row-gap: 6px; }
+  html body main[data-layout='minimal'] .m9 section h2[id]:not([id^='mf']) { line-height: 1.15; }
+  html body main[data-layout='minimal'] .m9 section :is(h2[id] + p, .ad4-lede, .pt-panel p:last-child) { line-height: 1.45; }
+}
+/* phones (2026-11-11, the user's ask: the figures' subtext "too congested"): the cohort line a step under
+   its label (11, was 12 like the label), quieter grey, 2px clear of it */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .dko-figs .dko-fig small { display: block; margin-top: 2px; font-size: 0.6875rem; line-height: 1.35; color: #8a8a8a; }
+}
