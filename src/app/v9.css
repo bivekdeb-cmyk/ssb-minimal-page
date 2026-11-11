@@ -377,8 +377,9 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
    the green band a quiet header under the card's own title (18): its title 14, its line 12 at 75% */
 @media (width < 672px) {
   html body main[data-layout='minimal'] .mf .mf-band { padding: 10px var(--space-4); }
-  /* (later: "the subtext and the header look the same") the title 14 semibold over its 12 line */
-  html body main[data-layout='minimal'] .mf .mf-band-t { font-size: 0.875rem; line-height: 1.35; font-weight: 600; letter-spacing: 0; }
+  /* (later: "the subtext and the header look the same", then "the headline a bit bigger") the title 16
+     semibold over its 12 line, still under the card's own title (18) */
+  html body main[data-layout='minimal'] .mf .mf-band-t { font-size: 1rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.005em; }
   html body main[data-layout='minimal'] .mf .mf-band-s { margin-top: 2px; font-size: 0.75rem; line-height: 1.35; color: rgb(255 255 255 / 0.75); }
 }
 
@@ -401,4 +402,13 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
   html:has(main[data-layout='minimal']) body .dkft .dkft-brand-line { font-size: 0.875rem; line-height: 1.5; }
   html:has(main[data-layout='minimal']) body .dkft .dkft-col-title { font-size: 0.75rem; font-weight: 600; }
   html:has(main[data-layout='minimal']) body .dkft :is(.dkft-col a, .dkft-place) { font-size: 0.875rem; }
+}
+
+/* phones (2026-11-11, the user's ask: "proper, equal gaps", "centre Built by leaders from"): title, the
+   leaders' block, the line, 24px apart (the line sat 8 under the logos); the label 8 over its logos,
+   centred between two hairlines */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9-hero .hf-label { margin-top: var(--space-6); justify-content: center; }
+  html body main[data-layout='minimal'] .m9-hero .hf-label::before { content: ''; flex: 1 1 0%; height: 1px; background: #e5e5e5; }
+  html body main[data-layout='minimal'] .m9-hero .hf-line { margin-top: var(--space-6); }
 }
