@@ -111,3 +111,11 @@
   .msa.msa .msa-unit, .msa.msa .msa-unit b { font-size: 0.8125rem; line-height: 1.3; }
   html[data-m9-apply] body { padding-bottom: 6.5rem; }
 }
+
+/* phones (2026-11-11, the user's ask: "lots of unwanted gap" in the footer): the footer kept 120px at
+   its foot for the main page's bottom Apply bar, but this page's Apply bar hides once the footer is
+   on screen, so that room was empty green under "Back to top". The footer now ends a step under it. */
+@media (width < 672px) {
+  html:has(main[data-layout='minimal']) body .dkft.dkft { padding-bottom: var(--space-4); }
+  html:has(main[data-layout='minimal']) body .dkft.dkft .dkft-legal { padding-bottom: var(--space-4); }
+}
