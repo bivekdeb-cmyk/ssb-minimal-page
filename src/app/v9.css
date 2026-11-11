@@ -411,3 +411,19 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
   html body main[data-layout='minimal'] .m9-hero .hf-label { margin-top: var(--space-4); }
   html body main[data-layout='minimal'] .m9-hero .hf-line { margin-top: var(--space-4); }
 }
+
+/* phones (2026-11-11, the user's ask: the room between a section's intro and its cards "too much"): 24px
+   in every section, as placements, the founders and campus life have it (alumni had 40, faculty and
+   mentors 32) */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 div:has(> div > #alumni-title),
+  html body main[data-layout='minimal'] .m9 div:has(> .pt-panel) { margin-bottom: var(--space-6); }
+}
+
+/* phones (2026-11-11, the user's ask: the logo tiles too tall, "lots of negative space"): 44px tiles
+   (were 58), each logo about a quarter larger (half its design width was ~49px for Amazon, now ~62%),
+   so the mark fills more of a smaller box; both logo grids (recruiters, peers) share these tiles */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .peers-flip-cell { height: 2.75rem !important; }
+  html body main[data-layout='minimal'] .m9 .peers-flip-logo[style] { width: min(calc(var(--w) * 0.62), 4.625rem); max-width: 82%; max-height: 1.375rem; }
+}
