@@ -289,3 +289,10 @@ main[data-layout='minimal'] .m9 :is(.ad4-fine, .dkg-note, .ad4-fast, .dkg-credit
     grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 1.85) !important;
   }
 }
+
+/* the hero's group photo in place of the film (2026-11-11, the user's ask): the whole frame, not the
+   film's 18% lift, so the back row's heads stay in; anchored a little above centre for the faces */
+html body main[data-layout='minimal'] .m9-hero img.hf-film { top: 0; height: 100%; object-position: 50% 20%; }
+@media (width < 1056px) {
+  html body main[data-layout='minimal'] .m9-hero img.hf-film { object-position: 50% 30%; }
+}

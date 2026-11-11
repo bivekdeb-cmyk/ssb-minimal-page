@@ -26,6 +26,8 @@ export const deckHero: HeroFrameContent = {
   eyebrow: 'PGP in Management & Technology',
   // without the trailing "…" (2026-10-28, the user's ask)
   logosLabel: 'Built by leaders from',
+  // the cohort's group photo in place of the film (2026-11-11, the user's ask)
+  image: '/media/hero-group.webp',
 };
 
 /** Slide 3: the five figures (the deck's order on its slide), the audited report, the recruiters. */

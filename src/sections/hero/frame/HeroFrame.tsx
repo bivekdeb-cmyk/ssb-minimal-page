@@ -31,7 +31,12 @@ export function HeroFrame({ content: c, variant, tone = 'light' }: { content: He
     >
       {/* the frame is dark in both tones: the copy is white on the film */}
       <div className="hf-frame" data-brand="ssb" data-theme="dark">
-        <video className="hf-film" src={c.video.src} poster={c.video.poster} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
+        {c.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="hf-film" src={c.image} alt="" width={2000} height={817} loading="eager" fetchPriority="high" decoding="async" />
+        ) : (
+          <video className="hf-film" src={c.video.src} poster={c.video.poster} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
+        )}
         <div className="hf-fade" aria-hidden="true" />
 
         <div className="hf-body">

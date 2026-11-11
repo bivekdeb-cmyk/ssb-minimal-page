@@ -106,6 +106,8 @@ export type HeroFrameContent = {
   flipLogos: { name: string; src: string }[];
   facts: { value: string; caption: string }[];
   video: { src: string; poster?: string };
+  /** A still in place of the film (the minimal page's group photo, 2026-11-11, the user's ask). */
+  image?: string;
 };
 
 export const heroFrame: HeroFrameContent = {
