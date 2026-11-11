@@ -267,3 +267,25 @@ main[data-layout='minimal'] .m9 :is(.ad4-fine, .dkg-note, .ad4-fast, .dkg-credit
   html body main[data-layout='minimal'] .m9 .lp-phone-row .lp-title { font-size: 1.0625rem !important; line-height: 1.3 !important; }
   html body main[data-layout='minimal'] .m9 .lp-phone-row .lp-desc { font-size: 0.8125rem !important; line-height: 1.5 !important; }
 }
+
+/* the founders' four cards (2026-11-11, the user's ask: Nikhil Kamath's and Anupam Mittal's sections as
+   one, all four cards): on the web, two by two inside the column (the row sits outside the Container,
+   so it takes the column's edges itself); below 1056px, the main page's sideways row */
+@media (width >= 1056px) {
+  html body main[data-layout='minimal'] .m9 .dkf .dkf-row.dkf-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: var(--m9-edge);
+    margin-right: var(--m9-right);
+    padding: 0;
+  }
+}
+
+/* web (2026-11-11, the user's ask: the faculty and mentors' cards "distorted", "make the card bigger so
+   there's some negative space"): at 2.85 to the column they were drawn at 57% of their 480 x 320
+   design, the course and credentials crowding the logo. Now one card and 85% of the next across the
+   column, ~430px on a 1440 screen (90% of the design), two rows as before. Alumni untouched. */
+@media (width >= 1056px) {
+  html body main[data-layout='minimal'] .m9 .fc-grid.fc-grid {
+    grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 1.85) !important;
+  }
+}

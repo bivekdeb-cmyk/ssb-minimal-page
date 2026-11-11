@@ -1,25 +1,15 @@
 import type { Metadata } from 'next';
 import { heroFrame } from '@/content/home';
-import { deckAlumni, deckHero, deckLiveLogos, deckUsps } from '@/content/deck';
+import { deckAlumni, deckHero } from '@/content/deck';
 import { AdmissionsV4 } from '@/sections/admissions/AdmissionsV4';
 import { AlumniSection } from '@/sections/alumni/AlumniSection';
 import { PeersTicker } from '@/sections/alumni/PeersTicker';
 import { CampusLifeSection } from '@/sections/community/CommunitySections';
-import {
-  DeckAiProductsSection,
-  DeckBusinessFacts,
-  DeckBusinessSection,
-  DeckImmersionsSection,
-  DeckUsp,
-  DeckUspHead,
-} from '@/sections/deck/DeckSections';
 import { DeckOutcomes } from '@/sections/deck/DeckOutcomes';
 import { DeckFooter } from '@/sections/deck/DeckFooter';
-import { DeckGlobalImmersion } from '@/sections/deck/DeckGlobalImmersion';
+import { DeckFounders } from '@/sections/deck/DeckFounders';
 import { HeroFrame, HeroFrameDeadline } from '@/sections/hero/frame/HeroFrame';
 import { ScrollRefresh } from '@/sections/home/client';
-import { CurriculumRail } from '@/sections/curriculum/CurriculumRail';
-import { LiveProjectsSection } from '@/sections/live-projects/LiveProjectsSection';
 import { HeroCardAlign, MinimalForm, MinimalNav, StickyApply } from '@/sections/minimal/MinimalChrome';
 import { PeopleTabsSection } from '@/sections/people-tabs/PeopleTabsSection';
 import { ApplyModal } from '@/sections/site/ApplyModal';
@@ -85,58 +75,16 @@ export default function V9Page() {
           <Tone>
             <PeopleTabsSection groups={['mentors']} id="mentors" label="Mentors" stack borrow={{ from: 'investors', count: 5 }} />
           </Tone>
+          {/* "How you learn" (the four USPs) came off, and the founders came on, Nikhil Kamath's card first
+              (2026-11-11, the user's ask) */}
           <Tone>
-            <DeckUspHead />
-            <CurriculumRail
-              sections={[
-                {
-                  ...deckUsps.items[0],
-                  line: undefined,
-                  node: (
-                    <DeckUsp num="01" label={deckUsps.items[0].label}>
-                      <DeckBusinessSection />
-                      <DeckBusinessFacts />
-                    </DeckUsp>
-                  ),
-                },
-                {
-                  ...deckUsps.items[1],
-                  line: undefined,
-                  node: (
-                    <DeckUsp num="02" label={deckUsps.items[1].label}>
-                      <DeckAiProductsSection />
-                    </DeckUsp>
-                  ),
-                },
-                {
-                  ...deckUsps.items[3],
-                  num: '03',
-                  line: undefined,
-                  node: (
-                    <DeckUsp num="03" label={deckUsps.items[3].label}>
-                      <LiveProjectsSection logos={deckLiveLogos} />
-                    </DeckUsp>
-                  ),
-                },
-                {
-                  ...deckUsps.items[2],
-                  num: '04',
-                  line: undefined,
-                  node: (
-                    <DeckUsp num="04" label={deckUsps.items[2].label}>
-                      <DeckImmersionsSection />
-                      <DeckGlobalImmersion />
-                    </DeckUsp>
-                  ),
-                },
-              ]}
-            />
+            <DeckFounders kamath />
           </Tone>
           <Tone dark>
             <AdmissionsV4 backers={false} />
           </Tone>
           <Tone>
-            <CampusLifeSection />
+            <CampusLifeSection clubs={false} />
           </Tone>
         </div>
         <StickyApply deadline={heroFrame.deadline} />

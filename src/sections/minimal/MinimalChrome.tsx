@@ -9,7 +9,7 @@ import './minimal.css';
 const LINKS = [
   { label: 'Placements', target: 'placements-showcase-title' },
   { label: 'Faculty', target: 'people' },
-  { label: 'How you learn', target: 'dk-usp-title' },
+  { label: 'Founders', target: 'dkf-title' },
   { label: 'Admissions', target: 'admissions' },
   { label: 'Campus', target: 'campus-title' },
 ];
