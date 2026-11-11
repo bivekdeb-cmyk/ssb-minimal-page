@@ -88,7 +88,10 @@ const PLACEHOLDER_COURSES = [
  */
 function FacultyDrift({ group: g, stack = false }: { group: Group; stack?: boolean }) {
   const gridRef = React.useRef<HTMLUListElement>(null);
-  const rows = useRows(2);
+  // the faculty stack three rows on a phone (2026-11-11, the user's ask; faculty-card.css), so the dots
+  // count columns of three there
+  const wideRows = useRows(2);
+  const rows = g.id === 'faculty' && wideRows === 1 ? 3 : wideRows;
   const driftRef = React.useRef<HTMLDivElement>(null);
   useSwipeDrift(driftRef);
   // mentors on the web: the looping scroller (not the CSS drift), so the dots can follow and step it
