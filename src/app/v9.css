@@ -394,3 +394,28 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
   html body main[data-layout='minimal'] .mf .mf-band-t { font-size: 0.75rem; line-height: 1.35; font-weight: 600; letter-spacing: 0.01em; }
   html body main[data-layout='minimal'] .mf .mf-band-s { margin-top: 2px; font-size: 0.75rem; line-height: 1.35; color: rgb(255 255 255 / 0.75); }
 }
+
+/* ── phones: the type audit outside the cards (2026-11-11, the user's asks). The scale: labels 12,
+   section titles 24 medium, subheads 16 semibold, intros and buttons 14, small print 12. Card insides
+   untouched (the user's ask), but for the report's button, asked for by name. ── */
+@media (width < 672px) {
+  /* the hero's three chips in the brand's colours, as the eyebrow's chip (the pale green, the deep green) */
+  html body main[data-layout='minimal'] .m9-hero .hf-line-in > span {
+    border-color: rgb(199 223 207); background: rgb(234 245 238); color: rgb(0 74 30);
+  }
+  /* "Built by leaders from" a label (12, was 14) */
+  html body main[data-layout='minimal'] .m9-hero .hf-label { font-size: 0.75rem; }
+  /* the subheads under a section title ("Our recruiters…", "Your peers come from"): 16 semibold, was 20 */
+  html body main[data-layout='minimal'] .m9 .peers-title.peers-title { font-size: 1rem !important; line-height: 1.35 !important; }
+  /* the buttons as the sign-up card's: 14 medium, 40 tall (the report's, Start application, Apply now) */
+  html body main[data-layout='minimal'] .dko-press-foot .dko-cta { font-size: 0.875rem; font-weight: 500; }
+  html body main[data-layout='minimal'] .ad4-ctas > a:not(.ad4-link) { min-height: 0; height: 2.5rem; padding-block: 0; font-size: 0.875rem; font-weight: 500; }
+  html body main[data-layout='minimal'] .msa .msa-btn { height: 2.5rem; min-height: 0; font-size: 0.875rem; font-weight: 500; }
+}
+@media (width < 672px) {
+  /* the footer's text on the page's scale: its column titles labels (12), its links and city body (14),
+     its line 14; the closing statement stays display */
+  html:has(main[data-layout='minimal']) body .dkft .dkft-brand-line { font-size: 0.875rem; line-height: 1.5; }
+  html:has(main[data-layout='minimal']) body .dkft .dkft-col-title { font-size: 0.75rem; font-weight: 600; }
+  html:has(main[data-layout='minimal']) body .dkft :is(.dkft-col a, .dkft-place) { font-size: 0.875rem; }
+}
