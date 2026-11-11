@@ -15,6 +15,11 @@ import { PeopleTabsSection } from '@/sections/people-tabs/PeopleTabsSection';
 import { ApplyModal } from '@/sections/site/ApplyModal';
 import { CalmEntrance } from '@/sections/shared/CalmEntrance';
 import { Tone } from '@/sections/tone/Tone';
+// the deck's shared styles (the scholarships' photo panel and numbered cards among them), which the
+// sections taken off on 2026-11-11 had loaded; kept so the sections left on look as before
+import '@/sections/deck/deck.css';
+import '@/sections/faculty/story-card.css';
+import '@/sections/internship/internship.css';
 import './v6.css';
 import '@/sections/deck/tokens.css';
 import './v9.css';

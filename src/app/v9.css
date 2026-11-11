@@ -455,3 +455,13 @@ html:has(main[data-layout='minimal']) body { background: #fafafa; }
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9 .dko-figs .dko-fig small { display: block; margin-top: 2px; font-size: 0.6875rem; line-height: 1.35; color: #8a8a8a; }
 }
+
+/* the scholarship cards (2026-11-11, the user's ask: "the eyebrow the same size as the header", "the
+   cards not aligned"): every card's label and title start at one line under its number (were set at the
+   card's foot, so a two-line label pushed its title out of line with the next card's); on a phone the
+   title 16 semibold, as on the web (was 14 under a 12px label) */
+html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: flex-start; }
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc-t { font-size: 1rem; font-weight: 600; line-height: 1.25; }
+  html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { gap: 4px; }
+}
