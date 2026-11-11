@@ -158,7 +158,7 @@ main[data-layout='minimal'] .m9-hero .hf-actions { display: none; }
 @media (width < 672px) {
   /* the people rows' cards smaller (72% of the screen, was 85%): two rows still, more of the next
      column in view, so they read as scrollable */
-  html body main[data-layout='minimal'] .m9 :is(.alumni-row, .fc-grid) { grid-auto-columns: 72vw !important; gap: var(--space-3) !important; }
+  /* (2026-11-11) superseded: the main page's sizes now, set at the file's foot */
 }
 /* the card's rail stops under both bars (the announcement bar now stays over the top bar) */
 @media (width >= 1056px) { main[data-layout='minimal'] .m9-sticky { top: calc(var(--hf-bar, 0px) + 4rem + var(--space-4)); } }
@@ -204,7 +204,7 @@ main[data-layout='minimal'] .m9-hero .hf-actions { display: none; }
    projects' cards square (were 3:4), the copy still clear at the foot */
 @media (width < 672px) {
   main[data-layout='minimal'] .m9-hero .hf-film { aspect-ratio: 16 / 9; }
-  main[data-layout='minimal'] .m9 .lp-card { aspect-ratio: 1 / 1; }
+  /* (2026-11-11) the live projects as the main page's: two rows of landscape cards (live-projects.css) */
 }
 
 /* =========================================================
@@ -257,3 +257,13 @@ main[data-layout='minimal'] .m9 :is(.ad4-fine, .dkg-note, .ad4-fast, .dkg-credit
 /* the scholarships' four tiles are narrow: their titles a step under the card title on desktop, and
    the phones' tight 2 × 2 keeps its 14px */
 @media (width >= 672px) { main[data-layout='minimal'] .m9 .ad4-sc-t { font-size: 1rem !important; font-weight: 600 !important; } }
+
+/* (2026-11-11, the user's ask: "the same design language as the main page", phones only) the people rows
+   as the main page's: alumni and faculty at its sizes (alumni.css, faculty-card.css; their 72% override
+   off above), and every people row three rows high, the mentors and the rest too; the live projects'
+   landscape cards with the main page's type (17 / 13), not this page's card scale */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .fc-grid.fc-grid { grid-template-rows: repeat(3, auto) !important; }
+  html body main[data-layout='minimal'] .m9 .lp-phone-row .lp-title { font-size: 1.0625rem !important; line-height: 1.3 !important; }
+  html body main[data-layout='minimal'] .m9 .lp-phone-row .lp-desc { font-size: 0.8125rem !important; line-height: 1.5 !important; }
+}
