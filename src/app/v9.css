@@ -490,3 +490,10 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
   html body main[data-layout='minimal'] h2 .sj-ai-accent,
   html body main[data-layout='minimal'] h2.sg-title span { display: none !important; }
 }
+
+/* phones (2026-11-11, the user's ask: the alumni cards "too small on my iPhone 16", the faculty and
+   mentors' size): 76vw wide with a 16px gap, as the faculty grid (were capped by the screen's height,
+   282px on a 393 x 852 phone, 8px apart); their own type, scaled with the card */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9 .alumni-row.alumni-row { grid-auto-columns: 76vw !important; gap: var(--space-4) !important; }
+}
