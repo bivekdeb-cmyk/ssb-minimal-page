@@ -443,11 +443,11 @@ html body .alumni-row {
 }
 
 /* Post SSB / Pre SSB a step larger on phones only (2026-11-11, the user's ask: "Blinkit" and "Software
-   Developer" read too small on mweb; the web untouched). In the card's 480 x 320 design units, 16 / 20
+   Developer" read too small on mweb; the web untouched). In the card's 480 x 320 design units, 15 / 18 (a touch under the first 16 / 20, the user's ask)
    (the card drawn at ~0.56 on a phone); the name, the role and the card's size as they were. */
 @media (width < 672px) {
-  html body .alumni-card .alumni-card__label.alumni-card__label { font-size: 1rem !important; letter-spacing: 0.04em !important; }
-  html body .alumni-card .alumni-card__value.alumni-card__value { font-size: 1.25rem; line-height: 1.2; }
+  html body .alumni-card .alumni-card__label.alumni-card__label { font-size: 0.9375rem !important; letter-spacing: 0.04em !important; }
+  html body .alumni-card .alumni-card__value.alumni-card__value { font-size: 1.125rem; line-height: 1.2; }
   html body .alumni-card .alumni-card__step.alumni-card__step { gap: var(--space-4); }
 }
 
