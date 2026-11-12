@@ -507,13 +507,13 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
   }
 }
 
-/* phones (2026-11-12, the user's ask: the hero's copy "a bit more upwards, overlapping"): the copy 32px
-   higher over the photo (-9.5rem, was -7.5), the photo's fade starting a step higher to keep the title
+/* phones (2026-11-12, the user's ask: the hero's copy "a bit more upwards, overlapping"): the copy 64px
+   higher over the photo (-11.5rem, was -7.5; then "slide more upwards"), the photo's fade starting a step higher to keep the title
    on a clear ground */
 @media (width < 672px) {
-  html body main[data-layout='minimal'] .m9-hero .hf-body { margin-top: -9.5rem; }
+  html body main[data-layout='minimal'] .m9-hero .hf-body { margin-top: -11.5rem; }
   html body main[data-layout='minimal'] .m9-hero .hf-film {
-    -webkit-mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.35) 44%, transparent 64%);
-    mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.35) 44%, transparent 64%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 12%, rgb(0 0 0 / 0.35) 36%, transparent 54%);
+    mask-image: linear-gradient(to bottom, #000 12%, rgb(0 0 0 / 0.35) 36%, transparent 54%);
   }
 }
