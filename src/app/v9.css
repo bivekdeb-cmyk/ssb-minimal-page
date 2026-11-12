@@ -497,3 +497,12 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
 @media (width < 672px) {
   html body main[data-layout='minimal'] .m9 .alumni-row.alumni-row { grid-auto-columns: 76vw !important; gap: var(--space-4) !important; }
 }
+
+/* web (2026-11-12, the user's ask: the alumni cards the faculty and mentors' size, sizing only): the same
+   column as the faculty grid's, one card and a third across the column (~346px on a 1440 screen, was
+   275); two rows and the 12px gap as before; phones untouched */
+@media (width >= 1056px) {
+  html body main[data-layout='minimal'] .m9 .alumni-row.alumni-row {
+    grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 2.3) !important;
+  }
+}
