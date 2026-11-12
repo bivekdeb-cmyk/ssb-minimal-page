@@ -506,3 +506,14 @@ html body main[data-layout='minimal'] .m9 .ad4-sch .ad4-sc { justify-content: fl
     grid-auto-columns: calc((var(--m9-col) - var(--space-3)) / 2.3) !important;
   }
 }
+
+/* phones (2026-11-12, the user's ask: the hero's copy "a bit more upwards, overlapping"): the copy 32px
+   higher over the photo (-9.5rem, was -7.5), the photo's fade starting a step higher to keep the title
+   on a clear ground */
+@media (width < 672px) {
+  html body main[data-layout='minimal'] .m9-hero .hf-body { margin-top: -9.5rem; }
+  html body main[data-layout='minimal'] .m9-hero .hf-film {
+    -webkit-mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.35) 44%, transparent 64%);
+    mask-image: linear-gradient(to bottom, #000 18%, rgb(0 0 0 / 0.35) 44%, transparent 64%);
+  }
+}
